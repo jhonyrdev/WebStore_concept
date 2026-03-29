@@ -1,0 +1,66 @@
+<footer class="bg-[#5e0956] text-[var(--text-primary)] text-content-font">
+
+  <!-- ── Fila superior ── -->
+  <div class="container px-6 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+
+    <!-- Columna 1: Marca -->
+    <div class="flex flex-col gap-4">
+      <a href="/" class="no-underline leading-none tracking-tight w-fit">
+        <span class="text-[1.6rem] font-extrabold text-[var(--text-primary)] lowercase">Tambito+</span>
+      </a>
+      <p class="text-sm text-[var(--text-secondary)] leading-relaxed max-w-[240px]">
+        Tu tienda online de confianza. Encuentra todo lo que necesitas con la mejor calidad y precio.
+      </p>
+    </div>
+
+    <!-- Columna 2: Enlaces útiles -->
+    <div class="flex flex-col gap-4">
+      <h3 class="text-title-font text-sm font-semibold uppercase tracking-widest text-[#f2c32f]">
+        Enlaces útiles
+      </h3>
+      <nav class="flex flex-col gap-2.5">
+        @for (link of enlaces; track link.href) {
+          <a
+            [href]="link.href"
+            class="text-sm text-[#d4d4d4] no-underline transition-colors hover:text-[#f2c32f] w-fit"
+          >
+            {{ link.label }}
+          </a>
+        }
+      </nav>
+    </div>
+
+    <!-- Columna 3: Redes sociales -->
+    <div class="flex flex-col gap-4">
+      <h3 class="text-title-font text-sm font-semibold uppercase tracking-widest text-[#f2c32f]">
+        Síguenos
+      </h3>
+      <div class="flex flex-wrap gap-3">
+        @for (red of redes; track red.label) {
+          <a
+            [href]="red.href"
+            target="_blank"
+            rel="noopener noreferrer"
+            [attr.aria-label]="red.label"
+            class="w-10 h-10 rounded-full flex items-center justify-center text-[#d4d4d4] no-underline transition-all hover:bg-[#d946c5] hover:text-[#fde68a] hover:scale-110"
+          >
+            <span class="w-5 h-5 flex items-center justify-center [&>svg]:w-5 [&>svg]:h-5" [innerHTML]="red.icon"></span>
+          </a>
+        }
+      </div>
+      <p class="text-xs text-[#d4d4d4] mt-1">
+        Únete a nuestra comunidad y entérate de todas las ofertas.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Divisor -->
+  <div class="border-t border-white/10"></div>
+
+  <!-- ── Fila inferior ── -->
+  <div class="container px-6 py-5 flex flex-row items-center justify-center text-xs text-[#d4d4d4]">
+    <span>© {{ currentYear }} Tambito+. Todos los derechos reservados.</span>
+  </div>
+
+</footer>

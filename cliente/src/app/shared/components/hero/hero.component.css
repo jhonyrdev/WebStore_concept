@@ -1,0 +1,48 @@
+.hero {
+    min-height: clamp(360px, 60vh, 640px);
+    background-image: url('/assets/img/banners/bannerInicio.webp');
+  }
+ 
+  .hero__overlay {
+    background:
+      linear-gradient(110deg, color-mix(in oklab, #a00691 72%, black) 0%, transparent 70%),
+      linear-gradient(180deg, rgb(0 0 0 / 22%) 0%, rgb(0 0 0 / 50%) 100%);
+  }
+ 
+  .hero__content {
+    padding-block: clamp(2.25rem, 8vw, 5rem);
+  }
+ 
+
+  .hero__eyebrow {
+    font-size: clamp(0.72rem, 1.5vw, 0.9rem);
+    color: #f2c32f;
+    border-color: color-mix(in oklab, #f2c32f 55%, transparent);
+  }
+ 
+  /* Font-size fluido */
+  .hero__title {
+    font-size: clamp(1.75rem, 5.5vw, 3.65rem);
+    color: white;
+  }
+ 
+  .hero__description {
+    font-size: clamp(0.95rem, 2vw, 1.12rem);
+    color: color-mix(in oklab, white 70%, transparent);
+  }
+ 
+  .hero__btn--primary {
+    background-color: #f2c32f;
+    color: black;
+  }
+ 
+  .hero__btn--ghost {
+    color: white;
+  }
+ 
+  @media (max-width: 767px) {
+    .hero {
+      min-height: 68vh;
+      background-position: 70% center;
+    }
+  }

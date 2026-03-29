@@ -1,0 +1,201 @@
+<header class="bg-[#a00691]">
+  <nav
+    class="flex items-center h-14 gap-4 text-title-font text-white sticky top-0 z-[1000] container"
+  >
+    <!-- Left -->
+    <div class="flex items-center gap-3 shrink-0">
+      <!-- Logo -->
+      <a href="/" class="no-underline leading-none tracking-tight" aria-label="Inicio">
+        <img
+          src="assets/img/logo/logoMobileSecundario.webp"
+          alt="Tambito+"
+          class="block sm:hidden h-8 w-auto"
+        />
+
+        <!-- Desktop -->
+        <img
+          src="assets/img/logo/logoAlternativo.webp"
+          alt="Tambito+"
+          class="hidden sm:block h-8 w-auto"
+        />
+      </a>
+
+      <!-- Botón Categorías — solo en md+ -->
+      <button
+        class="hidden md:flex items-center gap-1.5 bg-transparent border-none cursor-pointer px-2.5 py-1.5 rounded-md text-[0.8rem] font-semibold tracking-wide transition-colors hover:bg-[#0f0f]/10"
+        (click)="toggleMenu()"
+        aria-label="Abrir categorías"
+      >
+        <svg
+          class="w-5 h-5 shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+        <span>Categorias</span>
+      </button>
+
+      <!-- Hamburger — solo en < md -->
+      <button
+        class="flex md:hidden items-center bg-transparent border-none cursor-pointer p-1.5 rounded-md transition-colors hover:bg-[var(--color-general-2)]/15"
+        (click)="toggleMobileMenu()"
+        aria-label="Abrir menú"
+      >
+        <svg
+          class="w-6 h-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Search -->
+    <div class="flex-1 max-w-[680px] mx-auto">
+      <!-- Barra completa — md+ -->
+      <div
+        class="hidden md:flex items-center bg-white rounded-full overflow-hidden h-9 shadow-sm focus-within:ring-2 focus-within:ring-[#f2c32f] transition-shadow"
+        role="search"
+      >
+        <input
+          type="search"
+          class="flex-1 border-none outline-none px-4 text-sm text-[#303030] bg-transparent h-full placeholder:text-[#747474] [&::-webkit-search-cancel-button]:appearance-none"
+          placeholder="¿Qué estás buscando?"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          autocomplete="off"
+          aria-label="Buscar productos"
+        />
+      </div>
+
+      <!-- Icono lupa — < md -->
+      <button
+        class="flex md:hidden items-center justify-center bg-transparent border-none cursor-pointer p-1.5 rounded-md transition-colors"
+        (click)="toggleSearch()"
+        aria-label="Buscar"
+      >
+        <svg
+          class="w-6 h-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="M21 21l-4.35-4.35" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Right: Action icons -->
+    <div class="flex items-center gap-1 shrink-0">
+      <!-- My Account -->
+      <div
+        class="flex items-center gap-1.5 cursor-pointer px-2.5 py-1.5 rounded-md transition-colors hover:bg-[#0f0f]/10 whitespace-nowrap relative group select-none"
+        id="nav-account"
+      >
+        <div class="flex items-center justify-center shrink-0">
+          <svg
+            class="w-[22px] h-[22px]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+        <div class="flex items-center gap-[0.15rem]">
+          <span class="text-[0.8rem] font-medium hidden md:inline">Mi cuenta</span>
+          <svg
+            class="w-3.5 h-3.5 hidden md:block transition-transform group-hover:rotate-180"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+
+        <!-- Dropdown -->
+        <div
+          class="hidden group-hover:block absolute top-[calc(100%+6px)] right-0 bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.15)] min-w-[180px] py-2 overflow-hidden animate-[dropdownFade_0.18s_ease]"
+        >
+          <a
+            href="/"
+            class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]"
+            >Iniciar sesión</a
+          >
+          <div class="h-px bg-[#fde68a] my-1"></div>
+
+          <a
+            href="/perfil"
+            class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]"
+            >Mi perfil</a
+          >
+
+          <a
+            href="/pedidos"
+            class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]"
+            >Mis pedidos</a
+          >
+        </div>
+      </div>
+
+      <!-- Cart -->
+
+      <a
+        href="/carrito"
+        class="flex items-center text-white no-underline cursor-pointer px-2 py-1.5 rounded-md transition-colors hover:bg-[#0f0f]/10 relative"
+        id="nav-cart"
+        aria-label="Carrito de compras"
+      >
+        <div class="flex items-center justify-center relative">
+          <svg
+            class="w-[22px] h-[22px]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 01-8 0" />
+          </svg>
+          @if (cartCount() > 0) {
+            <span
+              class="absolute -top-[7px] -right-2 bg-[#eab308] text-[#fff] text-[0.65rem] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-[3px] shadow leading-none"
+            >
+              {{ cartCount() }}
+            </span>
+          }
+        </div>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<!-- Sidebar categorías — solo md+ -->
+<div class="hidden sm:block">
+  <app-sidebar-categoria [isMenuOpen]="isMenuOpen()" (toggleMenu)="toggleMenu()" />
+</div>
+
+<!-- Sidebar mobile — solo < md -->
+<div class="block xs:hidden">
+  <app-sidebar-mobile [isOpen]="isMobileMenuOpen()" (toggleMenu)="toggleMobileMenu()" />
+</div>
+
+<!-- Modal de búsqueda mobile -->
+<app-search-modal [isOpen]="isSearchOpen()" (closed)="toggleSearch()" />
