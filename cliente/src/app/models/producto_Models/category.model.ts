@@ -1,9 +1,6 @@
 export interface Category {
-  label: string;
-  sublabel?: string;
-  imgSrc?: string;
-  route?: string;
-  featured?: boolean;
+  id: number;
+  nombre: string;
 }
 
 // export interface CategoryResponse extends Category {

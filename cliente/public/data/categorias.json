@@ -1,13 +1,10 @@
 [
-  { "label": "Cervezas", "imgSrc": "assets/img/catProductos/cerveza.webp" },
-  { "label": "RTDs", "imgSrc": "assets/img/catProductos/rtds.webp" },
-  { "label": "Licores", "imgSrc": "assets/img/catProductos/licor.webp" },
-  {
-    "label": "Comidas",
-    "imgSrc": "assets/img/catProductos/comida.webp"
-  },
-  { "label": "Bebidas", "imgSrc": "assets/img/catProductos/bebidas.webp" },
-  { "label": "Antojos", "imgSrc": "assets/img/catProductos/antojos.webp"},
-  { "label": "Helados", "imgSrc": "assets/img/catProductos/helados.webp"},
-  { "label": "Despensa", "imgSrc": "assets/img/catProductos/despensa.webp"}
+  { "id": 1, "nombre": "Cervezas" },
+  { "id": 2, "nombre": "RTDs" },
+  { "id": 3, "nombre": "Licores" },
+  { "id": 4, "nombre": "Comidas" },
+  { "id": 5, "nombre": "Bebidas" },
+  { "id": 6, "nombre": "Antojos" },
+  { "id": 7, "nombre": "Helados" },
+  { "id": 8, "nombre": "Despensa" }
 ]
