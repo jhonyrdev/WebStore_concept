@@ -1,51 +1,48 @@
-<section class="py-10">
-  <div class="categories-track flex gap-4 px-4
-              overflow-x-auto
-              md:overflow-x-auto
-              lg:overflow-x-visible
-              lg:grid lg:grid-cols-8 lg:gap-6 lg:px-8 lg:justify-items-center container mx-auto">
+@if (categoriasService.isLoading()) {
+  <app-skeleton-categoria [count]="8" />
+} @else if (categoriasService.error()) {
+  <p class="text-center text-red-500">{{ categoriasService.error() }}</p>
+} @else {
+  <section
+    class="categories-section py-10"
+    [class.categories-section--visible]="allImagesLoaded"
+  >
+    <div
+      class="categories-track flex gap-4 px-4 overflow-x-auto md:overflow-x-auto lg:overflow-x-visible lg:grid lg:grid-cols-8 lg:gap-6 lg:px-8 lg:justify-items-center container mx-auto"
+    >
+      @for (cat of categoriasService.categories(); track cat.route) {
+        
+       <a   [routerLink]="cat.route"
+          class="category-item flex flex-col items-center gap-2 flex-shrink-0 w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] md:w-[calc(25%-12px)] lg:flex-shrink lg:w-auto focus:outline-none no-underline"
+        >
+          <div
+            class="relative w-[72px] h-[72px] rounded-full overflow-hidden transition-transform duration-200 ease-out hover:scale-110 active:scale-95 mx-auto"
+          >
+            @if (cat.featured) {
+              <span
+                class="absolute top-0 left-1/2 -translate-x-1/2 z-10 bg-yellow-400 text-[8px] font-black uppercase px-1.5 py-0.5 rounded-sm tracking-widest text-yellow-900 whitespace-nowrap"
+              >
+                PROMO
+              </span>
+            }
 
-    @for (cat of categories(); track cat.label) {
-      <a
-        [routerLink]="cat.route"
-        class="category-item flex flex-col items-center gap-2
-               flex-shrink-0
-               w-[calc(50%-8px)]
-               sm:w-[calc(33.333%-11px)]
-               md:w-[calc(25%-12px)]
-               lg:flex-shrink lg:w-auto
-               focus:outline-none no-underline"
-      >
-        <!-- Imagen -->
-        <div class="relative w-[72px] h-[72px] rounded-full overflow-hidden
-                    transition-transform duration-200 ease-out
-                    hover:scale-110 active:scale-95 mx-auto">
+            <img
+              [src]="cat.imgSrc"
+              [alt]="cat.label"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              (load)="onImageLoad()"
+            />
+          </div>
 
-          @if (cat.featured) {
-            <span class="absolute top-0 left-1/2 -translate-x-1/2 z-10
-                         bg-yellow-400 text-[8px] font-black uppercase
-                         px-1.5 py-0.5 rounded-sm tracking-widest text-yellow-900 whitespace-nowrap">
-              PROMO
-            </span>
-          }
-
-          <img
-            [src]="cat.imgSrc"
-            [alt]="cat.label"
-            class="w-full h-full object-cover"
-            loading="lazy"
-          />
-        </div>
-
-        <!-- Label -->
-        <span class="text-center leading-tight text-[12px] font-medium text-gray-800">
-          {{ cat.label }}
-          @if (cat.sublabel) {
-            <br />{{ cat.sublabel }}
-          }
-        </span>
-      </a>
-    }
-
-  </div>
-</section>
+          <span class="text-center leading-tight text-[12px] font-medium text-gray-800">
+            {{ cat.label }}
+            @if (cat.sublabel) {
+              <br />{{ cat.sublabel }}
+            }
+          </span>
+        </a>
+      }
+    </div>
+  </section>
+}

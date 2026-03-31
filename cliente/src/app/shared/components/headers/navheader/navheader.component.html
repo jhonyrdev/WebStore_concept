@@ -189,12 +189,16 @@
 
 <!-- Sidebar categorías — solo md+ -->
 <div class="hidden sm:block">
-  <app-sidebar-categoria [isMenuOpen]="isMenuOpen()" (toggleMenu)="toggleMenu()" />
+  <app-sidebar-categoria 
+  [isMenuOpen]="isMenuOpen()" 
+  (toggleMenu)="toggleMenu()" />
 </div>
 
 <!-- Sidebar mobile — solo < md -->
-<div class="block xs:hidden">
-  <app-sidebar-mobile [isOpen]="isMobileMenuOpen()" (toggleMenu)="toggleMobileMenu()" />
+<div class="block sm:hidden">
+  <app-sidebar-mobile 
+  [isOpen]="isMobileMenuOpen()" 
+  (toggleMenu)="toggleMobileMenu()" />
 </div>
 
 <!-- Modal de búsqueda mobile -->
