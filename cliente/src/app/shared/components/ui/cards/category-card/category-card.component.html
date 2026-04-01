@@ -1,0 +1,20 @@
+<a
+  [routerLink]="config.route"
+  class="flex flex-col items-center gap-2 flex-shrink-0 w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] md:w-[calc(25%-12px)] lg:flex-shrink lg:w-auto focus:outline-none no-underline"
+>
+  <div
+    class="w-[72px] h-[72px] rounded-full overflow-hidden mx-auto transition-transform duration-200 ease-out hover:scale-110 active:scale-95"
+  >
+    <img
+      [src]="config.img"
+      [alt]="category.nombre"
+      class="w-full h-full object-cover"
+      loading="lazy"
+      (load)="imageLoad.emit()"
+    />
+  </div>
+
+  <span class="text-center leading-tight text-[12px] font-medium text-gray-800">
+    {{ category.nombre }}
+  </span>
+</a>

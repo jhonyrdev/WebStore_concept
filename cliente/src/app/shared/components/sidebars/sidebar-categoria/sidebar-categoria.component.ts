@@ -1,6 +1,6 @@
 import { Component, input, OnInit, output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CategoriaService } from '../../../../core/services/producto_Services/categorias/categoria.service';
+import { CategoriaService } from '../../../../features/categories/services/categoria.service';
 
 @Component({
   selector: 'app-sidebar-categoria',
