@@ -4,8 +4,7 @@ import { Component, input, output } from '@angular/core';
   selector: 'app-sidebar-mobile',
   standalone: true,
   imports: [],
-  templateUrl: './sidebar-mobile.component.html',
-  styleUrl: './sidebar-mobile.component.css',
+  templateUrl: './sidebar-mobile.component.html'
 })
 export class SidebarMobileComponent {
   isOpen     = input.required<boolean>();

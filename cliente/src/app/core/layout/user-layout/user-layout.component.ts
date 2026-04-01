@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
-import { RouterOutlet } from "@angular/router";
-import { NavheaderComponent } from '../../../shared/components/headers/navheader/navheader.component';
+import { RouterOutlet } from '@angular/router';
+import { NavheaderComponent } from '../../../shared/components/layout/headers/navheader/navheader.component';
 
 @Component({
   selector: 'app-user-layout.component',
@@ -9,6 +9,4 @@ import { NavheaderComponent } from '../../../shared/components/headers/navheader
   templateUrl: './user-layout.component.html',
   styleUrl: './user-layout.component.css',
 })
-export class UserLayoutComponent {
-
-}
+export class UserLayoutComponent {}

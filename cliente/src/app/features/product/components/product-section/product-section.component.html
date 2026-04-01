@@ -1,0 +1,11 @@
+@if (productService.isLoading()) {
+  <app-skeleton-producto [count]="3" />
+} @else if (productService.error()) {
+  <p class="text-center text-red-500">{{ productService.error() }}</p>
+} @else {
+  <app-slider title="Productos Destacados" mode="loop">
+    @for (product of productService.products(); track product.id) {
+      <app-product-card [product]="product" (addToCart)="onAddToCart($event)" />
+    }
+  </app-slider>
+}

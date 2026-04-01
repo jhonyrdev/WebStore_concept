@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "nombre": "Coca Cola 600ml",
+    "stock": 10,
+    "precio": 3.80,
+    "categoriaId": 5
+  },
+  {
+    "id": 2,
+    "nombre": "Empanada de pollo",
+    "stock": 4,
+    "precio": 3.50,
+    "categoriaId": 4
+  },
+  {
+    "id": 3,
+    "nombre": "Galleta 60gm",
+    "stock": 10,
+    "precio": 1.80,
+    "categoriaId": 6
+  }
+]
