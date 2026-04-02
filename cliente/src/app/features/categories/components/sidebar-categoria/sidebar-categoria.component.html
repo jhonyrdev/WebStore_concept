@@ -1,0 +1,11 @@
+<app-sidebar-shell title="Categorías" [isOpen]="isMenuOpen()" (toggle)="toggleMenu.emit()">
+  <nav class="flex flex-col py-2">
+    @for (cat of categorias(); track cat.id) {
+      <a [routerLink]="cat.route"
+        class="block px-5 py-[0.85rem] text-[#4e4e4e] no-underline
+               text-[0.95rem] font-medium transition-colors hover:text-[#5e0956]">
+        {{ cat.nombre }}
+      </a>
+    }
+  </nav>
+</app-sidebar-shell>

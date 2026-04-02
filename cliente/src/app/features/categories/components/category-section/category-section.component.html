@@ -3,7 +3,7 @@
 } @else if (categoriasService.error()) {
   <p class="text-center text-red-500">{{ categoriasService.error() }}</p>
 } @else {
-  <app-slider title="Categorías" mode="normal">
+  <app-slider [showTitle]="false" [showControls]="false" mode="normal">
     @for (cat of categoriasService.categories(); track cat.id) {
       <app-category-card [category]="cat" (imageLoad)="onImageLoad()" />
     }

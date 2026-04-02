@@ -1,9 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SidebarCategoriaComponent } from '../../../sidebars/sidebar-categoria/sidebar-categoria.component';
-import { SidebarMobileComponent } from '../../../sidebars/sidebar-mobile/sidebar-mobile.component';
-import { SearchModalComponent } from '../../../modales/search-modal/search-modal.component';
+import { SidebarCategoriaComponent } from '../../../../../features/categories/components/sidebar-categoria/sidebar-categoria.component';
+import { SidebarMobileComponent } from '../../sidebars/sidebar-mobile/sidebar-mobile.component';
+import { SearchModalComponent } from '../../../ui/modal/search-modal/search-modal.component';
 
 @Component({
   selector: 'app-navheader',
@@ -24,6 +24,7 @@ export class NavheaderComponent {
   isSearchOpen = signal(false);
   cartCount = signal(3);
   searchQuery = signal('');
+  isAccountOpen = signal(false);
 
   toggleMenu(): void {
     this.isMenuOpen.update((v) => !v);
@@ -46,5 +47,22 @@ export class NavheaderComponent {
     const q = this.searchQuery().trim();
     if (!q) return;
     console.log('Buscando:', q);
+  }
+
+   toggleAccount() {
+    this.isAccountOpen.set(!this.isAccountOpen());
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('#nav-account')) {
+      this.isAccountOpen.set(false);
+    }
+  }
+
+  @HostListener('window:scroll')
+  onScroll() {
+    this.isAccountOpen.set(false);
   }
 }

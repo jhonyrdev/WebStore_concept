@@ -1,31 +1,32 @@
-<div class="w-full py-6">
+<div class="w-full">
+  <div class="container py-8">
+     @if (showTitle && title) {
+    <h2 class="text-lg font-semibold text-gray-900 text-center mb-4 px-4">{{ title }}</h2>
+  }
 
-  <!-- Header -->
-  <div class="flex items-center justify-between px-6 mb-4">
-    <h2 class="text-lg font-semibold text-gray-900">{{ title }}</h2>
-    <div class="flex gap-2">
-      <button (click)="scroll('left')" class="w-8 h-8 rounded-full border border-gray-200 
+  @if (showControls) {
+    <div class="flex justify-end gap-2 px-6 mb-4">
+      <button (click)="scroll('left')" class="w-8 h-8 rounded-full border border-gray-200
               flex items-center justify-center hover:bg-gray-100 active:scale-95 transition-all">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M10 3L5 8L10 13" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </button>
-      <button (click)="scroll('right')" class="w-8 h-8 rounded-full border border-gray-200 
+      <button (click)="scroll('right')" class="w-8 h-8 rounded-full border border-gray-200
               flex items-center justify-center hover:bg-gray-100 active:scale-95 transition-all">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M6 3L11 8L6 13" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </button>
     </div>
-  </div>
+  }
 
-  <!-- Track -->
-  <div #sliderTrack
-    class="flex overflow-x-auto scroll-smooth pb-2 snap-x snap-mandatory no-scrollbar"
-    [class.gap-4]="true"
-    [style.padding-inline]="'24px'"
-    style="-ms-overflow-style:none; scrollbar-width:none;">
+    <!-- Track -->
+    <div #sliderTrack
+    [class]="variant === 'category'
+      ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-8 gap-6 px-6 place-items-center'
+      : 'track-product snap-x snap-mandatory'">
     <ng-content />
   </div>
-
+  </div>
 </div>

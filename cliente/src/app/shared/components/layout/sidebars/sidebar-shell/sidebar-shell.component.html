@@ -1,0 +1,21 @@
+<div class="sidebar" [class.sidebar--open]="isOpen()">
+
+  <div class="flex items-center justify-between bg-[#a00691] px-5 py-4">
+    <span class="text-white font-bold text-base">{{ title() }}</span>
+    <button class="bg-transparent border-none cursor-pointer text-white p-1 flex items-center"
+      (click)="toggle.emit()" aria-label="Cerrar menú">
+      <svg class="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- cada sidebar pone su contenido acá -->
+  <ng-content />
+
+</div>
+
+@if (isOpen()) {
+  <div class="backdrop" (click)="toggle.emit()"></div>
+}

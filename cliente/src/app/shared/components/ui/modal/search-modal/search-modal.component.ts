@@ -1,10 +1,11 @@
 import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ModalComponent } from '../modal.component';
 
 @Component({
   selector: 'app-search-modal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ModalComponent],
   templateUrl: './search-modal.component.html',
   styleUrl: './search-modal.component.css',
 })

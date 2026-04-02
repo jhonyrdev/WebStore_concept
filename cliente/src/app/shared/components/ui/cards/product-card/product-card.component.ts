@@ -7,6 +7,7 @@ import { Producto } from '../../../../../features/product/models/product.model';
   standalone: true,
   imports: [NgClass, DecimalPipe],
   templateUrl: './product-card.component.html',
+  styleUrl: './product-card.component.css'
 })
 export class ProductCardComponent {
   @Input({ required: true }) product!: Producto;

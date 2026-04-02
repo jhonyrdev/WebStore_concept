@@ -1,13 +1,13 @@
 import { Component, input, OnInit, output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CategoriaService } from '../../../../features/categories/services/categoria.service';
+import { SidebarShellComponent } from '../../../../shared/components/layout/sidebars/sidebar-shell/sidebar-shell.component';
 
 @Component({
   selector: 'app-sidebar-categoria',
-  imports: [RouterLink],
+  imports: [RouterLink, SidebarShellComponent],
   standalone: true,
   templateUrl: './sidebar-categoria.component.html',
-  styleUrl: './sidebar-categoria.component.css',
 })
 export class SidebarCategoriaComponent implements OnInit {
   isMenuOpen = input.required<boolean>();

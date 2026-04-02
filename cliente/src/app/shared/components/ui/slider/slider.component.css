@@ -1,0 +1,15 @@
+
+.track-product {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-inline: 1rem;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  justify-content: safe center;
+}
+
+.track-product::-webkit-scrollbar {
+  display: none;
+}
