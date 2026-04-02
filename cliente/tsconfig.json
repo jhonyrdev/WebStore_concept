@@ -13,7 +13,34 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",                    
+    "paths": {            
+      "*": ["./src/*"],                  
+      "@core/*": ["./src/app/core/*"],
+      "@core-Config/*": ["./src/app/core/config/*"],
+      "@core-Guards/*": ["./src/app/core/guards/*"],
+      "@core-Interceptors/*": ["./src/app/core/interceptor/*"],
+      "@core-Services/*": ["./src/app/core/services/*"],
+
+      "@features/*": ["./src/app/features/*"],
+      "@features-Categories/*": ["./src/app/features/categories/*"],
+      "@features-Product/*": ["./src/app/features/product/*"],
+      "@features-Search/*": ["./src/app/features/search/*"],
+
+      "@pages/*":  ["./src/app/pages/*"],
+      "@pages-Admin/*":  ["./src/app/pages/admin/*"],
+      "@pages-Client/*":  ["./src/app/pages/client/*"],
+      "@pages-Errors/*":  ["./src/app/pages/errors_page/*"],
+      "@pages-Landing/*":  ["./src/app/pages/landing/*"],
+
+      "@shared/*": ["./src/app/shared/*"],
+      "@shared-Component-Common/*": ["./src/app/shared/components/common/*"],
+      "@shared-Component-Layout/*": ["./src/app/shared/components/layout/*"],
+      "@shared-Component-Ui/*": ["./src/app/shared/components/ui/*"],
+      "@shared-Constants/*": ["./src/app/shared/constants/*"],
+      "@shared-Pipes/*": ["./src/app/shared/pipes/*"],
+      "@shared-Utils/*": ["./src/app/shared/utils/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
