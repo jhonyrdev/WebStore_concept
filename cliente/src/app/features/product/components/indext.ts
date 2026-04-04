@@ -1,0 +1,1 @@
+export {ProductSectionComponent} from './product-section/product-section.component'
