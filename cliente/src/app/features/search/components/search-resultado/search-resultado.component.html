@@ -1,0 +1,64 @@
+@if (buscando()) {
+  <div
+    [class]="
+      modo() === 'mobile'
+        ? 'bg-white'
+        : 'absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 w-search z-[1500] bg-white rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/6 overflow-hidden animate-[cartDrop_0.18s_ease-out]'
+    "
+  >
+    @if (resultados().length > 0) {
+      <ul class="max-h-72 overflow-y-auto divide-y divide-slate-50">
+        @for (producto of resultados(); track producto.id) {
+          <li class="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors">
+            <div
+              class="h-10 w-10 flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-[#a00691]/10 to-[#eab308]/20 flex items-center justify-center"
+            >
+              @if (producto.imagen) {
+                <img
+                  [src]="producto.imagen"
+                  [alt]="producto.nombre"
+                  class="h-full w-full object-cover"
+                />
+              } @else {
+                <svg
+                  class="h-5 w-5 text-[#a00691]/30"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
+                </svg>
+              }
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-slate-800 truncate">{{ producto.nombre }}</p>
+              <p class="text-xs text-slate-400">S/ {{ producto.precio | number: '1.2-2' }}</p>
+            </div>
+
+            
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="flex flex-col items-center gap-2 py-10 text-center">
+        <svg
+          class="h-10 w-10 text-slate-200"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="M21 21l-4.35-4.35" />
+        </svg>
+        <p class="text-sm font-semibold text-slate-400">Sin resultados</p>
+        <p class="text-xs text-slate-300">
+          No encontramos productos para
+          <span class="font-medium">"{{ query() }}"</span>
+        </p>
+      </div>
+    }
+  </div>
+}

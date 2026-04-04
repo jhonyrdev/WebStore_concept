@@ -1,30 +1,24 @@
-import { Component, input, output } from '@angular/core';
+import { Component, HostListener, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../modal.component';
+import { SearchService } from 'app/features/search/services/search.service';
+import { SearchResultadoComponent } from 'app/features/search/components/search-resultado/search-resultado.component';
 
 @Component({
   selector: 'app-search-modal',
   standalone: true,
-  imports: [FormsModule, ModalComponent],
+  imports: [FormsModule, ModalComponent, SearchResultadoComponent],
   templateUrl: './search-modal.component.html',
   styleUrl: './search-modal.component.css',
 })
 export class SearchModalComponent {
-   isOpen  = input.required<boolean>();
-  closed  = output<void>();
-  searched = output<string>();
+  isOpen = input.required<boolean>();
+  closed = output<void>();
 
-  query = '';
-
-  onSubmit(event: Event): void {
-    event.preventDefault();
-    if (!this.query.trim()) return;
-    this.searched.emit(this.query.trim());
-    this.closed.emit();
-  }
-
+  searchService = inject(SearchService);
+  
   onClose(): void {
-    this.query = '';
+    this.searchService.limpiarMobile();
     this.closed.emit();
   }
 }

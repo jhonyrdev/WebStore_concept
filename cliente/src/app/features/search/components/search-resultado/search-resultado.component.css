@@ -1,0 +1,3 @@
+.w-search {
+  width: clamp(5.75rem, 50vw, 30rem);
+}

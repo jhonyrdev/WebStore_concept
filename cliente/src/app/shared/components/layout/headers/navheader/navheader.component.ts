@@ -1,9 +1,13 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarCategoriaComponent } from '../../../../../features/categories/components/sidebar-categoria/sidebar-categoria.component';
 import { SidebarMobileComponent } from '../../sidebars/sidebar-mobile/sidebar-mobile.component';
 import { SearchModalComponent } from '../../../ui/modal/search-modal/search-modal.component';
+import { CartComponent } from 'app/features/cart/components/cart/cart.component';
+import { CartService } from 'app/features/cart/services/cart.service';
+import { SearchService } from 'app/features/search/services/search.service';
+import { SearchResultadoComponent } from "app/features/search/components/search-resultado/search-resultado.component";
 
 @Component({
   selector: 'app-navheader',
@@ -14,16 +18,19 @@ import { SearchModalComponent } from '../../../ui/modal/search-modal/search-moda
     SidebarCategoriaComponent,
     SidebarMobileComponent,
     SearchModalComponent,
-  ],
+    CartComponent,
+    SearchResultadoComponent
+],
   templateUrl: './navheader.component.html',
   styleUrl: './navheader.component.css',
 })
 export class NavheaderComponent {
+
+  searchService = inject(SearchService);
+
   isMenuOpen = signal(false);
   isMobileMenuOpen = signal(false);
   isSearchOpen = signal(false);
-  cartCount = signal(3);
-  searchQuery = signal('');
   isAccountOpen = signal(false);
 
   toggleMenu(): void {
@@ -32,22 +39,18 @@ export class NavheaderComponent {
   toggleMobileMenu(): void {
     this.isMobileMenuOpen.update((v) => !v);
   }
+  
   toggleSearch(): void {
-    this.isSearchOpen.update((v) => !v);
+  this.isSearchOpen.update((v) => !v);
+  if (!this.isSearchOpen()) {
+    this.searchService.limpiarMobile();
   }
+}
 
   readonly isCartOpen = signal(false);
 
-  toggleCart() {
-    this.isCartOpen.update((v) => !v);
-  }
-
-  onSearch(event: Event): void {
-    event.preventDefault();
-    const q = this.searchQuery().trim();
-    if (!q) return;
-    console.log('Buscando:', q);
-  }
+  private cartService = inject(CartService);
+  cartCount = this.cartService.totalItems;
 
    toggleAccount() {
     this.isAccountOpen.set(!this.isAccountOpen());
