@@ -3,6 +3,7 @@ import { SliderComponent, ProductCardComponent } from '@shared/components/ui';
 import { SkeletonProductoComponent } from '@shared-Component-Common/skeleton/skeleton-producto/skeleton-producto.component';
 import { Producto } from '../../models/product.model';
 import { ProductoService } from '../../services/producto.service';
+import { CartService } from '@features/cart/services/cart.service';
 
 @Component({
   selector: 'app-product-section',
@@ -11,12 +12,10 @@ import { ProductoService } from '../../services/producto.service';
   templateUrl: './product-section.component.html'
 })
 export class ProductSectionComponent {
-  productService = inject(ProductoService)
-  //cartService    = inject(CartService)
-  //toastService   = inject(ToastService)
+  productService = inject(ProductoService);
+  private cartService = inject(CartService);
 
-  onAddToCart(product: Producto) {
-    //this.cartService.add(product)
-    //this.toastService.show(`${product.nombre} agregado`)
+  onAddToCart(product: Producto): void {
+    this.cartService.agregarProducto(product);
   }
 }

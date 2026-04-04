@@ -1,33 +1,43 @@
-<app-modal [isOpen]="isOpen()" (closed)="onClose()">
-
-  <div class="flex items-center h-14 px-4 gap-3" role="search">
-
-    <svg class="w-5 h-5 text-[#a00691] shrink-0"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <circle cx="11" cy="11" r="8"/>
-      <path d="M21 21l-4.35-4.35"/>
-    </svg>
-
-    <input
-      type="search"
-      class="flex-1 border-none outline-none text-base text-[#303030]
-             placeholder:text-[#747474] bg-transparent
-             [&::-webkit-search-cancel-button]:appearance-none"
-      placeholder="¿Qué estás buscando?"
-      [(ngModel)]="query"
-      autocomplete="off"
-      autofocus
-      aria-label="Buscar productos"
-    />
-
-    <button type="button" class="p-1 text-[#a00691]"
-            (click)="onClose()" aria-label="Cerrar">
-      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2.5">
-        <path d="M18 6L6 18M6 6l12 12"/>
+<app-modal [isOpen]="isOpen()" 
+  [closeOnScroll]="true"
+  [closeOnBackdrop]="true"
+  (closed)="onClose()">
+  <div class="relative">
+    <div class="flex items-center h-14 px-4 gap-3" role="search">
+      <svg
+        class="w-5 h-5 text-[#a00691] shrink-0"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <path d="M21 21l-4.35-4.35" />
       </svg>
-    </button>
 
+      <input
+        class="flex-1 border-none outline-none text-base text-[#303030] placeholder:text-[#747474] bg-transparent [&::-webkit-search-cancel-button]:appearance-none"
+        placeholder="¿Qué estás buscando?"
+        type="search"
+        [ngModel]="searchService.queryMobile()"
+  (ngModelChange)="searchService.queryMobile.set($event)"
+        autocomplete="off"
+        autofocus
+        aria-label="Buscar productos"
+      />
+
+      <button type="button" class="p-1 text-[#a00691]" (click)="onClose()" aria-label="Cerrar">
+        <svg
+          class="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <app-search-resultado modo="mobile" />
   </div>
-
 </app-modal>

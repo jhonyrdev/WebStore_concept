@@ -1,7 +1,6 @@
 <header class="bg-[#a00691]">
   <nav
-    class="flex items-center h-14 text-title-font text-white sticky top-0 z-[1000] container
-           gap-4 md:gap-4"
+    class="flex items-center h-14 text-title-font text-white sticky top-0 z-[1000] container gap-4 md:gap-4"
   >
     <!-- ══════════ MOBILE LAYOUT (< md) ══════════ -->
     <div class="flex md:hidden items-center gap-1 shrink-0">
@@ -10,7 +9,13 @@
         (click)="toggleMobileMenu()"
         aria-label="Abrir menú"
       >
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <svg
+          class="w-6 h-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
           <line x1="3" y1="6" x2="21" y2="6" />
           <line x1="3" y1="12" x2="21" y2="12" />
           <line x1="3" y1="18" x2="21" y2="18" />
@@ -22,7 +27,13 @@
         (click)="toggleSearch()"
         aria-label="Buscar"
       >
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <svg
+          class="w-6 h-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
           <circle cx="11" cy="11" r="8" />
           <path d="M21 21l-4.35-4.35" />
         </svg>
@@ -30,42 +41,17 @@
     </div>
     <div class="flex md:hidden flex-1 justify-center">
       <a href="/" class="no-underline leading-none" aria-label="Inicio">
-        <img
-          src="assets/img/logo/logoMobileSecundario.webp"
-          alt="Tambito+"
-          class="h-8 w-auto"
-        />
+        <img src="assets/img/logo/logoMobileSecundario.webp" alt="Tambito+" class="h-8 w-auto" />
       </a>
     </div>
     <div class="flex md:hidden items-center shrink-0">
-      <button
-        (click)="toggleCart()"
-        class="flex items-center text-white cursor-pointer p-1.5 rounded-md transition-colors hover:bg-white/10 relative"
-        aria-label="Carrito de compras"
-      >
-        <div class="relative">
-          <svg class="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <path d="M16 10a4 4 0 01-8 0" />
-          </svg>
-          @if (cartCount() > 0) {
-            <span class="absolute -top-[7px] -right-2 bg-[#eab308] text-white text-[0.65rem] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-[3px] shadow leading-none">
-              {{ cartCount() }}
-            </span>
-          }
-        </div>
-      </button>
+      <app-cart variant="mobile" />
     </div>
 
     <!-- ══════════ DESKTOP LAYOUT (md+) ══════════ -->
     <div class="hidden md:flex items-center gap-3 shrink-0">
       <a href="/" class="no-underline leading-none tracking-tight" aria-label="Inicio">
-        <img
-          src="assets/img/logo/logoAlternativo.webp"
-          alt="Tambito+"
-          class="h-8 w-auto"
-        />
+        <img src="assets/img/logo/logoAlternativo.webp" alt="Tambito+" class="h-8 w-auto" />
       </a>
 
       <button
@@ -73,7 +59,13 @@
         (click)="toggleMenu()"
         aria-label="Abrir categorías"
       >
-        <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <svg
+          class="w-5 h-5 shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
           <line x1="3" y1="6" x2="21" y2="6" />
           <line x1="3" y1="12" x2="21" y2="12" />
           <line x1="3" y1="18" x2="21" y2="18" />
@@ -90,12 +82,13 @@
           type="search"
           class="flex-1 border-none outline-none px-4 text-sm text-[#303030] bg-transparent h-full placeholder:text-[#747474] [&::-webkit-search-cancel-button]:appearance-none"
           placeholder="¿Qué estás buscando?"
-          [ngModel]="searchQuery()"
-          (ngModelChange)="searchQuery.set($event)"
+          [ngModel]="searchService.queryDesktop()"
+          (ngModelChange)="searchService.queryDesktop.set($event)"
           autocomplete="off"
           aria-label="Buscar productos"
         />
       </div>
+      <app-search-resultado modo="desktop" />
     </div>
 
     <div class="hidden md:flex items-center gap-1 shrink-0">
@@ -104,7 +97,13 @@
         id="nav-account"
         (click)="toggleAccount()"
       >
-        <svg class="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg
+          class="w-[22px] h-[22px]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
           <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
           <circle cx="12" cy="7" r="4" />
         </svg>
@@ -113,47 +112,43 @@
           <svg
             class="w-3.5 h-3.5 transition-transform duration-200"
             [class.rotate-180]="isAccountOpen()"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
           >
             <path d="M6 9l6 6 6-6" />
           </svg>
         </div>
 
         @if (isAccountOpen()) {
-          <div class="absolute top-[calc(100%+6px)] right-0 bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.15)] min-w-[180px] py-2 overflow-hidden animate-[dropdownFade_0.18s_ease]">
-            <a href="/" class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]">
+          <div
+            class="absolute top-[calc(100%+6px)] right-0 bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.15)] min-w-[180px] py-2 overflow-hidden animate-[dropdownFade_0.18s_ease]"
+          >
+            <a
+              href="/"
+              class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]"
+            >
               Iniciar sesión
             </a>
             <div class="h-px bg-[#fde68a] my-1"></div>
-            <a href="/perfil" class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]">
+            <a
+              href="/perfil"
+              class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]"
+            >
               Mi perfil
             </a>
-            <a href="/pedidos" class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]">
+            <a
+              href="/pedidos"
+              class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]"
+            >
               Mis pedidos
             </a>
           </div>
         }
       </div>
 
-      <button
-        (click)="toggleCart()"
-        class="flex items-center text-white cursor-pointer px-2 py-1.5 rounded-md transition-colors hover:bg-white/10 relative"
-        id="nav-cart"
-        aria-label="Carrito de compras"
-      >
-        <div class="relative">
-          <svg class="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <path d="M16 10a4 4 0 01-8 0" />
-          </svg>
-          @if (cartCount() > 0) {
-            <span class="absolute -top-[7px] -right-2 bg-[#eab308] text-white text-[0.65rem] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-[3px] shadow leading-none">
-              {{ cartCount() }}
-            </span>
-          }
-        </div>
-      </button>
+      <app-cart variant="desktop" />
     </div>
   </nav>
 </header>
@@ -169,4 +164,7 @@
 </div>
 
 <!-- Modal de búsqueda mobile -->
-<app-search-modal [isOpen]="isSearchOpen()" (closed)="toggleSearch()" />
+<app-search-modal 
+  [isOpen]="isSearchOpen()" 
+  (closed)="toggleSearch()" 
+/>
