@@ -1,5 +1,5 @@
 import { NgClass, DecimalPipe } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { Producto } from '../../../../../features/product/models/product.model';
 
 @Component({
@@ -11,5 +11,10 @@ import { Producto } from '../../../../../features/product/models/product.model';
 })
 export class ProductCardComponent {
   @Input({ required: true }) product!: Producto;
+  @Input() variant: 'grid' | 'slider' = 'grid';
   @Output() addToCart = new EventEmitter<Producto>();
+
+  @HostBinding('class.is-slider') get isSlider() { return this.variant === 'slider'; }
+  @HostBinding('class.is-grid')   get isGrid()   { return this.variant === 'grid'; }
 }
+

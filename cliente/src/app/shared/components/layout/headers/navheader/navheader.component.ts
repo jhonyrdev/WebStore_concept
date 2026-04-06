@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { SidebarCategoriaComponent } from '../../../../../features/categories/components/sidebar-categoria/sidebar-categoria.component';
 import { SidebarMobileComponent } from '../../sidebars/sidebar-mobile/sidebar-mobile.component';
 import { SearchModalComponent } from '../../../ui/modal/search-modal/search-modal.component';
-import { CartComponent } from 'app/features/cart/components/cart/cart.component';
-import { CartService } from 'app/features/cart/services/cart.service';
-import { SearchService } from 'app/features/search/services/search.service';
-import { SearchResultadoComponent } from "app/features/search/components/search-resultado/search-resultado.component";
+import { CartComponent } from '@features/cart/components/cart/cart.component';
+import { CartService } from '@features/cart/services/cart.service';
+import { SearchService } from '@features/search/services/search.service';
+import { SearchResultadoComponent } from "@features/search/components/search-resultado/search-resultado.component";
 
 @Component({
   selector: 'app-navheader',

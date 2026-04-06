@@ -1,0 +1,214 @@
+<!-- ── MOBILE TOOLBAR ── visible solo en mobile/tablet -->
+<div class="flex flex-col lg:hidden">
+  <!-- Fila 1: Categorías horizontales con scroll -->
+  <div class="overflow-x-auto scrollbar-hide border-b border-gray-100">
+    <div class="flex gap-2 px-4 py-3 w-max">
+      <!-- Ver todo -->
+      <button
+        (click)="catalog.selectTodo()"
+        class="shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors"
+        [class.bg-fuchsia-900]="catalog.categoriaId() === null"
+        [class.text-white]="catalog.categoriaId() === null"
+        [class.border-fuchsia-900]="catalog.categoriaId() === null"
+        [class.bg-white]="catalog.categoriaId() !== null"
+        [class.text-gray-600]="catalog.categoriaId() !== null"
+        [class.border-gray-200]="catalog.categoriaId() !== null"
+      >
+        Ver todo
+      </button>
+
+      @for (cat of catalog.categorias(); track cat.id) {
+        <button
+          (click)="catalog.selectCategoria(cat.id)"
+          class="shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors"
+          [class.bg-fuchsia-900]="catalog.categoriaId() === cat.id"
+          [class.text-white]="catalog.categoriaId() === cat.id"
+          [class.border-fuchsia-900]="catalog.categoriaId() === cat.id"
+          [class.bg-white]="catalog.categoriaId() !== cat.id"
+          [class.text-gray-600]="catalog.categoriaId() !== cat.id"
+          [class.border-gray-200]="catalog.categoriaId() !== cat.id"
+        >
+          {{ cat.nombre }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Fila 2: Botones Filtrar + Ordenar -->
+  <div class="flex border-b border-gray-100">
+    <button
+      (click)="showFiltros.set(true)"
+      class="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors border-r border-gray-100"
+    >
+      <!-- icono filtrar -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-4 h-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 4h18M7 8h10M11 12h2M9 16h6" />
+      </svg>
+      Filtrar
+      @if (catalog.activeFilterCount() > 0) {
+        <span
+          class="bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+        >
+          {{ catalog.activeFilterCount() }}
+        </span>
+      }
+    </button>
+
+    <button
+      (click)="showOrdenar.set(true)"
+      class="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+    >
+      <!-- icono ordenar -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-4 h-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3 7h5m0 0V3m0 4L4 11M16 17h5m0 0v4m0-4l-4 4M8 12h8"
+        />
+      </svg>
+      Ordenar
+    </button>
+  </div>
+</div>
+
+<!-- ══ DRAWER LATERAL: FILTROS ══ -->
+@if (showFiltros()) {
+  <!-- Backdrop -->
+  <app-sidebar-shell
+  [isOpen]="showFiltros()"
+  title="Filtros"
+  (toggle)="closeFiltros()"
+  class="lg:hidden"
+>
+
+    <!-- Contenido scrollable -->
+    <div class="overflow-y-auto flex-1 px-5 pb-6">
+
+      @if (catalog.activeFilterCount() > 0) {
+      <div class="flex justify-end pt-3">
+        <button
+          (click)="catalog.clearFilters()"
+          class="text-xs text-fuchsia-900 hover:text-fuchsia-700 font-medium"
+        >
+          Limpiar ({{ catalog.activeFilterCount() }})
+        </button>
+      </div>
+    }
+
+      <!-- Sub-Categoría 
+      @if (catalog.hasSubCategorias()) {
+        <div class="border-b border-gray-100">
+          <button
+            (click)="toggleSection('subcategoria')"
+            class="w-full flex items-center justify-between py-3 text-sm font-medium
+                   text-gray-800 hover:text-red-600 transition-colors"
+          >
+            <span>Sub-Categoría</span>
+            <svg class="w-4 h-4 transition-transform duration-200"
+                 [class.rotate-180]="isSectionOpen('subcategoria')"
+                 xmlns="http://www.w3.org/2000/svg" fill="none"
+                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+            </svg>
+          </button>
+          @if (isSectionOpen('subcategoria')) {
+            <div class="pb-3 space-y-0.5">
+              @for (sub of catalog.subCategorias(); track sub.id) {
+                <button
+                  (click)="catalog.selectSubCategoria(sub.id)"
+                  class="w-full text-left px-2 py-1.5 rounded-lg text-sm text-gray-600
+                         hover:bg-gray-50 transition-colors"
+                  [class.bg-red-50]="catalog.subCategoriaId() === sub.id"
+                  [class.text-red-600]="catalog.subCategoriaId() === sub.id"
+                  [class.font-semibold]="catalog.subCategoriaId() === sub.id"
+                >
+                  {{ sub.nombre }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }-->
+
+      <!-- Marca 
+      @if (catalog.hasMarcas()) {
+        <div class="border-b border-gray-100">
+          <button
+            (click)="toggleSection('marca')"
+            class="w-full flex items-center justify-between py-3 text-sm font-medium
+                   text-gray-800 hover:text-red-600 transition-colors"
+          >
+            <span>Marca</span>
+            <svg class="w-4 h-4 transition-transform duration-200"
+                 [class.rotate-180]="isSectionOpen('marca')"
+                 xmlns="http://www.w3.org/2000/svg" fill="none"
+                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+            </svg>
+          </button>
+          @if (isSectionOpen('marca')) {
+            <div class="pb-3 space-y-0.5">
+              @for (marca of catalog.marcas(); track marca.id) {
+                <button
+                  (click)="catalog.selectMarca(marca.id)"
+                  class="w-full text-left px-2 py-1.5 rounded-lg text-sm text-gray-600
+                         hover:bg-gray-50 transition-colors"
+                  [class.bg-red-50]="catalog.marcaId() === marca.id"
+                  [class.text-red-600]="catalog.marcaId() === marca.id"
+                  [class.font-semibold]="catalog.marcaId() === marca.id"
+                >
+                  {{ marca.nombre }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }-->
+    </div>
+  </app-sidebar-shell>
+}
+
+<!-- ══ BOTTOM SHEET: ORDENAR ══ -->
+@if (showOrdenar()) {
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/40 z-40 lg:hidden" (click)="closeOrdenar()"></div>
+
+  <!-- Sheet -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-xl lg:hidden">
+    <!-- Handle + header -->
+    <div class="relative flex items-center justify-center px-5 pt-4 pb-3 border-b border-gray-100">
+      <div class="w-10 h-1 bg-gray-300 rounded-full absolute top-2 left-1/2 -translate-x-1/2"></div>
+      <h3 class="font-semibold text-gray-900">Ordenar por</h3>
+    </div>
+
+    <!-- Opciones -->
+    <div class="px-5 py-3 pb-8 space-y-1">
+      @for (opt of sortOptions; track opt.value) {
+        <button
+          (click)="catalog.sortOrder.set($any(opt.value)); closeOrdenar()"
+          class="w-full text-left px-4 py-3 rounded-xl text-sm transition-colors"
+          [class.text-fuchsia-900]="catalog.sortOrder() === opt.value"
+          [class.font-semibold]="catalog.sortOrder() === opt.value"
+          [class.text-gray-700]="catalog.sortOrder() !== opt.value"
+          [class.hover:bg-gray-50]="catalog.sortOrder() !== opt.value"
+        >
+          {{ opt.label }}
+        </button>
+      }
+    </div>
+  </div>
+}

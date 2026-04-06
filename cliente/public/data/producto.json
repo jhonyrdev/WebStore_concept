@@ -1,23 +1,26 @@
 [
-  {
-    "id": 1,
-    "nombre": "Coca Cola 600ml",
-    "stock": 10,
-    "precio": 3.80,
-    "categoriaId": 5
-  },
-  {
-    "id": 2,
-    "nombre": "Empanada de pollo",
-    "stock": 4,
-    "precio": 3.50,
-    "categoriaId": 4
-  },
-  {
-    "id": 3,
-    "nombre": "Galleta 60gm",
-    "stock": 10,
-    "precio": 1.80,
-    "categoriaId": 6
-  }
+  { "id": 1, "nombre": "Coca Cola 600ml", "stock": 10, "precio": 3.80, "categoriaId": 5 },
+  { "id": 2, "nombre": "Empanada de pollo", "stock": 4, "precio": 3.50, "categoriaId": 4 },
+  { "id": 3, "nombre": "Galleta 60gm", "stock": 10, "precio": 1.80, "categoriaId": 6 },
+
+  { "id": 4, "nombre": "Cerveza Pilsen 330ml", "stock": 24, "precio": 4.50, "categoriaId": 1 },
+  { "id": 5, "nombre": "Cerveza Cusqueña 620ml", "stock": 18, "precio": 6.00, "categoriaId": 1 },
+
+  { "id": 6, "nombre": "Smirnoff Ice Limón", "stock": 12, "precio": 7.50, "categoriaId": 2 },
+  { "id": 7, "nombre": "Brutal Fruit Fresa", "stock": 10, "precio": 7.00, "categoriaId": 2 },
+
+  { "id": 8, "nombre": "Ron Cartavio 750ml", "stock": 6, "precio": 32.00, "categoriaId": 3 },
+  { "id": 9, "nombre": "Whisky Old Times 750ml", "stock": 5, "precio": 45.00, "categoriaId": 3 },
+
+  { "id": 10, "nombre": "Salchipapa personal", "stock": 8, "precio": 7.00, "categoriaId": 4 },
+
+  { "id": 11, "nombre": "Agua San Luis 625ml", "stock": 30, "precio": 1.50, "categoriaId": 5 },
+
+  { "id": 12, "nombre": "Chifles 40gm", "stock": 15, "precio": 2.00, "categoriaId": 6 },
+
+  { "id": 13, "nombre": "Helado Donofrio Vainilla", "stock": 10, "precio": 3.00, "categoriaId": 7 },
+  { "id": 14, "nombre": "Helado Sublime Paleta", "stock": 8, "precio": 2.50, "categoriaId": 7 },
+
+  { "id": 15, "nombre": "Arroz Costeño 1kg", "stock": 20, "precio": 4.20, "categoriaId": 8 },
+  { "id": 16, "nombre": "Aceite Primor 500ml", "stock": 15, "precio": 6.50, "categoriaId": 8 }
 ]

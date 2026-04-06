@@ -45,9 +45,13 @@
   --text-secondary: #d4d4d4;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
 .container {
-  width: min(1600px, 95%);
-  margin-inline: auto;
+  margin: 0 auto;
   padding-inline: clamp(1rem, 2vw, 2rem);
 }
 

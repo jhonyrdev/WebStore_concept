@@ -1,0 +1,155 @@
+<div class="bg-white rounded-xl border border-gray-200 sticky top-20 h-full overflow-hidden">
+  <!-- Tabs -->
+  <div class="flex border-b border-gray-200">
+    <button
+      (click)="activeTab.set('categorias')"
+      class="flex-1 py-3 text-sm font-semibold transition-colors"
+      [class.text-fuchsia-900]="activeTab() === 'categorias'"
+      [class.border-b-2]="activeTab() === 'categorias'"
+      [class.border-fuchsia-900]="activeTab() === 'categorias'"
+      [class.text-gray-500]="activeTab() !== 'categorias'"
+    >
+      Categorías
+    </button>
+    <button
+      (click)="activeTab.set('filtros')"
+      class="flex-1 py-3 text-sm font-semibold transition-colors relative"
+      [class.text-fuchsia-900]="activeTab() === 'filtros'"
+      [class.border-b-2]="activeTab() === 'filtros'"
+      [class.border-fuchsia-900]="activeTab() === 'filtros'"
+      [class.text-gray-500]="activeTab() !== 'filtros'"
+    >
+      Filtros
+      @if (catalog.activeFilterCount() > 0) {
+        <span class="ml-1 text-xs bg-fuchsia-500 text-white rounded-full px-1.5 py-0.5">
+          {{ catalog.activeFilterCount() }}
+        </span>
+      }
+    </button>
+  </div>
+
+  <!-- ── TAB: CATEGORÍAS ── -->
+  @if (activeTab() === 'categorias') {
+    <div class="p-3">
+      @if (catalog.hasCategorias()) {
+        <div class="space-y-0.5">
+          <button
+            (click)="catalog.selectTodo()"
+            class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors border-l-2 hover:bg-gray-50"
+            [class.border-fuchsia-900]="catalog.categoriaId() === null"
+            [class.text-fuchsia-900]="catalog.categoriaId() === null"
+            [class.font-semibold]="catalog.categoriaId() === null"
+            [class.border-transparent]="catalog.categoriaId() !== null"
+            [class.text-gray-600]="catalog.categoriaId() !== null"
+          >
+            Ver todo
+          </button>
+          @for (cat of catalog.categorias(); track cat.id) {
+            <button
+              (click)="catalog.selectCategoria(cat.id)"
+              class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors border-l-2 hover:bg-gray-50"
+              [class.border-fuchsia-900]="catalog.categoriaId() === cat.id"
+              [class.text-fuchsia-900]="catalog.categoriaId() === cat.id"
+              [class.font-semibold]="catalog.categoriaId() === cat.id"
+              [class.border-transparent]="catalog.categoriaId() !== cat.id"
+              [class.text-gray-600]="catalog.categoriaId() !== cat.id"
+            >
+              {{ cat.nombre }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── TAB: FILTROS ── -->
+  @if (activeTab() === 'filtros') {
+    <div class="p-3">
+      <!-- Limpiar filtros -->
+      @if (catalog.activeFilterCount() > 0) {
+        <div class="flex justify-end mb-2">
+          <button
+            (click)="catalog.clearFilters()"
+            class="text-xs text-fuchsia-500 hover:text-fuchsia-700 font-medium transition-colors"
+          >
+            Limpiar ({{ catalog.activeFilterCount() }})
+          </button>
+        </div>
+      }
+
+      <!-- Sub-Categoría 
+      @if (catalog.hasSubCategorias()) {
+        <div class="border-b border-gray-100">
+          <button
+            (click)="toggleSection('subcategoria')"
+            class="w-full flex items-center justify-between py-3 text-sm font-medium text-gray-800 hover:text-red-600 transition-colors"
+          >
+            <span>Sub-Categoría</span>
+            <svg
+              class="w-4 h-4 transition-transform duration-200"
+              [class.rotate-180]="isSectionOpen('subcategoria')"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+            </svg>
+          </button>
+
+          @if (isSectionOpen('subcategoria')) {
+            <div class="pb-3 space-y-0.5">
+              @for (sub of catalog.subCategorias(); track sub.id) {
+                <button
+                  (click)="catalog.selectSubCategoria(sub.id)"
+                  class="w-full text-left px-2 py-1.5 rounded-lg text-sm text-gray-600
+                         hover:bg-gray-50 transition-colors"
+                  [class.bg-red-50]="catalog.subCategoriaId() === sub.id"
+                  [class.text-red-600]="catalog.subCategoriaId() === sub.id"
+                  [class.font-semibold]="catalog.subCategoriaId() === sub.id"
+                >
+                  {{ sub.nombre }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }-->
+
+      <!-- Marca 
+      @if (catalog.hasMarcas()) {
+        <div class="border-b border-gray-100">
+          <button
+            (click)="toggleSection('marca')"
+            class="w-full flex items-center justify-between py-3 text-sm font-medium text-gray-800 hover:text-red-600 transition-colors"
+          >
+            <span>Marca</span>
+            <svg
+              class="w-4 h-4 transition-transform duration-200"
+              [class.rotate-180]="isSectionOpen('marca')"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+            </svg>
+          </button>
+
+          @if (isSectionOpen('marca')) {
+            <div class="pb-3 space-y-0.5">
+              @for (marca of catalog.marcas(); track marca.id) {
+                <button
+                  (click)="catalog.selectMarca(marca.id)"
+                  class="w-full text-left px-2 py-1.5 rounded-lg text-sm text-gray-600
+                         hover:bg-gray-50 transition-colors"
+                  [class.bg-red-50]="catalog.marcaId() === marca.id"
+                  [class.text-red-600]="catalog.marcaId() === marca.id"
+                  [class.font-semibold]="catalog.marcaId() === marca.id"
+                >
+                  {{ marca.nombre }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }-->
+    </div>
+  }
+</div>

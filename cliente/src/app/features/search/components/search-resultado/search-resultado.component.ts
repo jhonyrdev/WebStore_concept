@@ -1,7 +1,7 @@
 import { Component, computed, HostListener, inject, input } from '@angular/core';
 import { SearchService } from '../../services/search.service';
-import { CartService } from 'app/features/cart/services/cart.service';
-import { Producto } from 'app/features/product/models/product.model';
+import { CartService } from '@features/cart/services/cart.service';
+import { Producto } from '@features/product/models/product.model';
 import { CommonModule, DecimalPipe } from '@angular/common';
 
 @Component({

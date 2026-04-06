@@ -14,7 +14,7 @@ readonly currentYear = new Date().getFullYear();
     { label: 'Términos y condiciones', href: '/terminos' },
     { label: 'Política de privacidad', href: '/privacidad' },
     { label: 'Preguntas frecuentes', href: '/faq' },
-    { label: 'Contacto', href: '/contacto' },
+    { label: 'Libro de Reclamaciones', href: '/LibroReclamaciones' },
   ];
  
   readonly redes = [

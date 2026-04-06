@@ -3,9 +3,9 @@
 } @else if (productService.error()) {
   <p class="text-center text-red-500">{{ productService.error() }}</p>
 } @else {
-  <app-slider title="Productos Destacados" [showControls]="false" mode="loop">
-    @for (product of productService.products(); track product.id) {
-      <app-product-card [product]="product" (addToCart)="onAddToCart($event)" />
+  <app-slider title="Productos Destacados" [showControls]="true" mode="loop">
+    @for (product of productService.products().slice(0, 8); track product.id) {
+      <app-product-card [product]="product" (addToCart)="onAddToCart($event)" variant="slider" />
     }
   </app-slider>
 }

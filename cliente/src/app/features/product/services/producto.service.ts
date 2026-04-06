@@ -23,7 +23,7 @@ export class ProductoService {
 
     this.api.get<Producto[]>(this.url).subscribe({
       next: (data) => {
-        this.products.set(data);
+        this.products.set(data.filter((p) => p.stock > 0));
         this.isLoading.set(false);
       },
       error: (err) => {

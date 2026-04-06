@@ -1,8 +1,8 @@
 import { Component, HostListener, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../modal.component';
-import { SearchService } from 'app/features/search/services/search.service';
-import { SearchResultadoComponent } from 'app/features/search/components/search-resultado/search-resultado.component';
+import { SearchService } from '@features/search/services/search.service';
+import { SearchResultadoComponent } from '@features/search/components/search-resultado/search-resultado.component';
 
 @Component({
   selector: 'app-search-modal',

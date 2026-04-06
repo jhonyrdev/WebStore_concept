@@ -1,0 +1,54 @@
+<div class="flex items-center justify-center gap-1">
+
+  <!-- Anterior -->
+  <button
+    (click)="prev()"
+    [disabled]="currentPage() === 1"
+    class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200
+           text-gray-500 hover:bg-gray-50 transition-colors disabled:opacity-40
+           disabled:cursor-not-allowed"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6" />
+    </svg>
+  </button>
+
+  <!-- Páginas -->
+  @for (page of pages(); track $index) {
+    @if (page === '...') {
+      <span class="flex items-center justify-center w-9 h-9 text-sm text-gray-400">
+        ...
+      </span>
+    } @else {
+      <button
+        (click)="goTo(page)"
+        class="flex items-center justify-center w-9 h-9 rounded-lg text-sm
+               border transition-colors"
+        [class.bg-[#a00691]]="currentPage() === page"
+        [class.text-white]="currentPage() === page"
+        [class.border-[#a00691]]="currentPage() === page"
+        [class.border-gray-200]="currentPage() !== page"
+        [class.text-gray-700]="currentPage() !== page"
+        [class.hover:bg-gray-50]="currentPage() !== page"
+      >
+        {{ page }}
+      </button>
+    }
+  }
+
+  <!-- Siguiente -->
+  <button
+    (click)="next()"
+    [disabled]="currentPage() === totalPages()"
+    class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200
+           text-gray-500 hover:bg-gray-50 transition-colors disabled:opacity-40
+           disabled:cursor-not-allowed"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" />
+    </svg>
+  </button>
+
+</div>
