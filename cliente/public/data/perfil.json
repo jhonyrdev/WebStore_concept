@@ -1,0 +1,34 @@
+[
+  { "id": 1,
+    "codigo": "Adm-001",
+    "nombre": "Anonimo Admin",
+    "email": "anonimo.admin@example.com",
+    "telefono": "+51 987654321",
+    "documento": "5846715",
+    "direccion": null,
+    "fechaRegistro": null,
+    "credencial_id": 1
+  },
+  {
+    "id": 2,
+    "codigo": "CLI-001",
+    "nombre": "Juan Pérez",
+    "email": "juan.perez@example.com",
+    "telefono": "+51 987654321",
+    "documento": "5176841",
+    "direccion": "Jesus Maria, Lima, PERU",
+    "fechaRegistro": "2026-04-07",
+    "credencial_id": 2
+  },
+  {
+    "id": 3,
+    "codigo": "CLI-002",
+    "nombre": "Maria Torres",
+    "email": "maria.torres@example.com",
+    "telefono": "+51 597231945",
+    "documento": "8467958",
+    "direccion": "Lince, Lima, PERU",
+    "fechaRegistro": "2026-04-07",
+    "credencial_id": 3
+  }
+]
