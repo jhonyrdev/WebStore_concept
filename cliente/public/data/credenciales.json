@@ -1,0 +1,5 @@
+[
+  { "id": 1, "user": "admin", "password": "password123", "rol_id": 1, "activo": true },
+  { "id": 2, "user": "juan.perez", "password": "password123", "rol_id": 2, "activo": true },
+  { "id": 3, "user": "maria.torres", "password": "password456", "rol_id": 2, "activo": true }
+]
