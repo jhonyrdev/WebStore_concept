@@ -38,11 +38,13 @@
 
   /* Colores generales */
   --color-general-1: #ffffff;
-  --color-general-2: #0f0f0f;
+  --color-general-2: #fffcd3;
 
   /* Texto */
   --text-primary: #f5f5f5;
   --text-secondary: #d4d4d4;
+
+  --color-prueba: #fff7fd;
 }
 
 html, body {

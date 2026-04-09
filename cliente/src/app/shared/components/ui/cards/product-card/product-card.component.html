@@ -1,7 +1,8 @@
 <div [ngClass]="variant === 'slider' 
   ? 'snap-start shrink-0 w-full' 
   : 'h-full'"
-  class="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm flex flex-col">
+  class="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm flex flex-col cursor-pointer"
+  (click)="openDetail()">
 
   <div class="w-full h-44 bg-gray-100 overflow-hidden">
     @if (product.imagen) {
@@ -23,12 +24,12 @@
       {{ product.nombre }}
     </p>
     <p class="font-precio font-regular text-gray-900 mt-1">
-      S/ {{ product.precio | number:'1.2-2' }}
+      {{ formattedPrice }}
     </p>
   </div>
 
   <div class="px-3 pb-3">
-    <button (click)="addToCart.emit(product)"
+    <button (click)="onAddButtonClick($event)"
       class="w-full py-3 rounded-xl font-btn transition-all duration-150 active:scale-95
              bg-transparent text-[#a00691] border border-[#a00691] hover:bg-[#a00691] hover:text-white">
       Agregar
@@ -36,3 +37,12 @@
   </div>
 
 </div>
+
+@if (selectedProduct()) {
+  <app-detail-product
+    [productData]="selectedProduct()"
+    [currency]="currency"
+    (closed)="closeDetail()"
+    (cartAdded)="onDetailCartAdded($event)"
+  ></app-detail-product>
+}

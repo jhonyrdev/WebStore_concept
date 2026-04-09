@@ -95,7 +95,7 @@
       <div
         class="flex items-center gap-1.5 cursor-pointer px-2.5 py-1.5 rounded-md transition-colors hover:bg-white/10 whitespace-nowrap relative select-none"
         id="nav-account"
-        (click)="toggleAccount()"
+        (click)="handleAccountClick()"
       >
         <svg
           class="w-[22px] h-[22px]"
@@ -108,10 +108,12 @@
           <circle cx="12" cy="7" r="4" />
         </svg>
         <div class="flex items-center gap-[0.15rem]">
-          <span class="text-[0.8rem] font-medium">Mi cuenta</span>
+          <span class="text-[0.8rem] font-medium">
+            {{ isLoggedIn() ? 'Mi cuenta' : 'Iniciar sesión' }}
+          </span>
           <svg
             class="w-3.5 h-3.5 transition-transform duration-200"
-            [class.rotate-180]="isAccountOpen()"
+            [class.rotate-180]="isLoggedIn() && isAccountOpen()"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -121,7 +123,7 @@
           </svg>
         </div>
 
-        @if (isAccountOpen()) {
+        @if (isLoggedIn() && isAccountOpen()) {
           <div
             class="absolute top-[calc(100%+6px)] right-0 bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.15)] min-w-[180px] py-2 overflow-hidden animate-[dropdownFade_0.18s_ease]"
           >
@@ -154,17 +156,18 @@
 </header>
 
 <!-- Sidebar categorías — solo md+ -->
-<div class="hidden sm:block">
+<div class="hidden md:block">
   <app-sidebar-categoria [isMenuOpen]="isMenuOpen()" (toggleMenu)="toggleMenu()" />
 </div>
 
 <!-- Sidebar mobile — solo < md -->
-<div class="block sm:hidden">
+<div class="block md:hidden">
   <app-sidebar-mobile [isOpen]="isMobileMenuOpen()" (toggleMenu)="toggleMobileMenu()" />
 </div>
 
 <!-- Modal de búsqueda mobile -->
-<app-search-modal 
-  [isOpen]="isSearchOpen()" 
-  (closed)="toggleSearch()" 
-/>
+<app-search-modal [isOpen]="isSearchOpen()" (closed)="toggleSearch()" />
+
+@if (loginModalOpen()) {
+  <app-auth-form [isOpen]="loginModalOpen()" (closed)="loginModalOpen.set(false)"></app-auth-form>
+}

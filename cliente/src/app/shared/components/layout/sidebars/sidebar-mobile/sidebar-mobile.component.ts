@@ -14,7 +14,7 @@ export class SidebarMobileComponent {
   readonly links = [
     { label: 'Inicio',      href: '/' },
     { label: 'Ofertas',     href: '/ofertas' },
-    { label: 'Categorías',  href: '/categorias' },
+    { label: 'Categorías',  href: '/catalogo' },
     { label: 'Mi perfil',   href: '/perfil' },
   ]
 }

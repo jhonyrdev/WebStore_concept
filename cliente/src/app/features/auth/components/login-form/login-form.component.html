@@ -1,0 +1,91 @@
+<h1 class="text-center text-2xl font-bold text-slate-900 mb-6">
+	Inicia sesión en tu cuenta
+</h1>
+
+<div class="flex flex-col gap-4">
+	<div class="flex flex-col gap-1.5">
+		<label class="text-sm text-slate-600">Correo electrónico</label>
+		<div class="relative">
+			<i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-[#ad88a3]"></i>
+			<input
+				[(ngModel)]="email"
+				type="email"
+				placeholder="tu@correo.com"
+				class="w-full pl-9 pr-4 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691]"
+			/>
+		</div>
+	</div>
+
+	<div class="flex flex-col gap-1.5">
+		<label class="text-sm text-slate-600">Contraseña</label>
+		<div class="relative">
+			<i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-[#ad88a3]"></i>
+			<input
+				[type]="showPassword ? 'text' : 'password'"
+				[(ngModel)]="password"
+				placeholder="••••••••"
+				class="password-field w-full pl-9 pr-10 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691]"
+			/>
+			<button
+				type="button"
+				(click)="showPassword = !showPassword"
+				class="absolute right-3 top-1/2 -translate-y-1/2 text-[#ad88a3] hover:text-slate-700"
+			>
+				<i [class]="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+			</button>
+		</div>
+	</div>
+
+	<div class="flex items-center justify-between text-sm">
+		<label class="flex items-center gap-2 text-slate-600">
+			<input type="checkbox" [(ngModel)]="rememberMe" class="accent-[#b615a6]" />
+			Recuérdame
+		</label>
+		<a href="#" class="text-[#b615a6] hover:text-[#a00691]">
+			¿Olvidaste tu contraseña?
+		</a>
+	</div>
+
+	<button
+		type="button"
+		(click)="onSignIn()"
+		class="w-full py-2.5 rounded-lg text-sm font-semibold text-white bg-[#b615a6] hover:bg-[#a00691] transition flex items-center justify-center gap-2"
+	>
+		<i class="fa-solid fa-arrow-right-to-bracket"></i>
+		Iniciar sesión
+	</button>
+
+	<div class="flex items-center gap-3">
+		<div class="flex-1 h-px bg-slate-200"></div>
+		<span class="text-xs text-slate-400">O continúa con</span>
+		<div class="flex-1 h-px bg-slate-200"></div>
+	</div>
+
+	<div class="grid grid-cols-2 gap-3">
+		<button
+			type="button"
+			(click)="onGoogle()"
+			class="bg-[#fff7fd] border border-[#fae8f5] rounded-lg py-2.5 text-slate-700 hover:bg-[#fae8f5] flex items-center justify-center"
+			aria-label="Continuar con Google"
+			title="Google"
+		>
+			<i class="fa-brands fa-google text-lg" aria-hidden="true"></i>
+		</button>
+		<button
+			type="button"
+			(click)="onOutlook()"
+			class="bg-[#fff7fd] border border-[#fae8f5] rounded-lg py-2.5 text-slate-700 hover:bg-[#fae8f5] flex items-center justify-center"
+			aria-label="Continuar con Outlook"
+			title="Outlook"
+		>
+			<i class="fa-brands fa-microsoft text-lg" aria-hidden="true"></i>
+		</button>
+	</div>
+
+	<p class="text-center text-sm text-slate-600">
+		¿No tienes una cuenta?
+		<button type="button" (click)="goToRegister()" class="text-[#b615a6] hover:text-[#a00691] ml-1">
+			Regístrate ahora
+		</button>
+	</p>
+</div>

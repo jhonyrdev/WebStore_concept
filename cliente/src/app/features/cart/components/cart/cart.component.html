@@ -96,7 +96,7 @@
                 {{ item.producto.nombre }}
               </p>
               <p class="mt-0.5 text-xs text-slate-400">
-                S/ {{ item.producto.precio.toFixed(2) }} c/u
+                {{ formatCurrency(item.producto.precio) }} c/u
               </p>
             </div>
 
@@ -133,7 +133,7 @@
                 </button>
               </div>
               <p class="text-xs font-bold text-[#a00691]">
-                S/ {{ (item.producto.precio * item.cantidad).toFixed(2) }}
+                {{ formatCurrency(item.producto.precio * item.cantidad) }}
               </p>
             </div>
 
@@ -163,15 +163,15 @@
         <div class="border-t border-slate-100 px-5 py-4 space-y-2">
           <div class="flex justify-between text-xs text-slate-500">
             <span>Subtotal</span>
-            <span class="font-medium text-slate-700">S/ {{ subtotal().toFixed(2) }}</span>
+            <span class="font-medium text-slate-700">{{ formatCurrency(subtotal()) }}</span>
           </div>
           <div class="flex justify-between text-xs text-slate-500">
             <span>IGV (18%)</span>
-            <span class="font-medium text-slate-700">S/ {{ igv().toFixed(2) }}</span>
+            <span class="font-medium text-slate-700">{{ formatCurrency(igv()) }}</span>
           </div>
           <div class="flex justify-between rounded-xl bg-[#a00691]/8 px-3 py-2.5">
             <span class="text-sm font-bold text-[#5e0956]">Total</span>
-            <span class="text-sm font-extrabold text-[#a00691]">S/ {{ total().toFixed(2) }}</span>
+            <span class="text-sm font-extrabold text-[#a00691]">{{ formatCurrency(total()) }}</span>
           </div>
         </div>
 

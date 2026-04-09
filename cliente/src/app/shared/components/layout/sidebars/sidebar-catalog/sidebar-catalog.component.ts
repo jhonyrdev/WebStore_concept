@@ -1,6 +1,7 @@
 import { CatalogService } from '@/app/pages/landing/catalogo/services/catalog.service';
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
+import { ScrollLockService } from '@shared/services/scroll-lock.service';
 import { SidebarShellComponent } from '../sidebar-shell/sidebar-shell.component';
 
 @Component({
@@ -12,6 +13,7 @@ import { SidebarShellComponent } from '../sidebar-shell/sidebar-shell.component'
 })
 export class SidebarCatalogComponent {
   protected catalog = inject(CatalogService);
+  private readonly scrollLockService = inject(ScrollLockService);
 
   showFiltros = signal(false);
   showOrdenar = signal(false);
@@ -25,6 +27,20 @@ export class SidebarCatalogComponent {
   ];
 
   private openSections = signal<Set<string>>(new Set());
+
+  constructor() {
+    effect((onCleanup) => {
+      if (!this.showOrdenar()) {
+        return;
+      }
+
+      this.scrollLockService.lock();
+
+      onCleanup(() => {
+        this.scrollLockService.unlock();
+      });
+    });
+  }
 
   isSectionOpen(section: string): boolean {
     return this.openSections().has(section);

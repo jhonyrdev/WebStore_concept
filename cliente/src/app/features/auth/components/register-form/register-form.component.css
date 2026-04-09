@@ -1,0 +1,16 @@
+:host {
+	display: block;
+	width: 100%;
+}
+
+.password-field::-ms-reveal,
+.password-field::-ms-clear {
+	display: none;
+}
+
+.password-field::-webkit-credentials-auto-fill-button,
+.password-field::-webkit-password-toggle-button {
+	display: none !important;
+	visibility: hidden;
+	pointer-events: none;
+}
