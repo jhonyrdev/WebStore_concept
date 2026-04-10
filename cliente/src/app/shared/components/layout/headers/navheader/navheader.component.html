@@ -9,17 +9,7 @@
         (click)="toggleMobileMenu()"
         aria-label="Abrir menú"
       >
-        <svg
-          class="w-6 h-6"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-        >
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
+        <i class="fa-solid fa-bars font-icon" aria-hidden="true"></i>
       </button>
 
       <button
@@ -27,16 +17,7 @@
         (click)="toggleSearch()"
         aria-label="Buscar"
       >
-        <svg
-          class="w-6 h-6"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="M21 21l-4.35-4.35" />
-        </svg>
+        <i class="fa-solid fa-magnifying-glass font-icon" aria-hidden="true"></i>
       </button>
     </div>
     <div class="flex md:hidden flex-1 justify-center">
@@ -59,17 +40,7 @@
         (click)="toggleMenu()"
         aria-label="Abrir categorías"
       >
-        <svg
-          class="w-5 h-5 shrink-0"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-        >
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
+        <i class="fa-solid fa-bars text-[1.1rem] shrink-0" aria-hidden="true"></i>
         <span>Categorias</span>
       </button>
     </div>
@@ -97,30 +68,16 @@
         id="nav-account"
         (click)="handleAccountClick()"
       >
-        <svg
-          class="w-[22px] h-[22px]"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
+        <i class="fa-regular fa-user text-[1.2rem]" aria-hidden="true"></i>
         <div class="flex items-center gap-[0.15rem]">
           <span class="text-[0.8rem] font-medium">
             {{ isLoggedIn() ? 'Mi cuenta' : 'Iniciar sesión' }}
           </span>
-          <svg
-            class="w-3.5 h-3.5 transition-transform duration-200"
+          <i
+            class="fa-solid fa-chevron-down text-[0.7rem] transition-transform duration-200"
             [class.rotate-180]="isLoggedIn() && isAccountOpen()"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+            aria-hidden="true"
+          ></i>
         </div>
 
         @if (isLoggedIn() && isAccountOpen()) {
@@ -128,7 +85,7 @@
             class="absolute top-[calc(100%+6px)] right-0 bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.15)] min-w-[180px] py-2 overflow-hidden animate-[dropdownFade_0.18s_ease]"
           >
             <a
-              href="/cerrar-sesion"
+              (click)="onLogout($event)"
               class="block px-[1.1rem] py-2.5 text-[#4e4e4e] no-underline text-[0.85rem] transition-colors hover:text-[#5e0956]"
             >
               Cerrar Sesión
@@ -162,12 +119,17 @@
 
 <!-- Sidebar mobile — solo < md -->
 <div class="block md:hidden">
-  <app-sidebar-mobile [isOpen]="isMobileMenuOpen()" (toggleMenu)="toggleMobileMenu()" />
+  <app-sidebar-mobile
+    [isOpen]="isMobileMenuOpen()"
+    [isLoggedIn]="isLoggedIn()"
+    (toggleMenu)="toggleMobileMenu()"
+    (joinClick)="openLoginFromMobile()"
+  />
 </div>
 
 <!-- Modal de búsqueda mobile -->
 <app-search-modal [isOpen]="isSearchOpen()" (closed)="toggleSearch()" />
 
 @if (loginModalOpen()) {
-  <app-auth-form [isOpen]="loginModalOpen()" (closed)="loginModalOpen.set(false)"></app-auth-form>
+  <app-auth-form [isOpen]="loginModalOpen()" (closed)="closeLoginModal()"></app-auth-form>
 }

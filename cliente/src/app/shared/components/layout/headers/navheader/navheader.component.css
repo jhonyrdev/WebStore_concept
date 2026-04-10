@@ -11,3 +11,7 @@
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+.font-icon {
+  font-size: clamp(1.18rem, 2vw, 2rem);
+}

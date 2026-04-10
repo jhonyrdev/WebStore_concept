@@ -11,7 +11,7 @@
   >
     <div class="relative">
       <svg
-        class="w-[22px] h-[22px]"
+        class="w-[clamp(1.3rem,2vw,1.5rem)] h-[clamp(1.3rem,2vw,1.5rem)]"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -63,14 +63,12 @@
       </div>
 
       <!-- Lista -->
-      <div class="max-h-80 overflow-y-auto px-3 py-3 space-y-1" 
-      [style.maxHeight]="listHeight()">
+      <div class="max-h-80 overflow-y-auto px-3 py-3 space-y-1" [style.maxHeight]="listHeight()">
         @if (cartItems().length === 0) {
           <div class="flex flex-col items-center gap-2 py-10 text-center">
-            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#a00691]/8"
-           >
+            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#a00691]/8">
               <svg
-                class="h-7 w-7 text-[#a00691]/40"
+                class="w-[clamp(1.5rem,3.5vw,1.75rem)] h-[clamp(1.5rem,3.5vw,1.75rem)] text-[#a00691]/40"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -107,7 +105,11 @@
                   (click)="restar(item)"
                   class="flex h-6 w-6 items-center justify-center rounded-md text-slate-500 transition-all hover:bg-white hover:text-[#a00691] hover:shadow-sm active:scale-90"
                 >
-                  <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                  <svg
+                    class="w-[clamp(0.625rem,1.8vw,0.75rem)] h-[clamp(0.625rem,1.8vw,0.75rem)]"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
                     <path
                       fill-rule="evenodd"
                       d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -123,7 +125,11 @@
                   [disabled]="item.cantidad >= item.producto.stock"
                   class="flex h-6 w-6 items-center justify-center rounded-md text-slate-500 transition-all hover:bg-white hover:text-[#a00691] hover:shadow-sm active:scale-90 disabled:cursor-not-allowed disabled:opacity-30"
                 >
-                  <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                  <svg
+                    class="w-[clamp(0.625rem,1.8vw,0.75rem)] h-[clamp(0.625rem,1.8vw,0.75rem)]"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
                     <path
                       fill-rule="evenodd"
                       d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
@@ -146,7 +152,11 @@
                   : 'ml-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md text-slate-300 opacity-0 transition-all group-hover:opacity-100 hover:bg-rose-50 hover:text-rose-400'
               "
             >
-              <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                class="w-[clamp(0.75rem,2vw,0.875rem)] h-[clamp(0.75rem,2vw,0.875rem)]"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -183,7 +193,7 @@
             Ir a pagar
           </button>
           <button
-            class="w-full rounded-xl py-2.5 text-sm font-semibold text-[#a00691] transition-colors hover:bg-[#a00691]/8"
+            class="hidden w-full rounded-xl py-2.5 text-sm font-semibold text-[#a00691] transition-colors hover:bg-[#a00691]/8"
           >
             Ver bolsa completa
           </button>
