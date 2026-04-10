@@ -8,3 +8,6 @@
     transform: translateY(0) scale(1);
   }
 }
+.font-icon {
+  font-size: clamp(1.2rem, 2vw, 2rem);
+}

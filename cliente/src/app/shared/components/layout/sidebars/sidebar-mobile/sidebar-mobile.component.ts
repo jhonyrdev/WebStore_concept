@@ -5,16 +5,22 @@ import { SidebarShellComponent } from '../sidebar-shell/sidebar-shell.component'
   selector: 'app-sidebar-mobile',
   standalone: true,
   imports: [SidebarShellComponent],
-  templateUrl: './sidebar-mobile.component.html'
+  templateUrl: './sidebar-mobile.component.html',
 })
 export class SidebarMobileComponent {
-  isOpen     = input.required<boolean>()
-  toggleMenu = output<void>()
+  isOpen = input.required<boolean>();
+  isLoggedIn = input(false);
+  toggleMenu = output<void>();
+  joinClick = output<void>();
 
-  readonly links = [
-    { label: 'Inicio',      href: '/' },
-    { label: 'Ofertas',     href: '/ofertas' },
-    { label: 'Categorías',  href: '/catalogo' },
-    { label: 'Mi perfil',   href: '/perfil' },
-  ]
+  get links() {
+    return [
+      { label: 'Inicio', href: '/' },
+      { label: 'Ofertas', href: '/ofertas' },
+      { label: 'Categorías', href: '/catalogo' },
+      this.isLoggedIn()
+        ? { label: 'Mi perfil', href: '/perfil' }
+        : { label: 'Unirme', href: null, action: 'join' },
+    ];
+  }
 }

@@ -9,7 +9,10 @@
     @if (resultados().length > 0) {
       <ul class="max-h-72 overflow-y-auto divide-y divide-slate-50">
         @for (producto of resultados(); track producto.id) {
-          <li class="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors">
+          <li
+            (click)="openDetail(producto)"
+            class="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer"
+          >
             <div
               class="h-10 w-10 flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-[#a00691]/10 to-[#eab308]/20 flex items-center justify-center"
             >
@@ -36,8 +39,6 @@
               <p class="text-sm font-semibold text-slate-800 truncate">{{ producto.nombre }}</p>
               <p class="text-xs text-slate-400">S/ {{ producto.precio | number: '1.2-2' }}</p>
             </div>
-
-            
           </li>
         }
       </ul>
@@ -61,4 +62,12 @@
       </div>
     }
   </div>
+}
+
+@if (selectedProduct()) {
+  <app-detail-product
+    [productData]="selectedProduct()!"
+    (closed)="closeDetail()"
+    (cartAdded)="onDetailCartAdded($event)"
+  />
 }

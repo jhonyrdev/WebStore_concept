@@ -1,11 +1,23 @@
 <app-sidebar-shell title="Menú" [isOpen]="isOpen()" (toggle)="toggleMenu.emit()">
   <nav class="flex flex-col py-2">
     @for (link of links; track link.href) {
-      <a [href]="link.href"
-        class="block px-5 py-[0.85rem] text-[#4e4e4e] no-underline
-               text-[0.95rem] font-medium transition-colors hover:text-[#5e0956]">
-        {{ link.label }}
-      </a>
+      @if (link.action === 'join') {
+        <button
+          type="button"
+          (click)="joinClick.emit()"
+          class="block w-full bg-transparent border-none text-left px-5 py-[0.85rem] text-[#4e4e4e] text-[0.95rem] font-medium transition-colors hover:text-[#5e0956]"
+        >
+          {{ link.label }}
+        </button>
+      } @else {
+        <a
+          [href]="link.href"
+          (click)="toggleMenu.emit()"
+          class="block px-5 py-[0.85rem] text-[#4e4e4e] no-underline text-[0.95rem] font-medium transition-colors hover:text-[#5e0956]"
+        >
+          {{ link.label }}
+        </a>
+      }
     }
   </nav>
 </app-sidebar-shell>

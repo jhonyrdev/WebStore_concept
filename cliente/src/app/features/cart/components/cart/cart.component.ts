@@ -7,10 +7,13 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { CartItem } from '../../models/cart-Item.model';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { formatCurrencyAmount, SupportedCurrency } from '../../../../shared/utils/currency.utils';
+import { AuthService } from '@/app/features/auth/service/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cart',
@@ -24,6 +27,8 @@ export class CartComponent {
   currency = input<SupportedCurrency>('PEN');
 
   cartService = inject(CartService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
   private elRef = inject(ElementRef);
 
   isOpen = signal(false);
@@ -54,8 +59,35 @@ export class CartComponent {
     this.cartService.eliminarProducto(item.producto.id);
   }
 
-  checkout(): void {
-    alert('Procesando pago...');
+  async checkout(): Promise<void> {
+    if (!this.authService.isAuthenticated()) {
+      this.isOpen.set(false);
+      this.authService.openLoginModal();
+      return;
+    }
+
+    this.isOpen.set(false);
+
+    const result = await Swal.fire({
+      title: '¿Deseas continuar?',
+      text: 'Puedes continuar al checkout o volver al catálogo para agregar más productos.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Catálogo',
+      reverseButtons: true,
+      confirmButtonColor: '#a00691',
+      cancelButtonColor: '#6b7280',
+    });
+
+    if (result.isConfirmed) {
+      this.router.navigate(['/checkout']);
+      return;
+    }
+
+    if (result.dismiss === Swal.DismissReason.cancel) {
+      this.router.navigate(['/catalogo']);
+    }
   }
 
   // cart-dropdown.component.ts
