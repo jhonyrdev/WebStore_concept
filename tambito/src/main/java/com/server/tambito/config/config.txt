@@ -1,0 +1,1 @@
+Archivo global de configuracion, web, security
