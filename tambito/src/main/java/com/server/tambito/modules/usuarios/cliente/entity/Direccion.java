@@ -1,6 +1,8 @@
 
 package com.server.tambito.modules.usuarios.cliente.entity;
         
+import com.server.tambito.modules.usuarios.cliente.enums.tipoResidencia;
+
 import lombok.*; 
 
 @Data
@@ -10,10 +12,7 @@ public class Direccion {
     
     private Integer id;
     private String direccion;
-	private Tipo tipo = Tipo.casa;
+	private tipoResidencia tipo;
     private Cliente cliente;
 
-	public enum Tipo {
-		casa, oficina, otro
-	}
 }
