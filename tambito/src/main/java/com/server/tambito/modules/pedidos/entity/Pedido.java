@@ -4,10 +4,8 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.*;
 import java.util.*;
-import com.server.tambito.modules.usuarios.cliente.entity.Cliente;
-import com.server.tambito.modules.usuarios.cliente.entity.Direccion;
-import com.server.tambito.modules.pedidos.enums.estadoPedido;
-import com.server.tambito.modules.pedidos.enums.tipoEntrega;
+import com.server.tambito.modules.usuarios.cliente.entity.*;
+import com.server.tambito.modules.pedidos.enums.*;
 
 @Data
 @NoArgsConstructor
