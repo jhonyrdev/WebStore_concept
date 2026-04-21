@@ -2,6 +2,8 @@ package com.server.tambito.modules.catalogo.producto.entity;
 
 import lombok.*;
 import java.math.BigDecimal;
+
+import com.server.tambito.modules.catalogo.producto.enums.estadoProducto;
 import com.server.tambito.modules.catalogo.subcategoria.entity.SubCategoria;
 
 @Data
@@ -17,11 +19,8 @@ public class Producto {
     private Integer cantProd;
     private BigDecimal precioProd;
     private String imgProd;
-    private Estado estado = Estado.Disponible;
+    private estadoProducto estado;
     private SubCategoria subcategoria; 
 
 
-    public enum Estado {
-        Disponible, Critico, Agotado, Inactivo
-    }
 }

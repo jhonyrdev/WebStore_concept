@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.*;
 import com.server.tambito.modules.pedidos.entity.Pedido;
 import com.server.tambito.modules.usuarios.cliente.entity.Cliente;
+import com.server.tambito.modules.venta.enums.tipoDocumento;
 
 @Data
 @NoArgsConstructor
@@ -18,9 +19,6 @@ public class Venta {
     private Pedido pedido;
     private MetodoPago metodoPago;
     private BigDecimal total;
-    private Tipo tipo;
+    private tipoDocumento tipo;
 
-    public enum Tipo {
-        boleta, factura
-    }
 }

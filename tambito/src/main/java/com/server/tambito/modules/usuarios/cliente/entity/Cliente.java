@@ -4,6 +4,7 @@ package com.server.tambito.modules.usuarios.cliente.entity;
 import lombok.*;
 import java.time.LocalDate;
 
+import com.server.tambito.commons.enums.estadoUsuario;
 import com.server.tambito.modules.auth.entity.Credencial;
 
 @Data
@@ -17,10 +18,8 @@ public class Cliente {
     private String apeCli;
     private String correoCli;
     private String telCli;
-    private Estado estado = Estado.activo;
+    private estadoUsuario estado;
     private LocalDate fechaReg;
     private Credencial credencial;
-    public enum Estado {
-        activo, inactivo
-    }
+
 }

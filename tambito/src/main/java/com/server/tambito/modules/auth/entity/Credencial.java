@@ -1,5 +1,7 @@
 package com.server.tambito.modules.auth.entity;
 
+import com.server.tambito.commons.enums.rol;
+
 import lombok.*;
 
 @Data
@@ -10,10 +12,6 @@ public class Credencial {
     private Integer idCred;
     private String usuario;
     private String clave;
-    private Rol rol = Rol.cliente;
-
-    public enum Rol {
-        admin, cliente
-    }
+    private rol rol;
 }
 
