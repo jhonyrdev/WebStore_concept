@@ -1,0 +1,79 @@
+<div class="clientes-container">
+  <div class="header">
+    <h1>Clientes</h1>
+    <button class="btn-add" (click)="toggleForm()" [class.active]="showAddForm">
+      {{ showAddForm ? '✕ Cancelar' : '+ Añadir cliente' }}
+    </button>
+  </div>
+
+  <div class="add-form" *ngIf="showAddForm">
+    <div class="form-group">
+      <input type="text" placeholder="Nombre" [(ngModel)]="newCliente.nombre" class="form-input">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <input type="email" placeholder="Correo electrónico" [(ngModel)]="newCliente.correo" class="form-input">
+      </div>
+      <div class="form-group">
+        <input type="tel" placeholder="Teléfono" [(ngModel)]="newCliente.telefono" class="form-input">
+      </div>
+    </div>
+    <button (click)="addCliente()" class="btn-save">Guardar Cliente</button>
+  </div>
+
+  <div class="filters">
+    <input 
+      type="text" 
+      placeholder="Buscar clientes..." 
+      [(ngModel)]="searchTerm"
+      class="search-input"
+    >
+    <select [(ngModel)]="selectedStatus" class="filter-select">
+      <option value="todos">Todos</option>
+      <option value="Activo">Activos</option>
+      <option value="Inactivo">Inactivos</option>
+    </select>
+    <button class="btn-export">📊 Exportar</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="clients-table">
+      <thead>
+        <tr>
+          <th>Miembro</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Estado</th>
+          <th>Fecha de Registro</th>
+          <th>Total Compras</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of filteredClientes">
+          <td>
+            <span class="member-icon">●</span>
+            <span>{{ cliente.nombre }}</span>
+          </td>
+          <td>{{ cliente.correo }}</td>
+          <td>{{ cliente.telefono }}</td>
+          <td>
+            <span class="badge" [ngClass]="cliente.estado === 'Activo' ? 'active' : 'inactive'">
+              {{ cliente.estado }}
+            </span>
+          </td>
+          <td>{{ cliente.fechaRegistro }}</td>
+          <td class="total-compras">S/ {{ (cliente.totalCompras * 50).toFixed(2) }}</td>
+          <td class="actions">
+            <button class="btn-icon edit" title="Editar">✎</button>
+            <button class="btn-icon delete" (click)="deleteCliente(cliente.id)" title="Eliminar">✕</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="filteredClientes.length > 0">
+    <p>Mostrando <strong>{{ filteredClientes.length }}</strong> de <strong>{{ clientes.length }}</strong> clientes</p>
+  </div>
+</div>
