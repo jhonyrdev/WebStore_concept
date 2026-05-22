@@ -1,7 +1,7 @@
 package com.server.tambito.commons.exception;
 
-public class badRequestException extends RuntimeException {
-    public badRequestException(String message) {
+public class BadRequestException extends RuntimeException {
+    public BadRequestException(String message) {
         super(message);
     }
 }

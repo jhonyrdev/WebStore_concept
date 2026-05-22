@@ -1,7 +1,7 @@
 package com.server.tambito.commons.exception;
 
-public class resourceNotFoundException extends RuntimeException {
-    public resourceNotFoundException(String message) {
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
         super(message);
     }
 }

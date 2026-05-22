@@ -1,0 +1,107 @@
+{"properties": [
+  {
+    "name": "jwt.expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.expiration'"
+  },
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.secret'"
+  },
+  {
+    "name": "spring.flyway.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.flyway.enabled'"
+  },
+  {
+    "name": "spring.flyway.baseline-on-migrate",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.flyway.baseline-on-migrate'"
+  },
+  {
+    "name": "spring.flyway.validate-on-migrate",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.flyway.validate-on-migrate'"
+  },
+  {
+    "name": "spring.flyway.locations",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.flyway.locations'"
+  },
+  {
+    "name": "google.client-id",
+    "type": "java.lang.String",
+    "description": "A description for 'google.client-id'"
+  },
+  {
+    "name": "google.client-secret",
+    "type": "java.lang.String",
+    "description": "A description for 'google.client-secret'"
+  },
+  {
+    "name": "google.redirect-uri",
+    "type": "java.lang.String",
+    "description": "A description for 'google.redirect-uri'"
+  },
+  {
+    "name": "spring.mail.host",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.host'"
+  },
+  {
+    "name": "spring.mail.port",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.port'"
+  },
+  {
+    "name": "spring.mail.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.username'"
+  },
+  {
+    "name": "spring.mail.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.password'"
+  },
+  {
+    "name": "spring.mail.properties.mail.smtp.auth",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.properties.mail.smtp.auth'"
+  },
+  {
+    "name": "spring.mail.properties.mail.smtp.starttls.required",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.properties.mail.smtp.starttls.required'"
+  },
+  {
+    "name": "spring.mail.properties.mail.smtp.starttls.enable",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.properties.mail.smtp.starttls.enable'"
+  },
+  {
+    "name": "api.peru.v1",
+    "type": "java.lang.String",
+    "description": "A description for 'api.peru.v1'"
+  },
+  {
+    "name": "api.peru.v2",
+    "type": "java.lang.String",
+    "description": "A description for 'api.peru.v2'"
+  },
+  {
+    "name": "api.peru.url1",
+    "type": "java.lang.String",
+    "description": "A description for 'api.peru.url1'"
+  },
+  {
+    "name": "api.peru.url2",
+    "type": "java.lang.String",
+    "description": "A description for 'api.peru.url2'"
+  },
+  {
+    "name": "dni.fallback.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'dni.fallback.enabled'"
+  }
+]}

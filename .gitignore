@@ -1,1 +1,3 @@
 tambito/src/main/resources/static/data
+tambito/src/main/resources/application-dev.properties
+tambito/src/main/resources/application-prod.properties
