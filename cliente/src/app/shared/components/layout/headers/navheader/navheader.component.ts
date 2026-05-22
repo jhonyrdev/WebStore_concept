@@ -6,7 +6,7 @@ import { SidebarCategoriaComponent } from '../../../../../features/categories/co
 import { SidebarMobileComponent } from '../../sidebars/sidebar-mobile/sidebar-mobile.component';
 import { SearchModalComponent } from '../../../ui/modal/search-modal/search-modal.component';
 import { AuthFormComponent } from '@features/auth/components/auth-form/auth-form.component';
-import { AuthService } from '@features/auth/service/auth.service';
+import { ClientAuthService } from '@features/auth/service/client/client-auth.service';
 import { CartComponent } from '@features/cart/components/cart/cart.component';
 import { CartService } from '@features/cart/services/cart.service';
 import { SearchService } from '@features/search/services/search.service';
@@ -30,7 +30,7 @@ import { SearchResultadoComponent } from '@features/search/components/search-res
 })
 export class NavheaderComponent {
   searchService = inject(SearchService);
-  private authService = inject(AuthService);
+  private authService = inject(ClientAuthService);
   private router = inject(Router);
 
   isMenuOpen = signal(false);

@@ -1,0 +1,21 @@
+<div class="min-h-screen">
+  <div class="min-h-screen transition-colors duration-300">
+    <header class="bg-transparent border-b border-[var(--border-color)] shadow-sm">
+      <nav class="flex items-center px-6 gap-4">
+        <app-tabs
+          class="flex-1 min-w-0"
+          [tabs]="tabs"
+          [activeTab]="activeTab()"
+          (tabChange)="changeTab($event)"
+        ></app-tabs>
+      </nav>
+    </header>
+    <main class="p-6">
+      <div
+        class="rounded-2xl border border-dashed border-[var(--border-color)] bg-white/40 dark:bg-black/10 min-h-[55vh] flex items-center justify-center text-sm text-[var(--color-gray)]"
+      >
+        <span>Selecciona una pestaña para navegar entre secciones.</span>
+      </div>
+    </main>
+  </div>
+</div>

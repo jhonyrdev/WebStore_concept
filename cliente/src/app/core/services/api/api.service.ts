@@ -5,6 +5,7 @@ import {
   HttpParams
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '@/environments/environments';
 
 export interface ApiOptions {
   headers?: HttpHeaders;
@@ -16,8 +17,7 @@ export interface ApiOptions {
 })
 export class ApiService {
 
-  // Dejamos vacio porque usamos json, agregamos el url del backend base luego
-  private baseUrl = '';
+  private baseUrl = environment.serverUrl;
 
   constructor(private http: HttpClient) {}
 

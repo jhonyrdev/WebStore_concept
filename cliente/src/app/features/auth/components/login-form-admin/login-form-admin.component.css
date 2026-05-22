@@ -1,0 +1,56 @@
+/* Estilos contextuales del formulario de login */
+
+/* Standalone: fondo oscuro y card oscura */
+.login-form-host {
+  background-color: #0d0d1a;
+}
+
+.login-form-card {
+  background-color: #12122a;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Color del texto "¿Olvidaste tu contraseña?" */
+.forgot-text {
+  color: #60608a;
+}
+
+/* Cuando está dentro del right-panel de login-page:
+   el host hereda transparencia y la card usa fondo blanco con
+   sombra suave */
+:host-context(.right-panel) .login-form-host {
+  background-color: transparent;
+  min-height: unset;
+}
+
+:host-context(.right-panel) .login-form-card {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Ajuste de colores de texto para fondo blanco */
+:host-context(.right-panel) h1 {
+  color: #1a0533;
+}
+
+:host-context(.right-panel) .login-form-card p {
+  color: #6b7280;
+}
+
+:host-context(.right-panel) label {
+  color: #374151;
+}
+
+:host-context(.right-panel) input {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+  color: #111827;
+}
+
+:host-context(.right-panel) input::placeholder {
+  color: #9ca3af;
+}
+
+:host-context(.right-panel) .forgot-text {
+  color: #6b7280;
+}

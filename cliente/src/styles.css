@@ -1,9 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import "tailwindcss";  
+@import 'tailwindcss';
 
-
-:root.light {
+:root,
+:root.dark {
   /* Principal */
   --color-primary: #a00691;
   --color-primary-600: #5e0956;
@@ -16,15 +16,32 @@
   --color-secondary-100: #fffbf0;
 
   /* Colores Generales */
-  --color-general-1: #000000;
-  --color-general-2: #fff;
+  --color-general-1: #fff;
+
+  /* Fondos Generales */
+  --bg-principal: #2c0029;
+  --bg-secundario: #270427;
+  --bg-tercero: #ffda6c;
 
   /* Texto */
-  --text-primary: #5e0956;
-  --text-secondary: #c89b06;
+  --text-general: #fff;
+  --text-general-inverso: #000;
+  --text-primary: #ffd344;
+  --text-head-table: #a00691;
+  --text-complementary: #dbdbdb;
+  --text-sub-form: #e2e2e2e5;
+
+  --border-color: #ffffff2e;
+
+  /* Colores Aux */
+  --color-green: #4ade80;
+  --color-blue: #77b4ff;
+  --color-cyan: #22d3ee;
+  --color-red: #fb7185;
+  --color-gray: #dddddde5;
 }
-:root,
-:root.dark {
+
+:root.light {
   /* Principal (ligeramente más brillante para contraste) */
   --color-primary: #d946c5;
   --color-primary-600: #a00691;
@@ -37,17 +54,33 @@
   --color-secondary-100: #3b320d;
 
   /* Colores generales */
-  --color-general-1: #ffffff;
-  --color-general-2: #fffcd3;
+  --color-general-1: #fffcd3;
+
+  /* Fondos Generales */
+  --bg-principal: #fff;
+  --bg-secundario: #a00691;
+  --bg-tercero: #a00691;
 
   /* Texto */
-  --text-primary: #f5f5f5;
-  --text-secondary: #d4d4d4;
+  --text-general: #000;
+  --text-general-inverso: #fff;
+  --text-primary: #5e0956;
+  --text-head-table: #fde68a;
+  --text-complementary: #3b3b3b;
+  --text-sub-form: #575757b9;
 
-  --color-prueba: #fff7fd;
+  --border-color: #96969671;
+
+  /* Colores Aux */
+  --color-green: #049439;
+  --color-blue: #04499e;
+  --color-cyan: #00879c;
+  --color-red: #af0821;
+  --color-gray: #6d6d6d;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }
@@ -94,11 +127,19 @@ html, body {
 
 /* ─── Typography helpers  ── */
 .text-title-font {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .text-content-font {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
+/* ─── Scrollbar hidden ── */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; 
+}

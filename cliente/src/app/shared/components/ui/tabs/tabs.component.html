@@ -1,0 +1,17 @@
+<div class="w-full overflow-x-auto md:overflow-hidden scrollbar-hidden">
+  <div class="flex space-x-1 min-w-max md:min-w-0">
+    @for (tab of tabs; track tab.key) {
+      <button
+        (click)="changeTab(tab.key)"
+        class="px-5 py-4 text-md font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 border-b-4"
+        [ngClass]="
+          isActive(tab.key)
+            ? 'border-[var(--text-primary)] text-[var(--text-primary)]'
+            : 'border-transparent text-[var(--text-complementary)] hover:text-[var(--text-primary)]'
+        "
+      >
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+</div>

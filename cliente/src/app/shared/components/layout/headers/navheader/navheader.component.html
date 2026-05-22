@@ -71,7 +71,11 @@
         <i class="fa-regular fa-user text-[1.2rem]" aria-hidden="true"></i>
         <div class="flex items-center gap-[0.15rem]">
           <span class="text-[0.8rem] font-medium">
-            {{ isLoggedIn() ? 'Mi cuenta' : 'Iniciar sesión' }}
+            @if (isLoggedIn()) {
+              Mi cuenta
+            } @else {
+              Iniciar sesión
+            }
           </span>
           <i
             class="fa-solid fa-chevron-down text-[0.7rem] transition-transform duration-200"
@@ -80,7 +84,7 @@
           ></i>
         </div>
 
-        @if (isLoggedIn() && isAccountOpen()) {
+        @if (isAccountOpen()) {
           <div
             class="absolute top-[calc(100%+6px)] right-0 bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.15)] min-w-[180px] py-2 overflow-hidden animate-[dropdownFade_0.18s_ease]"
           >

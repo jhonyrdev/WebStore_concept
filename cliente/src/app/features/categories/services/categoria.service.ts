@@ -1,11 +1,13 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Category, CategoryWithConfig } from '../models/category.model';
 import { CATEGORIA_CONFIG } from '../../../shared/constants/categoria.config';
-import { ApiService } from '../../../core/services/api/api.service';
+import { HttpClient } from '@angular/common/http';
+import { FallbackService } from '@/app/core/services/fallback/fallback.service';
 
 @Injectable({ providedIn: 'root' })
 export class CategoriaService {
-  private readonly api = inject(ApiService);
+
+  private readonly fallback = inject(FallbackService);
 
   private readonly _categories = signal<Category[]>([]);
 
@@ -29,9 +31,9 @@ export class CategoriaService {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.api.get<Category[]>('data/categorias.json').subscribe({
-      next: (data: unknown) => {
-        this._categories.set(data as Category[]);
+    this.fallback.getWithFallback<Category[]>('categorias', 'data/categorias.json').subscribe({
+       next: (data) => {
+        this._categories.set(data);
         this.isLoading.set(false);
       },
       error: () => {

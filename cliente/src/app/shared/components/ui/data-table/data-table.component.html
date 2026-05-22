@@ -1,0 +1,49 @@
+<div class="w-full overflow-x-auto md:overflow-hidden scrollbar-hidden">
+  <table class="w-full text-sm min-w-full md:min-w-0">
+    <!-- HEADER -->
+    <thead class="bg-[var(--bg-tercero)]">
+      <tr>
+        @for (col of columns; track col.key) {
+          <th
+            class="px-6 py-4 font-bold text-[var(--text-head-table)] uppercase text-xs sm:text-sm"
+            [class.text-left]="col.align === 'left' || !col.align"
+            [class.text-center]="col.align === 'center'"
+            [class.text-right]="col.align === 'right'"
+            [class]="col.width ?? ''"
+          >
+            {{ col.label }}
+          </th>
+        }
+      </tr>
+    </thead>
+
+    <!-- BODY -->
+    <tbody>
+      @for (row of data; track trackByIndex($index)) {
+        <tr class="text-[var(--text-general)]">
+          <!-- Si hay template custom -->
+          @if (rowTemplate) {
+            <ng-container
+              [ngTemplateOutlet]="rowTemplate"
+              [ngTemplateOutletContext]="{ $implicit: row, emit: emitActionFromTemplate }"
+            ></ng-container>
+          }
+
+          <!-- fallback automático simple -->
+          @if (!rowTemplate) {
+            @for (col of columns; track col.key) {
+              <td
+                class="px-6 py-3.5"
+                [class.text-left]="col.align === 'left' || !col.align"
+                [class.text-center]="col.align === 'center'"
+                [class.text-right]="col.align === 'right'"
+              >
+                {{ row[col.key] }}
+              </td>
+            }
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

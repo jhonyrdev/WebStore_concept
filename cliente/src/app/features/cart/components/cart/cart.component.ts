@@ -12,8 +12,9 @@ import { CartItem } from '../../models/cart-Item.model';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { formatCurrencyAmount, SupportedCurrency } from '../../../../shared/utils/currency.utils';
-import { AuthService } from '@/app/features/auth/service/auth.service';
+
 import Swal from 'sweetalert2';
+import { ClientAuthService } from '@/app/features/auth/service/client/client-auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -27,7 +28,7 @@ export class CartComponent {
   currency = input<SupportedCurrency>('PEN');
 
   cartService = inject(CartService);
-  private authService = inject(AuthService);
+  private authService = inject(ClientAuthService);
   private router = inject(Router);
   private elRef = inject(ElementRef);
 

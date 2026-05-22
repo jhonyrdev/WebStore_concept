@@ -1,0 +1,115 @@
+<div class="login-form-host min-h-screen flex items-center justify-center font-[Poppins,sans-serif]">
+  <div class="login-form-card w-full max-w-md rounded-2xl px-10 py-12 flex flex-col items-center">
+
+    <!-- Lock Icon -->
+    <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-5
+                bg-linear-to-br from-(--color-primary-600) to-(--color-primary)
+                shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary)_40%,transparent)]">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-8 h-8">
+        <path d="M12 1C9.243 1 7 3.243 7 6v2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0
+          0 0 2-2V10a2 2 0 0 0-2-2h-2V6c0-2.757-2.243-5-5-5zm0 2c1.654 0 3 1.346 3 3v2H9V6c0
+          -1.654 1.346-3 3-3zm1 12.723V17h-2v-1.277A1.993 1.993 0 0 1 10 14c0-1.103.897-2
+          2-2s2 .897 2 2c0 .738-.405 1.376-1 1.723z"/>
+      </svg>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-white text-3xl font-bold tracking-tight mb-2">Bienvenido</h1>
+    <p class="text-(--text-secondary) text-sm mb-8 text-center">
+      Ingresa tus credenciales para continuar
+    </p>
+
+    <!-- Form -->
+    <form class="w-full flex flex-col gap-5" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <!-- Email -->
+      <div class="flex flex-col gap-2">
+        <label for="email" class="text-(--text-primary) text-sm font-medium">
+          Correo electrónico
+        </label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="tu@email.com"
+          class="w-full bg-[#1e1e3a] border border-[#2e2e52] rounded-xl px-4 py-3.5
+                 text-(--text-primary) text-sm placeholder:text-[#50506a] outline-none
+                 transition-all duration-200
+                 focus:border-(--color-primary) focus:ring-2
+                 focus:ring-[color-mix(in_srgb,var(--color-primary)_25%,transparent)]"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="flex flex-col gap-2">
+        <label for="password" class="text-(--text-primary) text-sm font-medium">
+          Contraseña
+        </label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+          class="w-full bg-[#1e1e3a] border border-[#2e2e52] rounded-xl px-4 py-3.5
+                 text-(--text-primary) text-sm placeholder:text-[#50506a] outline-none
+                 transition-all duration-200
+                 focus:border-(--color-primary) focus:ring-2
+                 focus:ring-[color-mix(in_srgb,var(--color-primary)_25%,transparent)]"
+        />
+      </div>
+
+      <!-- Error message -->
+      @if (errorMessage) {
+        <div class="flex items-center gap-2 bg-red-500/10 border border-red-500/30
+                    text-red-400 text-sm rounded-xl px-4 py-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1
+              1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1
+              1 0 00-1-1z" clip-rule="evenodd"/>
+          </svg>
+          {{ errorMessage }}
+        </div>
+      }
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid || isLoading"
+        class="mt-1 w-full py-4 rounded-xl font-semibold text-white text-base tracking-wide
+               bg-linear-to-r from-(--color-primary-600) to-(--color-primary)
+               shadow-[0_6px_20px_color-mix(in_srgb,var(--color-primary)_40%,transparent)]
+               transition-all duration-200
+               hover:opacity-90 hover:-translate-y-px
+               hover:shadow-[0_10px_28px_color-mix(in_srgb,var(--color-primary)_50%,transparent)]
+               active:translate-y-0
+               disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
+               flex items-center justify-center gap-2"
+      >
+        @if (isLoading) {
+          <svg class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          </svg>
+          Verificando...
+        } @else {
+          Iniciar Sesión
+        }
+      </button>
+
+    </form>
+
+    <!-- Forgot Password -->
+    <p class="forgot-text mt-6 text-sm">
+      ¿Olvidaste tu contraseña?
+      <a href="#"
+         class="text-(--color-primary-400) font-medium hover:text-(--color-primary)
+                hover:underline transition-colors duration-200">
+        Recuperar
+      </a>
+    </p>
+
+  </div>
+</div>

@@ -1,1 +1,31 @@
-<p>admin-layout.component works!</p>
+@if (isLoading()) {
+  <div class="loader-overlay">
+    <div class="loader-ring"></div>
+  </div>
+}
+
+@if (!isLoading()) {
+  <div class="min-h-screen md:flex">
+    @if (isMobile() && mobileSidebarOpen()) {
+      <button
+        type="button"
+        class="fixed inset-0 z-40 bg-black/50 md:hidden"
+        aria-label="Cerrar menú lateral"
+        (click)="closeSidebar()"
+      ></button>
+    }
+
+    <app-sidebar-admin
+      [compact]="isMobile() && !mobileSidebarOpen()"
+      [mobileOpen]="mobileSidebarOpen()"
+      (toggleRequested)="toggleSidebar()"
+      (closeRequested)="closeSidebar()"
+    ></app-sidebar-admin>
+
+    <main
+      class="min-h-screen bg-[var(--bg-principal)] flex-1 transition-[margin] duration-300 ml-16 md:ml-0"
+    >
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+}

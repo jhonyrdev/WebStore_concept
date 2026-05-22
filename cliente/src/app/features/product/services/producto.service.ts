@@ -1,27 +1,28 @@
-import { Injectable, signal, effect } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Producto } from '../models/product.model';
-import { ApiService } from '../../../core/services/api/api.service';
+import { HttpClient } from '@angular/common/http';
+import { FallbackService } from '@/app/core/services/fallback/fallback.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductoService {
-  private readonly url = 'data/producto.json';
+
+  private readonly fallback = inject(FallbackService);
 
   products = signal<Producto[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
-  constructor(private api: ApiService) {
+  constructor() {
     this.loadProducts();
   }
-
   private loadProducts(): void {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.api.get<Producto[]>(this.url).subscribe({
+    this.fallback.getWithFallback<Producto[]>('productos', 'data/producto.json').subscribe({
       next: (data) => {
         this.products.set(data.filter((p) => p.stock > 0));
         this.isLoading.set(false);
@@ -34,6 +35,6 @@ export class ProductoService {
   }
 
   getProductos(): Observable<Producto[]> {
-    return this.api.get<Producto[]>(this.url);
+    return this.fallback.getWithFallback<Producto[]>('productos', 'data/producto.json');
   }
 }

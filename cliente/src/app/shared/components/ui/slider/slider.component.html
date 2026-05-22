@@ -1,45 +1,46 @@
 <div class="w-full">
   <div class="container py-8">
-
     @if (showTitle && title) {
       <h2 class="title-slider font-semibold text-gray-900 text-center mb-4 px-4">{{ title }}</h2>
     }
 
     <!-- Wrapper con controles a los lados -->
     <div class="relative flex items-center gap-2">
-
       <!-- Botón IZQUIERDA — solo desktop -->
-      @if (showControls && hasOverflow())  {
+      @if (showControls && hasOverflow()) {
         <button
           (click)="scroll('left')"
-          class="hidden md:flex shrink-0 w-8 h-8 rounded-full border border-gray-200
-                 items-center justify-center hover:bg-gray-100 active:scale-95 transition-all">
+          class="hidden md:flex shrink-0 w-8 h-8 rounded-full border border-gray-200 items-center justify-center hover:bg-gray-100 active:scale-95 transition-all"
+        >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M10 3L5 8L10 13" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10 3L5 8L10 13" stroke="#111" stroke-width="1.5" stroke-linecap="round" />
           </svg>
         </button>
       }
 
       <!-- Track -->
-      <div #sliderTrack
-        [class]="variant === 'category'
-          ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-8 gap-6 place-items-center w-full'
-          : 'track-product snap-x snap-mandatory w-full'">
+      <div
+        #sliderTrack
+        [class]="
+          variant === 'category'
+            ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-8 gap-6 place-items-center w-full scrollbar-hidden'
+            : 'track-product snap-x snap-mandatory w-full scrollbar-hidden'
+        "
+      >
         <ng-content />
       </div>
 
       <!-- Botón DERECHA — solo desktop -->
-     @if (showControls && hasOverflow()) {
+      @if (showControls && hasOverflow()) {
         <button
           (click)="scroll('right')"
-          class="hidden md:flex shrink-0 w-8 h-8 rounded-full border border-gray-200
-                 items-center justify-center hover:bg-gray-100 active:scale-95 transition-all">
+          class="hidden md:flex shrink-0 w-8 h-8 rounded-full border border-gray-200 items-center justify-center hover:bg-gray-100 active:scale-95 transition-all"
+        >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M6 3L11 8L6 13" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M6 3L11 8L6 13" stroke="#111" stroke-width="1.5" stroke-linecap="round" />
           </svg>
         </button>
       }
-
     </div>
   </div>
 </div>

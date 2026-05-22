@@ -11,7 +11,7 @@
 				[(ngModel)]="email"
 				type="email"
 				placeholder="tu@correo.com"
-				[disabled]="isFormBlocked"
+				[disabled]="isLocked"
 				class="w-full pl-9 pr-4 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691] disabled:opacity-50 disabled:cursor-not-allowed"
 			/>
 		</div>
@@ -25,14 +25,14 @@
 				[type]="showPassword ? 'text' : 'password'"
 				[(ngModel)]="password"
 				placeholder="••••••••"
-				[disabled]="isFormBlocked"
+				[disabled]="isLocked"
 				(keyup.enter)="onSignIn()"
 				class="password-field w-full pl-9 pr-10 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691] disabled:opacity-50 disabled:cursor-not-allowed"
 			/>
 			<button
 				type="button"
 				(click)="showPassword = !showPassword"
-				[disabled]="isFormBlocked"
+				[disabled]="isLocked"
 				class="absolute right-3 top-1/2 -translate-y-1/2 text-[#ad88a3] hover:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
 			>
 				@if (showPassword) {
@@ -46,7 +46,7 @@
 
 	<div class="flex items-center justify-between text-sm">
 		<label class="flex items-center gap-2 text-slate-600">
-			<input type="checkbox" [(ngModel)]="rememberMe" [disabled]="isFormBlocked" class="accent-[#b615a6]" />
+			<input type="checkbox" [(ngModel)]="rememberMe" [disabled]="isLocked" class="accent-[#b615a6]" />
 			Recuérdame
 		</label>
 		<a href="#" class="text-[#b615a6] hover:text-[#a00691]">
@@ -57,7 +57,7 @@
 	<button
 		type="button"
 		(click)="onSignIn()"
-		[disabled]="isFormBlocked"
+		[disabled]="isLoading || isLocked"
 		class="w-full py-2.5 rounded-lg text-sm font-semibold text-white bg-[#b615a6] hover:bg-[#a00691] transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
 	>
 		@if (!isLoading) {
@@ -86,7 +86,6 @@
 		<button
 			type="button"
 			(click)="onGoogle()"
-			[disabled]="isFormBlocked"
 			class="bg-[#fff7fd] border border-[#fae8f5] rounded-lg py-2.5 text-slate-700 hover:bg-[#fae8f5] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
 			aria-label="Continuar con Google"
 			title="Google"
@@ -96,7 +95,6 @@
 		<button
 			type="button"
 			(click)="onOutlook()"
-			[disabled]="isFormBlocked"
 			class="bg-[#fff7fd] border border-[#fae8f5] rounded-lg py-2.5 text-slate-700 hover:bg-[#fae8f5] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
 			aria-label="Continuar con Outlook"
 			title="Outlook"
@@ -107,7 +105,7 @@
 
 	<p class="text-center text-sm text-slate-600">
 		¿No tienes una cuenta?
-		<button type="button" (click)="goToRegister()" [disabled]="isFormBlocked" class="text-[#b615a6] hover:text-[#a00691] ml-1 disabled:opacity-50 disabled:cursor-not-allowed">
+		<button type="button" (click)="goToRegister()" class="text-[#b615a6] hover:text-[#a00691] ml-1 disabled:opacity-50 disabled:cursor-not-allowed">
 			Regístrate ahora
 		</button>
 	</p>

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, input, model } from '@angular/core';
 
 export interface SortOption<T = string> {
@@ -7,7 +8,8 @@ export interface SortOption<T = string> {
 
 @Component({
   selector: 'app-sort-select',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './sort-select.component.html',
 })
 export class SortSelectComponent {

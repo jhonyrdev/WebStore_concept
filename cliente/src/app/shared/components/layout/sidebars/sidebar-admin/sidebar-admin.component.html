@@ -1,0 +1,99 @@
+<aside
+  class="fixed top-0 left-0 z-50 flex h-screen flex-col overflow-hidden bg-[var(--bg-secundario)] text-[var(--color-general-1)] shadow-lg transition-all duration-300 md:sticky md:top-0 md:z-30 md:h-screen md:flex-none md:w-64"
+  [class.w-16]="compact && !mobileOpen"
+  [class.w-64]="!compact || mobileOpen"
+>
+  <div
+    class="flex items-center gap-3 border-b px-4 py-4 border-[rgba(255,255,255,0.18)]"
+  >
+    <span
+      class="no-underline leading-none tracking-tight flex flex-col items-left gap-3"
+      aria-label="Inicio"
+    >
+      <img src="assets/img/logo/logoAlternativo.webp" alt="Tambito+" class="h-8 w-auto" />
+      
+    </span>
+
+    @if (compact) {
+      <button
+        type="button"
+        class="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md 0 text-[var(--color-general-1)] transition-colors md:hidden"
+        aria-label="Abrir o cerrar menú lateral"
+        (click)="toggleRequested.emit()"
+      >
+        <i class="fas" [class.fa-bars]="!mobileOpen" [class.fa-times]="mobileOpen"></i>
+      </button>
+    }
+  </div>
+
+  <nav
+    class="flex-1 space-y-1 py-6"
+    [class.px-3]="!compact || mobileOpen"
+    [class.px-2]="compact && !mobileOpen"
+  >
+    @for (item of menuItems; track item.path) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="border-l border-[var(--color-secondary-200)] text-[var(--color-secondary-200)]"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="flex items-center gap-3 rounded-md py-2 transition-colors hover:text-[var(--color-secondary-200)]"
+        [class.justify-center]="compact && !mobileOpen"
+        [class.px-3]="!compact || mobileOpen"
+        [class.px-0]="compact && !mobileOpen"
+        (click)="closeRequested.emit()"
+      >
+        <i [class]="'fas fa-' + item.icon" class="w-5"></i>
+        @if (!compact || mobileOpen) {
+          <span>{{ item.label }}</span>
+        }
+      </a>
+    }
+  </nav>
+
+  <div class="mt-auto border-t p-4 border-[rgba(255,255,255,0.18)]">
+    <div class="relative">
+      <button
+        type="button"
+        class="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left transition-colors hover:bg-white/10"
+        [class.justify-center]="compact && !mobileOpen"
+        (click)="toggleProfileMenu()"
+      >
+        <i class="fas fa-user-circle text-2xl" [style.color]="'var(--color-primary)'"></i>
+        @if (!compact || mobileOpen) {
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-medium">Admin User</p>
+            <p class="truncate text-xs" [style.color]="'var(--text-secondary)'">Administrator</p>
+          </div>
+          <i
+            class="fas fa-chevron-up text-xs transition-transform"
+            [class.rotate-180]="!isProfileMenuOpen"
+          ></i>
+        }
+      </button>
+
+      @if (isProfileMenuOpen && (!compact || mobileOpen)) {
+        <div
+          class="absolute bottom-full left-0 right-0 mb-3 rounded-xl border border-white/10 bg-[var(--color-primary-600)] p-2 shadow-2xl"
+        >
+          <button
+            type="button"
+            class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-white/10"
+            (click)="goToProfile()"
+          >
+            <i class="fas fa-id-card w-5 text-[var(--color-secondary-200)]"></i>
+            <span>Perfil admin</span>
+          </button>
+
+          <button
+            type="button"
+            class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-white/10"
+            (click)="logout()"
+          >
+            <i class="fas fa-right-from-bracket w-5 text-[var(--color-secondary-200)]"></i>
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</aside>

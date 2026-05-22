@@ -1,0 +1,59 @@
+<div class="page-wrapper">
+
+  <!-- LEFT PANEL (solo en lg+) -->
+  <aside class="left-panel">
+
+    <!-- SVG background blob/glow -->
+    <svg class="blob" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#d946c5" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#0d0d1a"  stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="g2" cx="70%" cy="30%" r="40%">
+          <stop offset="0%"   stop-color="#a00691" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="300" cy="300" r="280" fill="url(#g1)"/>
+      <circle cx="400" cy="180" r="180" fill="url(#g2)"/>
+    </svg>
+
+    <!-- Floating icon -->
+    <div class="brand-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="40" height="40">
+        <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2
+          2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59L5.25 14C5.09 14.32 5
+          14.65 5 15c0 1.1.9 2 2 2h14v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1
+          13h7.45c.75 0 1.41-.41 1.75-1.03L20.7 5H5.21L4.27 3H1z"/>
+      </svg>
+    </div>
+
+    <!-- Text content -->
+    <div class="left-content">
+      <h2 class="left-title">Panel de Administración</h2>
+      <p class="left-subtitle">
+        Gestiona tu tienda, productos y pedidos desde un solo lugar.
+        Accede con tu cuenta y toma el control.
+      </p>
+
+      <!-- Decorative dots -->
+      <div class="dots">
+        <span class="dot dot--active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <!-- Bottom badge -->
+    <div class="left-badge">
+      <span>Área segura · Solo administradores</span>
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL — Login Form -->
+  <main class="right-panel">
+    <app-login-form-admin />
+  </main>
+
+</div>
