@@ -1,6 +1,3 @@
-/* Estilos contextuales del formulario de login */
-
-/* Standalone: fondo oscuro y card oscura */
 .login-form-host {
   background-color: #0d0d1a;
 }
@@ -10,14 +7,10 @@
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
 }
 
-/* Color del texto "¿Olvidaste tu contraseña?" */
 .forgot-text {
   color: #60608a;
 }
 
-/* Cuando está dentro del right-panel de login-page:
-   el host hereda transparencia y la card usa fondo blanco con
-   sombra suave */
 :host-context(.right-panel) .login-form-host {
   background-color: transparent;
   min-height: unset;
@@ -28,7 +21,6 @@
   box-shadow: none;
 }
 
-/* Ajuste de colores de texto para fondo blanco */
 :host-context(.right-panel) h1 {
   color: #1a0533;
 }

@@ -23,19 +23,20 @@ export class LoginFormAdminComponent {
     private cdr: ChangeDetectorRef,
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  onSubmit(): void {
+    onSubmit(): void {
     if (this.loginForm.invalid) return;
 
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { email, password } = this.loginForm.value;
-    combineLatest([this.authService.login(email, password), timer(1000)])
+    const { username, password } = this.loginForm.value;
+    
+    combineLatest([this.authService.login(username, password), timer(1000)])
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -43,16 +44,16 @@ export class LoginFormAdminComponent {
         }),
       )
       .subscribe({
-        next: ([profile]) => {
-          if (profile) {
+        next: ([authResponse]) => {
+          if (authResponse) {
             this.router.navigate(['/tambito++/home']);
           } else {
             this.errorMessage = 'Correo o contraseña incorrectos.';
           }
         },
         error: () => {
-          this.errorMessage = 'Error al conectar. Intenta de nuevo.';
-        },
+          this.errorMessage = 'Ocurrió un error en el servidor. Inténtalo más tarde.';
+        }
       });
   }
 }

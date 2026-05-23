@@ -77,11 +77,13 @@
               Iniciar sesión
             }
           </span>
-          <i
-            class="fa-solid fa-chevron-down text-[0.7rem] transition-transform duration-200"
-            [class.rotate-180]="isLoggedIn() && isAccountOpen()"
-            aria-hidden="true"
-          ></i>
+          @if (isLoggedIn()) {
+            <i
+              class="fa-solid fa-chevron-down text-[0.7rem] transition-transform duration-200"
+              [class.rotate-180]="isAccountOpen()"
+              aria-hidden="true"
+            ></i>
+          }
         </div>
 
         @if (isAccountOpen()) {

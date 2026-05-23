@@ -1,16 +1,23 @@
 :host {
-	display: block;
-	width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .password-field::-ms-reveal,
 .password-field::-ms-clear {
-	display: none;
+  display: none;
 }
 
 .password-field::-webkit-credentials-auto-fill-button,
 .password-field::-webkit-password-toggle-button {
-	display: none !important;
-	visibility: hidden;
-	pointer-events: none;
+  display: none !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.text-action {
+  font-size: clamp(0.75rem, 2.2vw, 0.95rem);
+}
+.text-action2 {
+  font-size: clamp(0.8rem, 2.2vw, 0.95rem);
 }

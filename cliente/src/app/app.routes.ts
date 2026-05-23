@@ -1,22 +1,25 @@
 import { Routes } from '@angular/router';
-import { PublicLayoutComponent } from './core/layout/public-layout/public-layout.component';
-import { HomeComponent } from './pages/landing/home/home.component';
+
 import { PageNotfoundComponent } from './pages/errors_page/page-notfound/page-notfound.component';
-import { CatalogLayoutComponent } from './core/layout/catalog-layout/catalog-layout.component';
-import { CatalogoComponent } from './pages/landing/catalogo/catalogo.component';
-import { authAdminGuard } from './core/guards/auth-admin.guard';
-import { adminLoginGuard } from './core/guards/admin-login.guard';
-import { authClientGuard } from './core/guards/auth-client.guard';
-import { LoginPage } from './pages/admin/login-page/login-page';
-import { Home } from './pages/admin/home/home';
-import { PerfilAdmin } from './pages/admin/perfil-admin/perfil-admin';
-import { PerfilComponent } from './pages/client/perfil/perfil.component';
-import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout.component';
-import { ConfigAdminPage } from './pages/admin/config-admin-page/config-admin-page';
-import { ClientesAdminPage } from './pages/admin/clientes-admin-page/clientes-admin-page';
-import { ReclamosAdminPage } from './pages/admin/reclamos-admin-page/reclamos-admin-page';
-import { VentasAdminPage } from './pages/admin/ventas-admin-page/ventas-admin-page';
-import { ProductosAdminPage } from './pages/admin/productos-admin-page/productos-admin-page';
+
+import { CatalogLayoutComponent, PublicLayoutComponent, AdminLayoutComponent } from './core/layout';
+
+import { authAdminGuard, adminLoginGuard, authClientGuard } from './core/guards';
+
+import { HomeComponent, CatalogoComponent } from './pages/landing';
+
+import { PerfilComponent } from './pages/client';
+
+import {
+  Home,
+  LoginPage,
+  PerfilAdmin,
+  ConfigAdminPage,
+  ClientesAdminPage,
+  ReclamosAdminPage,
+  VentasAdminPage,
+  ProductosAdminPage,
+} from './pages/admin';
 
 export const routes: Routes = [
   // ─── Rutas públicas ───────────────────────────────────────────────
@@ -52,7 +55,7 @@ export const routes: Routes = [
   // ─── Panel de Administración ──────────────────────────────────────
   {
     path: 'tambito++',
-    
+
     children: [
       {
         path: 'login',

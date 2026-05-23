@@ -14,3 +14,10 @@
 	visibility: hidden;
 	pointer-events: none;
 }
+
+.text-action {
+  font-size: clamp(0.7rem, 2.2vw, 0.85rem);
+}
+.text-action2 {
+  font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+}

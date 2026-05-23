@@ -1,102 +1,204 @@
 <h1 class="text-center text-2xl font-bold text-slate-900 mb-6">Crea tu cuenta</h1>
 
 <div class="flex flex-col gap-4">
-	<div class="flex flex-col gap-1.5">
-		<label class="text-sm text-slate-600">Nombre completo</label>
-		<div class="relative">
-			<i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-[#ad88a3]"></i>
-			<input
-				[(ngModel)]="regName"
-				placeholder="Tu nombre"
-				class="w-full pl-9 pr-4 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691]"
-			/>
-		</div>
-	</div>
+  @switch (regNameMode) {
+    @case ('choice') {
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm text-slate-600">Nombre completo</label>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            (click)="useDniMode()"
+            class="flex-1 rounded-lg border border-[#dac5d4] bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:border-[#a00691] hover:text-[#a00691]"
+          >
+            DNI
+          </button>
+          <button
+            type="button"
+            (click)="useManualMode()"
+            class="flex-1 rounded-lg border border-[#dac5d4] bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:border-[#a00691] hover:text-[#a00691]"
+          >
+            MANUAL
+          </button>
+        </div>
+      </div>
+    }
 
-	<div class="flex flex-col gap-1.5">
-		<label class="text-sm text-slate-600">Correo electrónico</label>
-		<div class="relative">
-			<i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-[#ad88a3]"></i>
-			<input
-				[(ngModel)]="regEmail"
-				placeholder="tu@correo.com"
-				class="w-full pl-9 pr-4 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691]"
-			/>
-		</div>
-	</div>
+    @case ('dni') {
+      <div class="flex flex-col gap-3">
+        <button
+          type="button"
+          (click)="backToChoice()"
+          class="self-start text-sm font-medium text-[#b615a6] hover:text-[#a00691]"
+        >
+          ← Volver
+        </button>
 
-	<div class="flex flex-col gap-1.5">
-		<label class="text-sm text-slate-600">Contraseña</label>
-		<div class="relative">
-			<i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-[#ad88a3]"></i>
-			<input
-				[type]="showRegPassword ? 'text' : 'password'"
-				[(ngModel)]="regPassword"
-				placeholder="••••••••"
-				class="password-field w-full pl-9 pr-10 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691]"
-			/>
-			<button
-				type="button"
-				(click)="showRegPassword = !showRegPassword"
-				class="absolute right-3 top-1/2 -translate-y-1/2 text-[#ad88a3] hover:text-slate-700"
-			>
-				<i [class]="showRegPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-			</button>
-		</div>
-	</div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm text-slate-600"> DNI </label>
 
-	<div class="space-y-1">
-		<div class="h-1.5 w-full rounded-full bg-slate-200 overflow-hidden">
-			<div
-				class="h-full rounded-full transition-all duration-300"
-				[ngClass]="regPasswordStrengthTrackClass"
-				[style.width.%]="regPasswordStrength"
-			></div>
-		</div>
-		<p class="text-xs text-slate-400">
-			Fortaleza de contraseña: <span class="font-medium text-slate-600">{{ regPasswordStrengthLabel }}</span>
-		</p>
-	</div>
+          <div class="relative">
+            <input
+              [(ngModel)]="regDni"
+              type="text"
+              inputmode="numeric"
+              maxlength="8"
+              (input)="onDniInput()"
+              placeholder="78788787"
+              class="w-full pr-12 pl-4 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691]"
+            />
 
-	<div class="flex items-center gap-3">
-		<div class="flex-1 h-px bg-slate-200"></div>
-		<span class="text-xs text-slate-400">O continúa con</span>
-		<div class="flex-1 h-px bg-slate-200"></div>
-	</div>
+            <button
+              type="button"
+              (click)="lookupNameByDni()"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-[#b615a6] hover:text-[#a00691]"
+              aria-label="Buscar DNI"
+            >
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </div>
 
-	<div class="grid grid-cols-2 gap-3">
-		<button
-			type="button"
-			(click)="onGoogle()"
-			class="bg-[#fff7fd] border border-[#fae8f5] rounded-lg py-2.5 text-slate-700 hover:bg-[#fae8f5] flex items-center justify-center"
-			aria-label="Continuar con Google"
-			title="Google"
-		>
-			<i class="fa-brands fa-google text-lg" aria-hidden="true"></i>
-		</button>
-		<button
-			type="button"
-			(click)="onOutlook()"
-			class="bg-[#fff7fd] border border-[#fae8f5] rounded-lg py-2.5 text-slate-700 hover:bg-[#fae8f5] flex items-center justify-center"
-			aria-label="Continuar con Outlook"
-			title="Outlook"
-		>
-			<i class="fa-brands fa-microsoft text-lg" aria-hidden="true"></i>
-		</button>
-	</div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm text-slate-600"> Resultado </label>
 
-	<button
-		type="button"
-		(click)="onRegister()"
-		class="w-full py-2.5 rounded-lg text-sm font-semibold text-white bg-[#b615a6] hover:bg-[#a00691] transition"
-	>
-		Crear cuenta
-	</button>
+          <input
+            [value]="regDniResult"
+            readonly
+            placeholder="Resultado"
+            class="w-full px-4 py-2.5 text-sm text-slate-700 bg-slate-50 border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none"
+          />
+        </div>
+      </div>
+    }
 
-	<p class="text-center text-sm text-slate-600">
-		¿Ya tienes una cuenta?
-		<button type="button" (click)="goToLogin()" class="text-[#b615a6] hover:text-[#a00691]">
-			Iniciar sesión
-		</button>
-	</p>
+    @case ('manual') {
+      <div class="flex flex-col gap-3">
+        <button
+          type="button"
+          (click)="backToChoice()"
+          class="self-start text-sm font-medium text-[#b615a6] hover:text-[#a00691]"
+        >
+          ← Volver
+        </button>
+
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm text-slate-600"> Nombre completo </label>
+
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-[#ad88a3]"></i>
+
+            <input
+              [(ngModel)]="regName"
+              placeholder="Tu nombre"
+              class="w-full pl-9 pr-4 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691]"
+            />
+          </div>
+        </div>
+      </div>
+    }
+  }
+
+  <div class="flex flex-col gap-1.5">
+    <label class="text-sm text-slate-600"> Correo electrónico </label>
+
+    <div class="relative">
+      <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-[#ad88a3]"></i>
+
+      <input
+        [(ngModel)]="regEmail"
+        placeholder="tu@correo.com"
+        class="w-full pl-9 pr-4 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691]"
+      />
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <label class="text-sm text-slate-600"> Contraseña </label>
+
+    <div class="relative">
+      <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-[#ad88a3]"></i>
+
+      <input
+        [type]="showRegPassword ? 'text' : 'password'"
+        [(ngModel)]="regPassword"
+        placeholder="••••••••"
+        class="password-field w-full pl-9 pr-10 py-2.5 text-sm text-slate-900 bg-transparent border-0 border-b-2 border-b-[#dac5d4] rounded-none placeholder-[#ad88a3] focus:outline-none focus:ring-0 focus:border-b-[#a00691]"
+      />
+
+      <button
+        type="button"
+        (click)="showRegPassword = !showRegPassword"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-[#ad88a3] hover:text-slate-700"
+      >
+        <i [class]="showRegPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="space-y-1">
+    <div class="h-1.5 w-full rounded-full bg-slate-200 overflow-hidden">
+      <div
+        class="h-full rounded-full transition-all duration-300"
+        [ngClass]="regPasswordStrengthTrackClass"
+        [style.width.%]="regPasswordStrength"
+      ></div>
+    </div>
+
+    <p class="text-action text-slate-400">
+      Fortaleza de contraseña:
+
+      <span class="font-medium text-slate-600">
+        {{ regPasswordStrengthLabel }}
+      </span>
+    </p>
+  </div>
+
+  <button
+    type="button"
+    (click)="onRegister()"
+    class="w-full py-2.5 rounded-lg text-sm font-semibold text-white bg-[#b615a6] hover:bg-[#a00691] transition"
+  >
+    Crear cuenta
+  </button>
+
+  <app-error-message [message]="errorMessage" />
+
+  <div class="flex items-center gap-3">
+    <div class="flex-1 h-px bg-slate-200"></div>
+
+    <span class="text-xs text-slate-400"> O continúa con </span>
+
+    <div class="flex-1 h-px bg-slate-200"></div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3">
+    <button
+      type="button"
+      (click)="onGoogle()"
+      class="bg-[#fff7fd] border border-[#fae8f5] rounded-lg py-2.5 text-slate-700 hover:bg-[#fae8f5] flex items-center justify-center"
+      aria-label="Continuar con Google"
+      title="Google"
+    >
+      <i class="fa-brands fa-google text-lg"></i>
+    </button>
+
+    <button
+      type="button"
+      (click)="onOutlook()"
+      class="bg-[#fff7fd] border border-[#fae8f5] rounded-lg py-2.5 text-slate-700 hover:bg-[#fae8f5] flex items-center justify-center"
+      aria-label="Continuar con Outlook"
+      title="Outlook"
+    >
+      <i class="fa-brands fa-microsoft text-lg"></i>
+    </button>
+  </div>
+
+  <p class="text-center text-action2 text-slate-600">
+    ¿Ya tienes una cuenta?
+
+    <button type="button" (click)="goToLogin()" class="text-[#b615a6] hover:text-[#a00691]">
+      Iniciar sesión
+    </button>
+  </p>
 </div>

@@ -25,7 +25,7 @@ export class TokenService {
     localStorage.removeItem(this.KEY);
   }
 
-  private getPayload(): any | null {
+  private getPayload(): TokenPayload | null {
     const token = this.get();
     if (!token) return null;
     try {

@@ -1,7 +1,6 @@
-import { ClientAuthService } from '@/app/features/auth/service/client/client-auth.service';
+import { ClientAuthService } from '@/app/features/auth/service/client/login/client-auth.service';
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-
 
 /**
  * Guard que protege las rutas del cliente.

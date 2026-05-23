@@ -1,132 +1,64 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, output, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnDestroy, output, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription, combineLatest, timer } from 'rxjs';
-import { finalize } from 'rxjs/operators';
-import { Profile } from '../../models/profile.model';
-import { AuthResponse, ClientAuthService } from '../../service/client/client-auth.service';
-
-const LOCK_STORAGE_KEY = 'auth.lock';
-
-interface LockState {
-  lockUntil: number;
-}
+import { Subscription } from 'rxjs';
+import { ErrorMessageComponent } from '@/app/shared/components/ui/error-message/error-message.component';
+import { ToastService } from '@/app/shared/services/toast.service';
+import { AuthFacade } from '../../service/client/login/auth.facade';
+import { AuthLockService } from '@/app/features/auth/service/admin/auth-lock.service';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ErrorMessageComponent],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.css',
 })
-export class LoginFormComponent implements OnInit, OnDestroy {
+export class LoginFormComponent implements OnDestroy {
   switchToRegister = output<void>();
-  private authService = inject(ClientAuthService);
 
-  private readonly maxLoginAttempts = 3;
-  private readonly lockDurationMs = 2 * 60 * 1000;
-  private lockUntil: number | null = null;
-  private lockIntervalId: ReturnType<typeof setInterval> | null = null;
-  private loginSubscription: Subscription | null = null;
-  private failedAttempts = 0;
-  private errorTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+  private toastService = inject(ToastService);
+  private authFacade = inject(AuthFacade);
+  private lockService = inject(AuthLockService);
+
+  isLoading = this.authFacade.isLoading;
+  isLocked = this.lockService.isLocked;
 
   email = '';
   password = '';
   rememberMe = false;
   showPassword = false;
-  isLoading = false;
   errorMessage = '';
-  lockRemainingSeconds = 0;
 
-  get isLocked(): boolean {
-    return this.lockUntil !== null && Date.now() < this.lockUntil;
-  }
-
-  constructor(
-    private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
-
-  ngOnInit(): void {
-    this.restoreLockFromStorage();
-  }
-
-  private showError(message: string, durationMs = 3000): void {
-    if (this.errorTimeoutId) {
-      clearTimeout(this.errorTimeoutId);
-      this.errorTimeoutId = null;
-    }
-
-    this.errorMessage = message;
-    this.cdr.detectChanges();
-
-    if (!message || durationMs <= 0) return;
-
-    this.errorTimeoutId = setTimeout(() => {
-      this.errorMessage = '';
-      this.errorTimeoutId = null;
-      this.cdr.detectChanges();
-    }, durationMs);
-  }
-
-  private restoreLockFromStorage(): void {
-    const raw = localStorage.getItem(LOCK_STORAGE_KEY);
-    if (!raw) return;
-
-    try {
-      const { lockUntil }: LockState = JSON.parse(raw);
-      if (Date.now() < lockUntil) {
-        this.lockUntil = lockUntil;
-        this.updateLockCountdown();
-        this.errorMessage = `Demasiados intentos fallidos. Intenta de nuevo en ${this.lockRemainingSeconds}s.`;
-        this.startLockInterval(); 
-      } else {
-        localStorage.removeItem(LOCK_STORAGE_KEY);
-      }
-    } catch {
-      localStorage.removeItem(LOCK_STORAGE_KEY);
-    }
-  }
+  private loginSubscription: Subscription | null = null;
+  private errorTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   onSignIn(): void {
-    if (this.isLoading) return;
+    if (this.isLoading()) return;
 
-    if (this.isLocked) {
-      this.updateLockCountdown();
-      this.errorMessage = `Demasiados intentos fallidos. Intentalo mas tarde.`;
+    if (this.isLocked()) {
+      this.showError(this.lockService.lockMessage(), 5000);
       return;
     }
-
-    this.errorMessage = '';
 
     if (!this.email.trim() || !this.password.trim()) {
       this.showError('Por favor completa todos los campos.', 3000);
       return;
     }
 
-    this.isLoading = true;
+    this.errorMessage = '';
     this.loginSubscription?.unsubscribe();
 
-    this.loginSubscription = combineLatest([
-      this.authService.login(this.email, this.password),
-      timer(1000),
-    ]).pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.cdr.detectChanges();
-        this.loginSubscription = null;
-      })
-    ).subscribe({
-      next: ([profile]: [AuthResponse | null, number]) => {
-        if (profile) {
-          this.failedAttempts = 0;
-          this.clearLock();
+    this.loginSubscription = this.authFacade.login(this.email, this.password).subscribe({
+      next: (state) => {
+        if (state.success) {
           this.resetForm();
           this.router.navigate(['/perfil']);
         } else {
-          this.handleFailedAttempt();
+          this.showError(state.message || 'Credenciales inválidas.', 3500);
           this.password = '';
         }
       },
@@ -137,60 +69,20 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  private handleFailedAttempt(): void {
-    this.failedAttempts += 1;
-    const remainingAttempts = this.maxLoginAttempts - this.failedAttempts;
-
-    if (remainingAttempts <= 0) {
-      this.startLock();
-      return;
+  private showError(message: string, durationMs = 3000): void {
+    if (this.errorTimeoutId) {
+      clearTimeout(this.errorTimeoutId);
     }
 
-    this.showError(`Credenciales inválidas. Te quedan ${remainingAttempts} intento(s).`, 3500);
-  }
+    this.errorMessage = message;
+    this.cdr.detectChanges();
 
-  private startLock(): void {
-    this.lockUntil = Date.now() + this.lockDurationMs;
-    this.failedAttempts = 0;
+    if (!message || durationMs <= 0) return;
 
-    // Persistir en localStorage
-    localStorage.setItem(LOCK_STORAGE_KEY, JSON.stringify({ lockUntil: this.lockUntil }));
-
-    this.updateLockCountdown();
-    this.showError(`Demasiados intentos fallidos. Intentalo mas tarde`, 5000);
-    this.startLockInterval();
-  }
-
-  private startLockInterval(): void {
-    if (this.lockIntervalId) clearInterval(this.lockIntervalId);
-
-    this.lockIntervalId = setInterval(() => {
-      if (!this.isLocked) {
-        this.clearLock();
-        this.errorMessage = '';
-        this.cdr.detectChanges();
-        return;
-      }
-      this.updateLockCountdown();
-      this.errorMessage = `Demasiados intentos fallidos. Intentalo mas tarde.`;
+    this.errorTimeoutId = setTimeout(() => {
+      this.errorMessage = '';
       this.cdr.detectChanges();
-    }, 1000);
-  }
-
-  private clearLock(): void {
-    this.lockUntil = null;
-    this.lockRemainingSeconds = 0;
-    localStorage.removeItem(LOCK_STORAGE_KEY); 
-    if (this.lockIntervalId) {
-      clearInterval(this.lockIntervalId);
-      this.lockIntervalId = null;
-    }
-  }
-
-  private updateLockCountdown(): void {
-    if (!this.lockUntil) { this.lockRemainingSeconds = 0; return; }
-    const remainingMs = this.lockUntil - Date.now();
-    this.lockRemainingSeconds = Math.max(0, Math.ceil(remainingMs / 1000));
+    }, durationMs);
   }
 
   private resetForm(): void {
@@ -201,16 +93,21 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.isLoading = false;
     this.loginSubscription?.unsubscribe();
-    if (this.lockIntervalId) clearInterval(this.lockIntervalId);
     if (this.errorTimeoutId) {
       clearTimeout(this.errorTimeoutId);
-      this.errorTimeoutId = null;
     }
   }
 
-  onGoogle(): void {}
-  onOutlook(): void {}
-  goToRegister(): void { this.switchToRegister.emit(); }
+  onGoogle(): void {
+    this.toastService.info('Próximamente con Google');
+  }
+
+  onOutlook(): void {
+    this.toastService.info('Próximamente con Outlook');
+  }
+
+  goToRegister(): void {
+    this.switchToRegister.emit();
+  }
 }
