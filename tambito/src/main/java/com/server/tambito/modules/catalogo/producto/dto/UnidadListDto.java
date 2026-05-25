@@ -6,4 +6,5 @@ import lombok.Data;
 public class UnidadListDto {
     private Integer idUnidad;
     private String nombre;
+    private String simbolo;
 }

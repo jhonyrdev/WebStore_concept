@@ -15,6 +15,13 @@ public interface SubCategoriaMapper {
 
     List<SubCategoriaListDto> toDtoList(List<SubCategoria> list);
 
+    @Mapping(target = "idSubcat", source = "idSubcat")
+    @Mapping(target = "nombre", source = "nomSubcat")
+    @Mapping(target = "categoriaNombre", source = "categoria.nomCat")
+    SubCategoriaDetalleDto toDetalleDto(SubCategoria subcategoria);
+
+    List<SubCategoriaDetalleDto> toDetalleDtoList(List<SubCategoria> list);
+
     @Mapping(target = "idSubcat", ignore = true)
     @Mapping(target = "nomSubcat", source = "nombre")
     @Mapping(target = "categoria", ignore = true)

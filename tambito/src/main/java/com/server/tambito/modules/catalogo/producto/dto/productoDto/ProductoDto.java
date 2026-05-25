@@ -1,4 +1,4 @@
-package com.server.tambito.modules.catalogo.producto.dto;
+package com.server.tambito.modules.catalogo.producto.dto.productoDto;
 
 import java.math.BigDecimal;
 

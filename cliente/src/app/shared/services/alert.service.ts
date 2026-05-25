@@ -56,25 +56,38 @@ export class AlertService {
   /**
    * Muestra un diálogo de confirmación personalizado.
    */
-  async confirm(options: {
-    title: string;
-    text: string;
-    icon?: SweetAlertIcon;
-    confirmButtonText?: string;
-    cancelButtonText?: string;
-    showCancelButton?: boolean;
-    reverseButtons?: boolean;
-  }): Promise<SweetAlertResult> {
+  async confirm(
+    titleOrOptions: string | any,
+    text: string = '',
+    confirmButtonText: string = 'Aceptar',
+    options: any = {},
+  ): Promise<SweetAlertResult> {
+    // Si el primer argumento es un objeto, lo usamos directamente como configuración de Swal
+    if (typeof titleOrOptions === 'object' && titleOrOptions !== null) {
+      return Swal.fire({
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true,
+        confirmButtonColor: this.defaultConfirmColor,
+        cancelButtonColor: this.defaultCancelColor,
+        ...titleOrOptions,
+      });
+    }
+
+    // Si son argumentos individuales
     return Swal.fire({
-      title: options.title,
-      text: options.text,
+      title: titleOrOptions,
+      text: text,
       icon: options.icon || 'question',
       showCancelButton: options.showCancelButton !== undefined ? options.showCancelButton : true,
-      confirmButtonText: options.confirmButtonText || 'Aceptar',
+      confirmButtonText: confirmButtonText,
       cancelButtonText: options.cancelButtonText || 'Cancelar',
       reverseButtons: options.reverseButtons !== undefined ? options.reverseButtons : true,
       confirmButtonColor: this.defaultConfirmColor,
       cancelButtonColor: this.defaultCancelColor,
+      ...options,
     });
   }
 

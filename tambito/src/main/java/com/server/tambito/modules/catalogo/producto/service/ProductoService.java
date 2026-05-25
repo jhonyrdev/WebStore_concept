@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.server.tambito.commons.validator.ProductoValidator;
 import com.server.tambito.core.service.*;
-import com.server.tambito.modules.catalogo.producto.dto.*;
+import com.server.tambito.modules.catalogo.producto.dto.productoDto.*;
 import com.server.tambito.modules.catalogo.producto.entity.*;
 import com.server.tambito.modules.catalogo.producto.enums.EstadoProductoEnum;
 import com.server.tambito.modules.catalogo.producto.mapper.ProductoMapper;
@@ -110,6 +110,14 @@ public class ProductoService extends BaseService<Producto, Integer> {
 
     public List<ProductoListDto> listarTodos() {
         return mapper.toListDtoList(findAll());
+    }
+
+    public List<ProductoCardDto> listarCards() {
+        return mapper.toCardDtoList(findAll());
+    }
+
+    public List<ProductoAdminDto> listarParaAdmin() {
+        return mapper.toTablaAdminDtoList(findAll());
     }
 
     @Transactional

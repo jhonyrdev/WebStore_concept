@@ -1,5 +1,8 @@
 package com.server.tambito.modules.venta.entity;
        
+import com.server.tambito.modules.venta.convert.TipoMetodoPagoConverter;
+import com.server.tambito.modules.venta.enums.TipoMetodoPagoEnum;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*; 
@@ -19,5 +22,12 @@ public class MetodoPago {
     @NotBlank
     @Column(name = "nombre_metodo", nullable = false, unique = true, length = 50)
     private String nombreMetodo;
+
+    @Convert(converter = TipoMetodoPagoConverter.class)
+    @Column(name = "tipo_metodo", nullable = false)
+    private TipoMetodoPagoEnum tipo;
+
+    @Column(name = "estado_metodo", nullable = false)
+    private Boolean estado = true;
 }
 

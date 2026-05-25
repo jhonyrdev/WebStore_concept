@@ -29,6 +29,14 @@ public class SubCategoriaService {
         return mapper.toDtoList(subCategoriaRepository.findByCategoriaIdCat(idCat));
     }
 
+    public List<SubCategoriaListDto> listarTodas() {
+        return mapper.toDtoList(subCategoriaRepository.findAll());
+    }
+
+    public List<SubCategoriaDetalleDto> listarConCategoria() {
+        return mapper.toDetalleDtoList(subCategoriaRepository.findAll());
+    }
+
     public SubCategoriaListDto registrar(SubCategoriaCreateDto dto) {
 
         Categoria categoria = categoriaRepo.findById(dto.getIdCategoria())

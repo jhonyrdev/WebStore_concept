@@ -1,40 +1,25 @@
 package com.server.tambito.modules.catalogo.producto.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.server.tambito.commons.response.*;
-import com.server.tambito.modules.catalogo.producto.dto.*;
+import com.server.tambito.modules.catalogo.producto.dto.productoDto.*;
 import com.server.tambito.modules.catalogo.producto.service.ProductoService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/public/producto")
+@RequestMapping("/api/producto")
+@CrossOrigin(origins = "http://localhost:4200")
+@PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class ProductoController {
 
     private final ProductoService service;
 
-    @GetMapping
-    public ResponseEntity<apiResponse<List<ProductoListDto>>> listar() {
-        return ResponseEntity.ok(responseUtil.success(
-                service.listarTodos(),
-                "Productos listados exitosamente"));
-    }
-
-    @GetMapping("/{idProd}")
-    public ResponseEntity<apiResponse<ProductoListDto>> obtenerPorId(@PathVariable Integer idProd) {
-        return ResponseEntity.ok(responseUtil.success(
-                service.obtenerPorId(idProd),
-                "Producto encontrado exitosamente"));
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<apiResponse<ProductoListDto>> registrar(@Valid @RequestBody ProductoDto dto) {
         return ResponseEntity.ok(responseUtil.success(
@@ -42,7 +27,6 @@ public class ProductoController {
                 "Producto registrado exitosamente"));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{idProd}")
     public ResponseEntity<apiResponse<ProductoListDto>> actualizar(@PathVariable Integer idProd,
             @Valid @RequestBody ProductoDto dto) {
@@ -51,7 +35,6 @@ public class ProductoController {
                 "Producto actualizado exitosamente"));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{idProd}/stock")
     public ResponseEntity<apiResponse<Void>> incrementarStock(@PathVariable Integer idProd,
             @RequestParam int cantidad) {
@@ -59,7 +42,6 @@ public class ProductoController {
         return ResponseEntity.ok(responseUtil.success(null, "Stock actualizado exitosamente"));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{idProd}")
     public ResponseEntity<apiResponse<Void>> eliminar(@PathVariable Integer idProd) {
         service.eliminar(idProd);

@@ -2,12 +2,9 @@ package com.server.tambito.modules.catalogo.producto.mapper;
 
 import java.util.List;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
-import com.server.tambito.modules.catalogo.producto.dto.ProductoDto;
-import com.server.tambito.modules.catalogo.producto.dto.ProductoListDto;
+import com.server.tambito.modules.catalogo.producto.dto.productoDto.*;
 import com.server.tambito.modules.catalogo.producto.entity.Producto;
 
 @Mapper(componentModel = "spring")
@@ -32,6 +29,13 @@ public interface ProductoMapper {
     ProductoListDto toListDto(Producto producto);
 
     List<ProductoListDto> toListDtoList(List<Producto> list);
+
+    ProductoCardDto toCardDto(Producto producto);
+    List<ProductoCardDto> toCardDtoList(List<Producto> list);
+
+    @Mapping(target = "nombreCategoria", source = "subcategoria.categoria.nomCat")
+    ProductoAdminDto toTablaAdminDto(Producto producto);
+    List<ProductoAdminDto> toTablaAdminDtoList(List<Producto> list);
 
     @Mapping(target = "idProd", ignore = true)
     @Mapping(target = "codProd", ignore = true)

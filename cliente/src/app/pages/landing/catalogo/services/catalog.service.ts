@@ -1,7 +1,12 @@
-import { CategoriaService } from '@/app/features/categories/services/categoria.service';
-import { ProductoService } from '@/app/features/product/services/producto.service';
+import { CategoriaService } from '@/app/features/categories/services/categorias/categoria.service';
+import { ProductoService } from '@/app/features/product/services/producto/producto.service';
 import { CATEGORIA_CONFIG } from '@/app/shared/constants/categoria.config';
-import { sortByNombreAsc, sortByNombreDesc, sortByPrecioAsc, sortByPrecioDesc } from '@/app/shared/utils/sort.utils';
+import {
+  sortByNombreAsc,
+  sortByNombreDesc,
+  sortByPrecioAsc,
+  sortByPrecioDesc,
+} from '@/app/shared/utils/sort.utils';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 

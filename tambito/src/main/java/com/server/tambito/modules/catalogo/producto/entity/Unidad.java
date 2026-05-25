@@ -17,6 +17,10 @@ public class Unidad {
     private Integer idUnidad;
 
     @NotBlank
-    @Column(name = "nombre", nullable = false, unique = true, length = 20)
+    @Column(name = "nom_unid", nullable = false, unique = true, length = 50)
     private String nombre;
+
+    @NotBlank
+    @Column(name = "simb_unid", nullable = false, unique = true, length = 20)
+    private String simbolo;
 }

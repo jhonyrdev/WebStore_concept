@@ -1,0 +1,18 @@
+<nav
+  class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-secundario)] border-t border-[rgba(255,255,255,0.18)] transition-transform duration-300"
+  [class.translate-y-full]="!isVisible()"
+  [class.translate-y-0]="isVisible()"
+>
+  <div class="flex items-center justify-around py-4">
+    @for (item of menuItems; track item.path) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="text-[var(--color-secondary-200)]"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="flex flex-col items-center gap-1 py-1 px-3 text-[var(--color-general-1)] transition-colors hover:text-[var(--color-secondary-200)]"
+      >
+        <i [class]="'fas fa-' + item.icon" class="text-base"></i>
+      </a>
+    }
+  </div>
+</nav>

@@ -24,6 +24,7 @@ export class DataTableComponent {
   @Input() columns: TableColumn[] = [];
   @Input() data: any[] = [];
   @Input() rowTemplate?: TemplateRef<any>;
+  @Input() scrollable: boolean = false;
 
   @Output() action = new EventEmitter<TableActionEvent>();
 

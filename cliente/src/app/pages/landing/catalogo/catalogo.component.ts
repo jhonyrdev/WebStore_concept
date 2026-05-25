@@ -2,7 +2,7 @@ import { Component, computed, effect, inject, PLATFORM_ID, signal } from '@angul
 import { CatalogService } from './services/catalog.service';
 import { ProductCardComponent } from '@/app/shared/components/ui';
 import { ActivatedRoute } from '@angular/router';
-import { ProductoService } from '@/app/features/product/services/producto.service';
+import { ProductoService } from '@/app/features/product/services/producto/producto.service';
 import { Producto } from '@/app/features/product/models/product.model';
 import { CartService } from '@/app/features/cart/services/cart.service';
 import { SortSelectComponent } from '@/app/shared/components/ui/sort-select/sort-select.component';

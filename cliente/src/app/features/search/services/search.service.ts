@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { ProductoService } from '@features/product/services/producto.service';
+import { ProductoService } from '@/app/features/product/services/producto/producto.service';
 
 @Injectable({
   providedIn: 'root',

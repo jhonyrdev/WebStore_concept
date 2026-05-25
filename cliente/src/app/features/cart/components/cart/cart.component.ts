@@ -14,7 +14,8 @@ import { CommonModule } from '@angular/common';
 import { formatCurrencyAmount, SupportedCurrency } from '../../../../shared/utils/currency.utils';
 
 import Swal from 'sweetalert2';
-import { ClientAuthService } from '@/app/features/auth/service/client/client-auth.service';
+import { ClientAuthService } from '@/app/features/auth/service/client/login/client-auth.service';
+import { AlertService } from '../../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-cart',
@@ -31,6 +32,7 @@ export class CartComponent {
   private authService = inject(ClientAuthService);
   private router = inject(Router);
   private elRef = inject(ElementRef);
+  private alertService = inject(AlertService);
 
   isOpen = signal(false);
 
@@ -69,16 +71,11 @@ export class CartComponent {
 
     this.isOpen.set(false);
 
-    const result = await Swal.fire({
+    const result = await this.alertService.confirm({
       title: '¿Deseas continuar?',
       text: 'Puedes continuar al checkout o volver al catálogo para agregar más productos.',
-      icon: 'question',
-      showCancelButton: true,
       confirmButtonText: 'Continuar',
       cancelButtonText: 'Catálogo',
-      reverseButtons: true,
-      confirmButtonColor: '#a00691',
-      cancelButtonColor: '#6b7280',
     });
 
     if (result.isConfirmed) {
@@ -95,10 +92,8 @@ export class CartComponent {
   listHeight = computed(() => {
     const itemH = 80;
     if (this.variant() === 'mobile') {
-      // scroll a partir del 3er item
       return this.cartItems().length > 2 ? `${2 * itemH}px` : null;
     }
-    // desktop/tablet: scroll a partir del 4to item (muestra 3)
     return this.cartItems().length > 3 ? `${3 * itemH}px` : null;
   });
 

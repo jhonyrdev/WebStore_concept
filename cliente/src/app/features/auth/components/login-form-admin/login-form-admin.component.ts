@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { combineLatest, timer } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { AdminAuthService } from '../../service/admin/admin-auth.service';
+import { ErrorMessageComponent } from "@/app/shared/components/ui/error-message/error-message.component";
 
 @Component({
   selector: 'app-login-form-admin',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ErrorMessageComponent],
   templateUrl: './login-form-admin.component.html',
   styleUrl: './login-form-admin.component.css',
 })
@@ -48,7 +49,7 @@ export class LoginFormAdminComponent {
           if (authResponse) {
             this.router.navigate(['/tambito++/home']);
           } else {
-            this.errorMessage = 'Correo o contraseña incorrectos.';
+            this.errorMessage = 'Usuario o contraseña incorrectos.';
           }
         },
         error: () => {

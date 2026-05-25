@@ -6,10 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.server.tambito.commons.response.apiResponse;
-import com.server.tambito.commons.response.responseUtil;
-import com.server.tambito.modules.catalogo.categoria.dto.CategoriaCreateDto;
-import com.server.tambito.modules.catalogo.categoria.dto.CategoriaListDto;
+import com.server.tambito.commons.response.*;
+import com.server.tambito.modules.catalogo.categoria.dto.*;
 import com.server.tambito.modules.catalogo.categoria.service.CategoriaService;
 
 import lombok.RequiredArgsConstructor;

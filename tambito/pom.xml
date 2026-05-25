@@ -107,6 +107,12 @@
 			<version>${org.mapstruct.version}</version>
 		</dependency>
 
+				<dependency>
+					<groupId>com.cloudinary</groupId>
+					<artifactId>cloudinary-http44</artifactId>
+					<version>1.31.0</version>
+				</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -137,16 +143,17 @@
                     <source>21</source>
                     <target>21</target>
                     <annotationProcessorPaths>
+						<path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${org.mapstruct.version}</version>
                         </path>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
+                        
                     </annotationProcessorPaths>
                 </configuration>
                 <executions>
@@ -158,15 +165,16 @@
                         </goals>
                         <configuration>
                             <annotationProcessorPaths>
+								<path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </path>
                                 <path>
                                     <groupId>org.mapstruct</groupId>
                                     <artifactId>mapstruct-processor</artifactId>
                                     <version>${org.mapstruct.version}</version>
                                 </path>
-                                <path>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                </path>
+                                
                             </annotationProcessorPaths>
                         </configuration>
                     </execution>
@@ -178,15 +186,16 @@
                         </goals>
                         <configuration>
                             <annotationProcessorPaths>
+								<path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </path>
                                 <path>
                                     <groupId>org.mapstruct</groupId>
                                     <artifactId>mapstruct-processor</artifactId>
                                     <version>${org.mapstruct.version}</version>
                                 </path>
-                                <path>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                </path>
+                                
                             </annotationProcessorPaths>
                         </configuration>
                     </execution>

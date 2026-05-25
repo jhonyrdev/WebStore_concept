@@ -103,12 +103,12 @@ INSERT INTO marca (nombre) VALUES
 ('Alacena'),
 ('Don Vittorio');
 
-INSERT INTO unidad (nombre) VALUES
-('unidad'),
-('Pack'),
-('ml'),
-('L'),
-('g');
+INSERT INTO unidad (nom_unid, simb_unid) VALUES
+('Unidad','und'),
+('Paquete', 'paq'),
+('miliLitros','ml'),
+('Litros','L'),
+('Gramos','g');
 
 INSERT INTO producto
 (id_prod, cod_prod, nom_prod, des_prod, id_marca, id_unidad, cant_prod, precio_prod, img_prod, estado, id_subcat)
@@ -218,3 +218,10 @@ VALUES
 (103,'CODDE00013','Leche UHT Gloria Entera 946ml','Descripcion',34,3,50,5.50,'https://res.cloudinary.com/dzoiv7zmi/image/upload/v1763938408/productos/hfefwefvywvjplwqzk6w.webp','Disponible',22),
 (104,'CODDE00014','Leche UHT Gloria Light 946 ml','Descripcion',34,3,50,5.50,'https://res.cloudinary.com/dzoiv7zmi/image/upload/v1763938409/productos/kmhsx93hmlh4ly5o9my6.webp','Disponible',22),
 (105,'CODDE00015','Bebida Láctea UHT ProDay Chocolate 320ml','Descripcion',34,3,50,5.50,'https://res.cloudinary.com/dzoiv7zmi/image/upload/v1763938409/productos/vt3eymwsy8mvjya5gzss.webp','Disponible',22);
+
+INSERT INTO metodo_pago(nombre_metodo, tipo_metodo, estado_metodo)
+VALUES
+('Tarjeta de Crédito', 'tarjetas', true),
+('Tarjeta de Débito', 'tarjetas', true),
+('Yape', 'billeteras_digitales', true),
+('Plin', 'billeteras_digitales', true);

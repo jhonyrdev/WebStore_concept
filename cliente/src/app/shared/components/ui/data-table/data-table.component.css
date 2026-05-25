@@ -1,1 +1,161 @@
+:host {
+  display: block;
+  width: 100%;
+}
 
+:host ::ng-deep .responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* HEADER */
+:host ::ng-deep .responsive-table thead {
+  background: var(--bg-tercero);
+}
+
+:host ::ng-deep .responsive-table th {
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-head-table);
+  white-space: nowrap;
+}
+
+/* BODY */
+:host ::ng-deep .responsive-table td {
+  vertical-align: middle;
+  color: var(--text-general);
+  font-size: 0.85rem;
+}
+
+/* Zebra rows */
+:host ::ng-deep .responsive-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+:host ::ng-deep .responsive-table tbody tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+/* Hover */
+:host ::ng-deep .responsive-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transition: 0.2s ease;
+}
+
+@media (max-width: 1150px) and (min-width: 616px) {
+  :host ::ng-deep .table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+    scrollbar-width: thin;
+  }
+
+  :host ::ng-deep .table-wrapper .responsive-table {
+    min-width: 700px;
+    white-space: nowrap;
+  }
+
+  :host ::ng-deep .table-wrapper .responsive-table th,
+  :host ::ng-deep .table-wrapper .responsive-table td {
+    white-space: nowrap;
+  }
+}
+
+/* MOBILE RESPONSIVE TABLE */
+@media (max-width: 616px) {
+  :host ::ng-deep .responsive-table,
+  :host ::ng-deep .responsive-table thead,
+  :host ::ng-deep .responsive-table tbody,
+  :host ::ng-deep .responsive-table th,
+  :host ::ng-deep .responsive-table tr,
+  :host ::ng-deep .responsive-table td {
+    display: block;
+    width: 100%;
+  }
+
+  /* hide headers */
+  :host ::ng-deep .responsive-table thead {
+    display: none;
+  }
+
+  /* card */
+  :host ::ng-deep .responsive-table tr {
+    color: var(--text-head-table);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  /* cells */
+  :host ::ng-deep .responsive-table td {
+    display: flex !important;
+    justify-content: space-between;
+    color: var(--text-general-inverso);
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    font-size: 0.95rem;
+    text-align: right !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    min-height: 56px;
+  }
+
+  :host ::ng-deep .responsive-table td:last-child {
+    border-bottom: none;
+  }
+
+  /* labels */
+  :host ::ng-deep .responsive-table td::before {
+    content: attr(data-label);
+    font-weight: 900;
+    color: var(--text-head-table);
+    text-align: left;
+    flex-shrink: 0;
+    min-width: 90px;
+  }
+
+  /* actions */
+  :host ::ng-deep .responsive-table td[data-label='Acciones'] {
+    justify-content: center;
+  }
+
+  /* buttons spacing */
+  :host ::ng-deep .responsive-table td[data-label='Acciones'] > div {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  :host ::ng-deep .responsive-table tbody tr:nth-child(odd) {
+    background: var(--bg-fila-1);
+  }
+  :host ::ng-deep .responsive-table tbody tr:nth-child(even) {
+    background: var(--bg-fila-2);
+  }
+}
+
+@media (max-width: 321px) {
+  :host ::ng-deep .responsive-table td {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    text-align: left !important;
+    justify-content: start;
+  }
+
+  :host ::ng-deep .responsive-table td::before {
+    display: block;
+    margin-bottom: 0.15rem;
+    opacity: 0.8;
+  }
+
+  /* acciones */
+  :host ::ng-deep .responsive-table td[data-label='Acciones']::before {
+    display: none;
+  }
+  :host ::ng-deep .responsive-table td[data-label='Acciones'] {
+    justify-items: center;
+    text-align: center !important;
+  }
+}

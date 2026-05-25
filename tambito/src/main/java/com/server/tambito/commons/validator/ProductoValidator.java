@@ -2,7 +2,7 @@ package com.server.tambito.commons.validator;
 
 import org.springframework.stereotype.Component;
 
-import com.server.tambito.modules.catalogo.producto.dto.ProductoDto;
+import com.server.tambito.modules.catalogo.producto.dto.productoDto.ProductoDto;
 import com.server.tambito.modules.catalogo.producto.entity.*;
 import com.server.tambito.modules.catalogo.producto.repository.*;
 import com.server.tambito.modules.catalogo.subcategoria.entity.SubCategoria;

@@ -1,6 +1,6 @@
 import { Component, input, OnInit, output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CategoriaService } from '../../../../features/categories/services/categoria.service';
+import { CategoriaService } from '../../services/categorias/categoria.service';
 import { SidebarShellComponent } from '../../../../shared/components/layout/sidebars/sidebar-shell/sidebar-shell.component';
 
 @Component({

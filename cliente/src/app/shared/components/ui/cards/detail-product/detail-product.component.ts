@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { Producto } from '../../../../../features/product/models/product.model';
-import { ProductoService } from '../../../../../features/product/services/producto.service';
+import { ProductoService } from '../../../../../features/product/services/producto/producto.service';
 import { formatCurrencyAmount, SupportedCurrency } from '../../../../utils/currency.utils';
 import { ScrollLockService } from '../../../../services/scroll-lock.service';
 
@@ -89,11 +89,11 @@ export class DetailProductComponent {
 
   increment() {
     const max = this._product()?.stock ?? 99;
-    if (this._quantity() < max) this._quantity.update(v => v + 1);
+    if (this._quantity() < max) this._quantity.update((v) => v + 1);
   }
 
   decrement() {
-    if (this._quantity() > 1) this._quantity.update(v => v - 1);
+    if (this._quantity() > 1) this._quantity.update((v) => v - 1);
   }
 
   addToCart() {

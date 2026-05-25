@@ -5,27 +5,41 @@
 }
 
 @if (!isLoading()) {
-  <div class="min-h-screen md:flex">
+  <div class="min-h-screen lg:flex">
     @if (isMobile() && mobileSidebarOpen()) {
       <button
         type="button"
-        class="fixed inset-0 z-40 bg-black/50 md:hidden"
+        class="fixed inset-0 z-40 bg-black/50 button"
         aria-label="Cerrar menú lateral"
         (click)="closeSidebar()"
       ></button>
     }
 
     <app-sidebar-admin
-      [compact]="isMobile() && !mobileSidebarOpen()"
+      [compact]="isTablet()"
       [mobileOpen]="mobileSidebarOpen()"
+      [hidden]="isMobile()"
       (toggleRequested)="toggleSidebar()"
       (closeRequested)="closeSidebar()"
     ></app-sidebar-admin>
 
-    <main
-      class="min-h-screen bg-[var(--bg-principal)] flex-1 transition-[margin] duration-300 ml-16 md:ml-0"
-    >
-      <router-outlet></router-outlet>
-    </main>
+    <div class="flex flex-col flex-1 min-w-0">
+      @if (isMobile()) {
+        <app-admin-header></app-admin-header>
+      }
+
+      <main
+        class="flex-1 min-w-0 min-h-screen bg-[var(--bg-principal)] duration-300 overflow-x-hidden"
+        [class.ml-16]="isTablet()"
+        [class.pb-14]="isMobile()"
+        [class.pt-16]="isMobile()"
+      >
+        <router-outlet></router-outlet>
+      </main>
+
+      @if (isMobile()) {
+        <app-admin-footer></app-admin-footer>
+      }
+    </div>
   </div>
 }

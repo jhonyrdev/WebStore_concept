@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpParams
-} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@/environments/environments';
 
@@ -16,7 +12,6 @@ export interface ApiOptions {
   providedIn: 'root',
 })
 export class ApiService {
-
   private baseUrl = environment.serverUrl;
 
   constructor(private http: HttpClient) {}
@@ -31,6 +26,10 @@ export class ApiService {
 
   put<T, B>(endpoint: string, body: B, options?: ApiOptions): Observable<T> {
     return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, options);
+  }
+
+  patch<T, B>(endpoint: string, body: B, options?: ApiOptions): Observable<T> {
+    return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, body, options);
   }
 
   delete<T>(endpoint: string, options?: ApiOptions): Observable<T> {

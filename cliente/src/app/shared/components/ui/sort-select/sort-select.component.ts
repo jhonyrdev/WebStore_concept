@@ -16,4 +16,5 @@ export class SortSelectComponent {
   value = model<any>(null);
   options = input<SortOption[]>([]);
   label = input<string>('Ordenar por:');
+  fullWidth = input<boolean>(false);
 }

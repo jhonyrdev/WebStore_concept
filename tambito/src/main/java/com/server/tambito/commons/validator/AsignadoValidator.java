@@ -28,7 +28,7 @@ public class AsignadoValidator {
         long countProductos = productoRepository.countBySubcategoria_IdSubcat(idSubcat);
         if (countProductos > 0) {
             throw new BadRequestException(
-                    "No se puede eliminar la subcategoría porque tiene " + countProductos + " producto(s) asignado(s)");
+                    "No se puede eliminar la subcategoría porque tiene producto(s) asignado(s)");
         }
     }
 
@@ -36,7 +36,7 @@ public class AsignadoValidator {
         long countProductos = productoRepository.countByUnidad_IdUnidad(idUnidad);
         if (countProductos > 0) {
             throw new BadRequestException(
-                    "No se puede eliminar la unidad porque tiene " + countProductos + " producto(s) asignado(s)");
+                    "No se puede eliminar la unidad porque tiene producto(s) asignado(s)");
         }
     }
 
@@ -51,7 +51,7 @@ public class AsignadoValidator {
         long countProductos = productoRepository.countByMarca_IdMarca(idMarca);
         if (countProductos > 0) {
             throw new BadRequestException(
-                    "No se puede eliminar la marca porque tiene " + countProductos + " producto(s) asignado(s)");
+                    "No se puede eliminar la marca porque tiene producto(s) asignado(s)");
         }
     }
 }

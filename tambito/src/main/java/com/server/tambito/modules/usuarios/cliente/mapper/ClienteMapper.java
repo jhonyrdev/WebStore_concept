@@ -14,12 +14,9 @@ public interface ClienteMapper {
 
     @Mapping(target = "idCli", source = "idCli")
     @Mapping(target = "codCli", source = "codCli")
-    @Mapping(target = "nombre", source = "nomCli")
-    @Mapping(target = "apellido", source = "apeCli")
+    @Mapping(target = "nombreCompleto", expression = "java(cliente.getNomCli() + \" \" + cliente.getApeCli())")
     @Mapping(target = "email", source = "correoCli")
-    @Mapping(target = "telefono", source = "telCli")
     @Mapping(target = "estado", source = "estado")
-    @Mapping(target = "fechaReg", source = "fechaReg")
     ClienteListDto toDto(Cliente cliente);
 
     List<ClienteListDto> toDtoList(List<Cliente> list);

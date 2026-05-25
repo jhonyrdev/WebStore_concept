@@ -1,5 +1,5 @@
 <aside
-  class="fixed top-0 left-0 z-50 flex h-screen flex-col overflow-hidden bg-[var(--bg-secundario)] text-[var(--color-general-1)] shadow-lg transition-all duration-300 md:sticky md:top-0 md:z-30 md:h-screen md:flex-none md:w-64"
+  class="fixed top-0 left-0 z-50 flex h-screen flex-col overflow-hidden bg-[var(--bg-secundario)] text-[var(--color-general-1)] shadow-lg transition-all duration-300 lg:sticky lg:top-0 lg:z-30 lg:h-screen lg:flex-none lg:w-62"
   [class.w-16]="compact && !mobileOpen"
   [class.w-64]="!compact || mobileOpen"
 >
@@ -17,7 +17,7 @@
     @if (compact) {
       <button
         type="button"
-        class="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md 0 text-[var(--color-general-1)] transition-colors md:hidden"
+        class="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md 0 text-[var(--color-general-1)] transition-colors lg:hidden"
         aria-label="Abrir o cerrar menú lateral"
         (click)="toggleRequested.emit()"
       >
@@ -36,7 +36,7 @@
         [routerLink]="item.path"
         routerLinkActive="border-l border-[var(--color-secondary-200)] text-[var(--color-secondary-200)]"
         [routerLinkActiveOptions]="{ exact: true }"
-        class="flex items-center gap-3 rounded-md py-2 transition-colors hover:text-[var(--color-secondary-200)]"
+        class="flex items-center gap-3 rounded-md py-3 transition-colors hover:text-[var(--color-secondary-200)]"
         [class.justify-center]="compact && !mobileOpen"
         [class.px-3]="!compact || mobileOpen"
         [class.px-0]="compact && !mobileOpen"
@@ -58,11 +58,11 @@
         [class.justify-center]="compact && !mobileOpen"
         (click)="toggleProfileMenu()"
       >
-        <i class="fas fa-user-circle text-2xl" [style.color]="'var(--color-primary)'"></i>
+        <i class="fas fa-user-circle text-2xl text-[var(--color-primary)]"></i>
         @if (!compact || mobileOpen) {
           <div class="min-w-0 flex-1">
             <p class="truncate text-sm font-medium">Admin User</p>
-            <p class="truncate text-xs" [style.color]="'var(--text-secondary)'">Administrator</p>
+            <p class="truncate text-xs text-[var(--text-secondary)]">Administrator</p>
           </div>
           <i
             class="fas fa-chevron-up text-xs transition-transform"

@@ -65,7 +65,8 @@ CREATE TABLE marca (
 
 CREATE TABLE unidad (
   id_unidad INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(20) NOT NULL UNIQUE
+  nom_unid VARCHAR(50) NOT NULL UNIQUE,
+  simb_unid VARCHAR(20) NOT NULL UNIQUE
 );
 
 CREATE TABLE producto (
@@ -116,6 +117,8 @@ CREATE TABLE detalle_pedido (
 CREATE TABLE metodo_pago (
   id_metodo INT NOT NULL AUTO_INCREMENT,
   nombre_metodo VARCHAR(50) NOT NULL,
+  tipo_metodo ENUM('billeteras_digitales', 'tarjetas') NOT NULL,
+  estado_metodo BOOLEAN NOT NULL DEFAULT TRUE,
   PRIMARY KEY (id_metodo),
   UNIQUE (nombre_metodo)
 );

@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.server.tambito.commons.response.apiResponse;
-import com.server.tambito.commons.response.responseUtil;
+import com.server.tambito.commons.response.*;
 import com.server.tambito.modules.usuarios.cliente.dto.*;
 import com.server.tambito.modules.usuarios.cliente.service.DireccionService;
 
@@ -15,17 +14,17 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/public/direcciones")
+@RequestMapping("/api/direcciones")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 public class DireccionController {
 
     private final DireccionService service;
 
-
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<apiResponse<List<DireccionListDto>>> listar() {
         return ResponseEntity.ok(responseUtil.success(service.listar(), "Direcciones listadas exitosamente"));
-    }
+    }*/
 
     @PreAuthorize("hasRole('CLIENTE')")
     @GetMapping("/cliente/{idCli}")
