@@ -1,1 +1,145 @@
-<p>perfil.component works!</p>
+<div class="w-full max-w-7xl mx-auto p-4 md:p-8 flex flex-col md:flex-row gap-8">
+  
+  <aside class="w-full md:w-1/3 flex flex-col gap-6">
+    <div class="bg-[var(--bg-tercero)] rounded-2xl p-6 shadow-sm border border-[var(--border-color)] flex flex-col items-center text-center relative overflow-hidden">
+      
+      <div class="absolute top-0 left-0 w-full h-24 bg-[var(--color-primary)] opacity-10"></div>
+
+      <div class="w-24 h-24 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center text-3xl font-bold mb-4 shadow-md z-10 border-4 border-[var(--bg-tercero)]">
+        {{ usuario().nombre[0] }}{{ usuario().apellido[0] }}
+      </div>
+      
+      <h2 class="text-xl font-bold text-[var(--text-head-table)] mb-1 z-10">
+        {{ usuario().nombre }} {{ usuario().apellido }}
+      </h2>
+      <p class="text-sm text-[var(--text-general-inverso)] mb-4 z-10">
+        {{ usuario().correo }}
+      </p>
+
+      <div class="w-full bg-black/5 dark:bg-white/5 rounded-xl p-3 mb-4 text-left border border-[var(--border-color)]">
+        <div class="flex justify-between text-xs font-bold text-[var(--text-head-table)] mb-1">
+          <span>Club Tambito+</span>
+          <span>{{ usuario().puntosActuales }}/{{ usuario().puntosSiguienteNivel }} pts</span>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
+          <div class="bg-[var(--color-primary)] h-full rounded-full transition-all duration-500" [style.width.%]="(usuario().puntosActuales / usuario().puntosSiguienteNivel) * 100"></div>
+        </div>
+        <span class="text-[10px] text-[var(--text-general-inverso)] mt-1 block">Faltan 80 puntos para tu próximo beneficio.</span>
+      </div>
+      
+      <button class="w-full py-2 px-4 bg-transparent border-2 border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white rounded-xl font-bold transition-all duration-300 mb-4">
+        Editar Perfil
+      </button>
+
+      <div class="w-full border-t border-[var(--border-color)] mb-4"></div>
+      
+      <button class="w-full py-2 px-4 text-[var(--color-red)] hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-semibold transition-colors duration-300 flex items-center justify-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+        Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <main class="w-full md:w-2/3 flex flex-col gap-6">
+    
+    <div class="grid grid-cols-3 gap-4">
+      @for (stat of estadisticas(); track stat.label) {
+        <div class="bg-[var(--bg-tercero)] rounded-2xl p-4 shadow-sm border border-[var(--border-color)] flex flex-col items-center justify-center hover:border-[var(--color-primary)] transition-colors duration-300">
+          <span class="text-2xl mb-1">{{ stat.icono }}</span>
+          <span class="text-xl font-bold text-[var(--text-head-table)]">{{ stat.valor }}</span>
+          <span class="text-xs text-[var(--text-general-inverso)] font-medium uppercase text-center mt-1">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="flex space-x-6 border-b border-[var(--border-color)] mt-2">
+      <button (click)="cambiarTab('historial')" class="pb-3 text-base font-bold transition-all duration-300" [ngClass]="tabActivo() === 'historial' ? 'text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]' : 'text-[var(--text-general-inverso)] hover:text-[var(--text-head-table)]'">
+        Historial de Compras
+      </button>
+      <button (click)="cambiarTab('favoritos')" class="pb-3 text-base font-bold transition-all duration-300 flex items-center gap-2" [ngClass]="tabActivo() === 'favoritos' ? 'text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]' : 'text-[var(--text-general-inverso)] hover:text-[var(--text-head-table)]'">
+        Lista de Deseos
+        <span class="bg-[var(--color-secondary)] text-[var(--text-head-table)] text-xs px-2 py-0.5 rounded-full font-bold">{{ favoritos().length }}</span>
+      </button>
+      <button (click)="cambiarTab('cupones')" class="pb-3 text-base font-bold transition-all duration-300 flex items-center gap-2" [ngClass]="tabActivo() === 'cupones' ? 'text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]' : 'text-[var(--text-general-inverso)] hover:text-[var(--text-head-table)]'">
+        Mis Cupones
+        <span class="bg-[var(--color-green)] text-white text-xs px-2 py-0.5 rounded-full font-bold">New</span>
+      </button>
+    </div>
+
+    @if (tabActivo() === 'historial') {
+      <div class="bg-[var(--bg-tercero)] rounded-2xl shadow-sm border border-[var(--border-color)] overflow-hidden animate-fade-in">
+        <app-data-table [columns]="columnasHistorial" [data]="historialPedidos()" [rowTemplate]="filaPersonalizada"></app-data-table>
+      </div>
+    }
+
+    @if (tabActivo() === 'favoritos') {
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fade-in">
+        @for (item of favoritos(); track item.id) {
+          <div class="bg-[var(--bg-tercero)] rounded-2xl p-4 shadow-sm border border-[var(--border-color)] flex flex-col justify-between hover:shadow-md transition-shadow relative group">
+            <button (click)="eliminarFavorito(item.id)" class="absolute top-3 right-3 text-[var(--text-general-inverso)] hover:text-[var(--color-red)] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+            </button>
+            <div>
+              <span class="text-xs font-bold text-[var(--color-primary)] uppercase tracking-wider mb-2 block">{{ item.categoria }}</span>
+              <h3 class="text-lg font-bold text-[var(--text-head-table)] pr-6">{{ item.nombre }}</h3>
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+              <span class="text-xl font-bold text-[var(--text-head-table)]">S/ {{ item.precio | number:'1.2-2' }}</span>
+              <button class="bg-[var(--color-primary)] hover:opacity-90 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">Al carrito</button>
+            </div>
+          </div>
+        } @empty {
+          <div class="col-span-full py-12 flex flex-col items-center justify-center text-center bg-[var(--bg-tercero)] rounded-2xl border border-dashed border-[var(--border-color)]">
+            <span class="text-4xl mb-4">🛒</span>
+            <h3 class="text-lg font-bold text-[var(--text-head-table)] mb-2">Tu lista está vacía</h3>
+          </div>
+        }
+      </div>
+    }
+
+    @if (tabActivo() === 'cupones') {
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fade-in">
+        @for (cupon of cupones(); track cupon.codigo) {
+          <div class="bg-[var(--bg-tercero)] rounded-2xl p-5 border-2 border-dashed border-[var(--color-primary)] flex items-center justify-between shadow-sm relative overflow-hidden">
+            <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[var(--border-color)]"></div>
+            <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[var(--border-color)]"></div>
+            
+            <div class="pl-4">
+              <span class="text-xs text-[var(--text-general-inverso)] font-medium">Expira el {{ cupon.expira }}</span>
+              <h3 class="text-lg font-bold text-[var(--text-head-table)] mt-0.5">{{ cupon.descripcion }}</h3>
+              <div class="mt-2 inline-block bg-[var(--color-secondary)] px-3 py-1 rounded-md border border-[var(--color-primary)]/20">
+                <span class="font-mono font-bold text-sm text-[var(--text-head-table)] tracking-wider">{{ cupon.codigo }}</span>
+              </div>
+            </div>
+            <button (click)="copiarCupon(cupon.codigo)" class="bg-[var(--color-primary)] hover:scale-105 active:scale-95 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap shadow-sm">
+              Copiar
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </main>
+</div>
+
+<ng-template #filaPersonalizada let-row let-emit="emit">
+  <td class="px-6 py-4 text-left" style="color: black !important; font-weight: bold;">{{ row.id }}</td>
+  
+  <td class="px-6 py-4 text-center" style="color: black !important; font-weight: 500;">{{ row.fecha | date:'dd/MM/yyyy' }}</td>
+  
+  <td class="px-6 py-4 text-right" style="color: black !important; font-weight: bold;">S/ {{ row.total | number:'1.2-2' }}</td>
+  <td class="px-6 py-4 text-center">
+    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"
+      [ngClass]="{
+        'bg-[var(--color-green)] text-white': row.estado === 'Realizado',
+        'bg-[var(--color-secondary)] text-[var(--text-general-inverso)]': row.estado === 'Pendiente',
+        'bg-[var(--color-red)] text-white': row.estado === 'Cancelado'
+      }">
+      {{ row.estado }}
+    </span>
+  </td>
+  <td class="px-6 py-4 text-center">
+    <button class="text-xs font-bold text-[var(--color-primary)] hover:underline">
+      Ver Detalle
+    </button>
+  </td>
+</ng-template>
