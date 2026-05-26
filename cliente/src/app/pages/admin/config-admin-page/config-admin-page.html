@@ -11,11 +11,232 @@
       </nav>
     </header>
     <main class="p-6">
-      <div
-        class="rounded-2xl border border-dashed border-[var(--border-color)] bg-white/40 dark:bg-black/10 min-h-[55vh] flex items-center justify-center text-sm text-[var(--color-gray)]"
-      >
-        <span>Selecciona una pestaña para navegar entre secciones.</span>
-      </div>
+      @if (activeTab() === 'unidades') {
+        <div class="flex justify-end mb-4">
+          <button
+            (click)="openAddModal()"
+            class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full w-9 h-9 md:w-auto md:px-3 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105"
+            aria-label="Agregar"
+          >
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span class="hidden md:inline ml-2 text-sm font-medium">Agregar</span>
+          </button>
+        </div>
+
+        <div>
+          @if (isLoadingUnidades()) {
+            <div class="px-4 py-3 text-sm text-[var(--color-gray)]">Cargando unidades...</div>
+          }
+
+          <app-data-table
+            [columns]="unidadColumns"
+            [data]="unidades()"
+            [rowTemplate]="unidadRow"
+            (action)="onUnidadAction($event)"
+          ></app-data-table>
+
+          <ng-template #unidadRow let-unidad let-emit="emit">
+
+            <td class="px-6 py-3.5 text-center" data-label="Nombre">
+              {{ unidad.nombre }}
+            </td>
+
+            <td class="px-6 py-3.5 text-center" data-label="Símbolo">
+              {{ unidad.simbolo }}
+            </td>
+
+            <td class="px-6 py-3.5" data-label="Acciones">
+              <div class="flex justify-center gap-2">
+                <button
+                  (click)="editUnidad(unidad)"
+                  class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                  aria-label="Editar unidad"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+
+                <button
+                  (click)="emit('delete', unidad)"
+                  class="text-[var(--color-red-inverso)] sm:text-[var(--color-red)]"
+                  aria-label="Eliminar unidad"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </ng-template>
+        </div>
+
+        <!-- 🔥 MODAL (AQUI VA) -->
+        @if (showUnidadModal()) {
+          <app-unidad-form
+            [initialData]="selectedUnidad() ?? undefined"
+            (submitForm)="guardarUnidad($event)"
+            (close)="closeUnidadModal()"
+          />
+        }
+      }
+      @if (activeTab() === 'pagos') {
+        <div class="flex justify-end mb-4">
+          <button
+            (click)="openAddModal()"
+            class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full w-9 h-9 md:w-auto md:px-3 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105"
+            aria-label="Agregar"
+          >
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span class="hidden md:inline ml-2 text-sm font-medium">Agregar</span>
+          </button>
+        </div>
+        <div class="overflow-hidden">
+          @if (isLoadingMetodos()) {
+            <div class="px-4 py-3 text-sm text-[var(--color-gray)]">
+              Cargando métodos de pago...
+            </div>
+          }
+
+          <app-data-table
+            [columns]="pagoColumns"
+            [data]="metodos()"
+            [rowTemplate]="pagoRow"
+            (action)="onPagoAction($event)"
+          ></app-data-table>
+
+          <ng-template #pagoRow let-pago let-emit="emit">
+
+            <td class="px-6 py-3.5 text-center" data-label="Nombre">
+              {{ pago.nombre }}
+            </td>
+
+            <td class="px-6 py-3.5 text-center" data-label="tipo">
+              <span
+                class="px-2 py-1 rounded-full text-xs font-semibold " 
+                [class]="getTipoBadgeClass(pago.tipo)"
+              >
+                {{ pago.tipo }}
+              </span>
+            </td>
+
+            <td class="px-6 py-3.5 text-center" data-label="Estado">
+              <div class="flex justify-center">
+                <app-switch
+                  [checked]="pago.estado"
+                  (checkedChange)="onToggleEstado(pago)"
+                ></app-switch>
+              </div>
+            </td>
+
+            <td class="px-6 py-3.5" data-label="Acciones">
+              <div class="flex justify-center gap-2">
+                <button
+                  (click)="emit('edit', pago)"
+                  class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                  aria-label="Editar"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+
+                <button
+                  (click)="emit('delete', pago)"
+                  class="text-[var(--color-red-inverso)] sm:text-[var(--color-red)]"
+                  aria-label="Eliminar"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </ng-template>
+        </div>
+
+        @if (showMetodoModal()) {
+          <app-metodo-pago-form
+            [initialData]="selectedMetodo() ?? undefined"
+            (submitForm)="guardarMetodo($event)"
+            (close)="closeMetodoModal()"
+          />
+        }
+      }
+      @if (activeTab() === 'negocio') {
+        <div class="max-w-2xl mx-auto">
+          <div
+            class="rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-6"
+          >
+            <div>
+              <h2 class="text-lg font-semibold text-[var(--text-general)] mb-1">
+                Configuración del Negocio
+              </h2>
+              <p class="text-sm text-[var(--color-gray)]">
+                Ajusta los datos generales de tu empresa.
+              </p>
+            </div>
+            <div>
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                  >Nombre del negocio</label
+                >
+                <input
+                  type="text"
+                  [(ngModel)]="negocioNombre"
+                  placeholder="Ej: Mi Empresa S.A."
+                  class="w-full px-4 py-2.5 text-sm rounded-lg border-b border-gray-300 dark:border-gray-600 text-[var(--color-gray)] placeholder-gray-400 focus:border-transparent transition-all"
+                />
+              </div>
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                  >RUC / Identificador fiscal</label
+                >
+                <input
+                  type="text"
+                  [(ngModel)]="negocioRFC"
+                  placeholder="Ej: ABC123456XYZ"
+                  class="w-full px-4 py-2.5 text-sm rounded-lg border-b border-gray-300 dark:border-gray-600 text-[var(--color-gray)] placeholder-gray-400 focus:border-transparent transition-all"
+                />
+              </div>
+              <div class="flex items-center justify-between py-2">
+                <div>
+                  <p class="text-sm font-medium text-[var(--text-general)]">
+                    Tema de la aplicación
+                  </p>
+                  <p class="text-xs text-[var(--color-gray)] mt-0.5">
+                    {{ darkMode() ? 'Modo oscuro activo' : 'Modo claro activo' }}
+                  </p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i
+                    [class]="!darkMode() ? 'text-rose-500' : 'text-gray-400'"
+                    class="fa-solid fa-sun w-4 h-4 transition-colors"
+                    aria-hidden="true"
+                  ></i>
+                  <button
+                    (click)="toggleTheme()"
+                    [class]="
+                      darkMode() ? 'bg-rose-600 border-rose-600' : 'bg-gray-200 border-gray-200'
+                    "
+                    class="relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
+                  >
+                    <span
+                      [class]="darkMode() ? 'translate-x-5' : 'translate-x-0'"
+                      class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-300 ml-0.5"
+                    ></span>
+                  </button>
+                  <i
+                    [class]="darkMode() ? 'text-rose-500' : 'text-gray-400'"
+                    class="fa-solid fa-moon w-4 h-4 transition-colors"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="pt-3 flex justify-end">
+              <button
+                (click)="guardarNegocio()"
+                class="px-6 py-2.5 bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-md"
+              >
+                Guardar cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      }
     </main>
   </div>
 </div>

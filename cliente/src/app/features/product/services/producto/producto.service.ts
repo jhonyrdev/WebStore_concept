@@ -59,10 +59,9 @@ export class ProductoService {
 
   listarConFallback(): Observable<Producto[]> {
     return this.fallback
-      .getWithFallback<ApiResponse<ProductoListDto[]> | ProductoLocalDto[]>(
-        this.API_PUBLIC,
-        'data/producto.json',
-      )
+      .getWithFallback<
+        ApiResponse<ProductoListDto[]> | ProductoLocalDto[]
+      >(this.API_PUBLIC, 'data/producto.json')
       .pipe(
         map((response) => {
           if (Array.isArray(response)) {
@@ -76,10 +75,9 @@ export class ProductoService {
 
   listarCards(): Observable<ProductoCardDto[]> {
     return this.fallback
-      .getWithFallback<ApiResponse<ProductoCardDto[]>>(
-        `${this.API_PUBLIC}/cards`,
-        'data/producto-cards.json',
-      )
+      .getWithFallback<
+        ApiResponse<ProductoCardDto[]>
+      >(`${this.API_PUBLIC}/cards`, 'data/producto-cards.json')
       .pipe(map((response) => response.data ?? []));
   }
 
@@ -106,6 +104,8 @@ export class ProductoService {
       precio: dto.precioProd,
       stock: dto.cantProd,
       categoriaId: dto.idCat,
+      subCategoriaId: dto.idSubcat,
+      marcaId: dto.idMarca,
       imagen: dto.imgProd,
     };
   }
@@ -117,6 +117,8 @@ export class ProductoService {
       precio: dto.precio,
       stock: dto.stock,
       categoriaId: dto.categoriaId,
+      subCategoriaId: 0, 
+      marcaId: 0,
       imagen: dto.imagen,
     };
   }

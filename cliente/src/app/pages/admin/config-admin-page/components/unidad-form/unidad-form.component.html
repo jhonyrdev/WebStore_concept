@@ -1,0 +1,40 @@
+<app-base-form
+  [form]="form"
+  [initialData]="initialData"
+  [title]="initialData ? 'Unidad' : 'Unidad'"
+  (submitForm)="onSubmit($event)"
+  (close)="onClose()"
+>
+  <div [formGroup]="form" class="space-y-4">
+    <div>
+      <label class="mb-1 block text-sm font-medium text-gray-700"> Nombre </label>
+      <input
+        type="text"
+        formControlName="nombre"
+        placeholder="Ej: Kilogramos, SixsPack..."
+        class="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+      />
+      <small
+        *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched"
+        class="text-red-500 text-xs"
+      >
+        El nombre es requerido.
+      </small>
+    </div>
+    <div>
+      <label class="mb-1 block text-sm font-medium text-gray-700"> Símbolo </label>
+      <input
+        type="text"
+        formControlName="simbolo"
+        placeholder="Ej: kg, ml, l..."
+        class="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+      />
+      <small
+        *ngIf="form.get('simbolo')?.invalid && form.get('simbolo')?.touched"
+        class="text-red-500 text-xs"
+      >
+        El simbolo es requerido.
+      </small>
+    </div>
+  </div>
+</app-base-form>

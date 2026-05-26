@@ -12,11 +12,213 @@
     </header>
 
     <main class="p-6">
-      <div
-        class="rounded-2xl border border-dashed border-[var(--border-color)] bg-white/40 dark:bg-black/10 min-h-[55vh] flex items-center justify-center text-sm text-[var(--color-gray)]"
-      >
-        <span>Selecciona una pestaña para navegar entre secciones.</span>
-      </div>
+      @if (activeTab() === 'productos') {
+        <div class="flex justify-end mb-4">
+          <button
+            (click)="openAddModal()"
+            class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full w-9 h-9 md:w-auto md:px-3 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105"
+            aria-label="Agregar producto"
+          >
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span class="hidden md:inline ml-2 text-sm font-medium">Agregar</span>
+          </button>
+        </div>
+
+        <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
+          <app-table-search
+            placeholder="Buscar por nombre…"
+            [(query)]="searchQuery"
+            class="w-full sm:flex-1"
+          />
+
+          <div class="sort-container flex item-start sm:items-end gap-8 shrink-0">
+            <app-sort-select
+              label="Filtrar por:"
+              [options]="productFieldOptions"
+              [(value)]="productField"
+              [fullWidth]="true"
+              class="flex-1"
+            ></app-sort-select>
+
+            <app-sort-select
+              label="Ordenar:"
+              [options]="productOrderOptions"
+              [(value)]="productOrder"
+              [fullWidth]="true"
+              class="flex-1"
+            ></app-sort-select>
+          </div>
+        </div>
+
+        <div class="w-full">
+          <app-data-table
+            [columns]="productoColumns"
+            [data]="productosPaginados()"
+            [rowTemplate]="productoRow"
+            (action)="onTableAction($event)"
+            [scrollable]="true"
+          ></app-data-table>
+
+          @if (totalProductosPages() > 1) {
+            <div class="mt-4 flex justify-center">
+              <app-pagination
+                [currentPage]="currentPage()"
+                [totalPages]="totalProductosPages()"
+                (pageChange)="currentPage.set($event)"
+              ></app-pagination>
+            </div>
+          }
+
+          <ng-template #productoRow let-producto let-emit="emit">
+            <td class="px-6 py-3.5 text-center" data-label="Codigo">{{ producto.codProd }}</td>
+            <td class="px-6 py-3.5" data-label="Producto">{{ producto.nomProd }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="Precio">
+              {{ producto.precioProd | currency }}
+            </td>
+            <td class="px-6 py-3.5 text-center" data-label="Cantidad">{{ producto.cantProd }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="Categoria">
+              {{ producto.nombreCategoria }}
+            </td>
+            <td class="px-6 py-3.5 text-center" data-label="Estado">{{ producto.estado }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="Acciones">
+              <div class="flex items-center justify-center gap-3">
+                <button
+                  (click)="emit('edit', producto)"
+                  class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                  aria-label="Editar producto"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  (click)="emit('delete', producto)"
+                  class="text-[var(--color-red-inverso)] sm:text-[var(--color-red)]"
+                  aria-label="Eliminar producto"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </ng-template>
+        </div>
+      }
+
+      @if (activeTab() === 'categorias') {
+        <div class="flex justify-end mb-4">
+          <button
+            (click)="openAddModal()"
+            class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full w-9 h-9 md:w-auto md:px-3 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105"
+            aria-label="Agregar categoria"
+          >
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span class="hidden md:inline ml-2 text-sm font-medium">Agregar</span>
+          </button>
+        </div>
+
+        <div>
+          <app-data-table
+            [columns]="categoriaColumns"
+            [data]="categoriasPaginadas()"
+            [rowTemplate]="categoriaRow"
+            (action)="onTableAction($event)"
+          ></app-data-table>
+
+          @if (totalCategoriasPages() > 1) {
+            <div class="mt-4 flex justify-center">
+              <app-pagination
+                [currentPage]="currentPage()"
+                [totalPages]="totalCategoriasPages()"
+                (pageChange)="currentPage.set($event)"
+              ></app-pagination>
+            </div>
+          }
+
+          <ng-template #categoriaRow let-categoria let-emit="emit">
+            <td class="px-6 py-3.5" data-label="Categoria">{{ categoria.categoriaNombre }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="subcategoria">
+              {{ categoria.nombre }}
+            </td>
+            <td class="px-6 py-3.5 text-center" data-label="Acciones">
+              <div class="flex items-center justify-center gap-3">
+                <button
+                  (click)="emit('edit', categoria)"
+                  class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                  aria-label="Editar categoria"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  (click)="emit('delete', categoria)"
+                  class="text-[var(--color-red-inverso)] sm:text-[var(--color-red)]"
+                  aria-label="Eliminar categoria"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </ng-template>
+        </div>
+      }
+
+      @if (activeTab() === 'marca') {
+        <div class="flex justify-end mb-4">
+          <button
+            (click)="openAddModal()"
+            class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full w-9 h-9 md:w-auto md:px-3 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105"
+            aria-label="Agregar marca"
+          >
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span class="hidden md:inline ml-2 text-sm font-medium">Agregar</span>
+          </button>
+        </div>
+
+        <div>
+          <app-data-table
+            [columns]="marcaColumns"
+            [data]="marcasPaginadas()"
+            [rowTemplate]="marcaRow"
+            (action)="onTableAction($event)"
+          ></app-data-table>
+
+          @if (totalMarcasPages() > 1) {
+            <div class="mt-4 flex justify-center">
+              <app-pagination
+                [currentPage]="currentPage()"
+                [totalPages]="totalMarcasPages()"
+                (pageChange)="currentPage.set($event)"
+              ></app-pagination>
+            </div>
+          }
+
+          <ng-template #marcaRow let-marca let-emit="emit">
+            <td class="px-6 py-3.5" data-label="Marca">{{ marca.nombre }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="Acciones">
+              <div class="flex items-center justify-center gap-3">
+                <button
+                  (click)="emit('edit', marca)"
+                  class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                  aria-label="Editar marca"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  (click)="emit('delete', marca)"
+                  class="text-[var(--color-red-inverso)] sm:text-[var(--color-red)]"
+                  aria-label="Eliminar marca"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </ng-template>
+        </div>
+      }
     </main>
+
+    <app-marca-form
+      *ngIf="showMarcaModal()"
+      [initialData]="selectedMarca()!"
+      (submitForm)="onMarcaSubmit($event)"
+      (close)="showMarcaModal.set(false)"
+    ></app-marca-form>
   </div>
 </div>

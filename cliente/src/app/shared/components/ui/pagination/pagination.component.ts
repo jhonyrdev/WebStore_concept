@@ -21,7 +21,7 @@ export class PaginationComponent {
     }
 
     if (current <= 4) {
-      return [1, 2, 3, 4, 5, '...', total];
+      return [1, 2, 3, '...', total];
     }
 
     if (current >= total - 3) {

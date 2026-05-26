@@ -10,6 +10,7 @@ import com.server.tambito.modules.catalogo.subcategoria.entity.SubCategoria;
 @Mapper(componentModel = "spring")
 public interface SubCategoriaMapper {
 
+    @Mapping(target = "idSubcat", source = "idSubcat")
     @Mapping(target = "nombre", source = "nomSubcat")
     SubCategoriaListDto toDto(SubCategoria subcategoria);
 
