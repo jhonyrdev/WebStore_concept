@@ -1,19 +1,17 @@
-<div [ngClass]="variant === 'slider' 
-  ? 'snap-start shrink-0 w-full' 
-  : 'h-full'"
+<div
+  [ngClass]="variant === 'slider' ? 'snap-start shrink-0 w-full' : 'h-full'"
   class="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm flex flex-col cursor-pointer"
-  (click)="openDetail()">
-
-  <div class="w-full h-44 bg-gray-100 overflow-hidden">
+  (click)="openDetail()"
+>
+  <div class="w-full overflow-hidden" [ngClass]="product.imagen ? 'h-full' : 'h-45 bg-gray-100'">
     @if (product.imagen) {
-      <img [src]="product.imagen" [alt]="product.nombre"
-           class="w-full h-full object-cover"/>
+      <img [src]="product.imagen" [alt]="product.nombre" class="w-full h-full object-contain" />
     } @else {
       <div class="w-full h-full flex items-center justify-center">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-          <rect width="40" height="40" rx="8" fill="#E5E7EB"/>
-          <path d="M10 28l8-8 4 4 4-6 8 10H10z" fill="#9CA3AF"/>
-          <circle cx="15" cy="16" r="3" fill="#9CA3AF"/>
+          <rect width="40" height="40" rx="8" fill="#E5E7EB" />
+          <path d="M10 28l8-8 4 4 4-6 8 10H10z" fill="#9CA3AF" />
+          <circle cx="15" cy="16" r="3" fill="#9CA3AF" />
         </svg>
       </div>
     }
@@ -29,13 +27,13 @@
   </div>
 
   <div class="px-3 pb-3">
-    <button (click)="onAddButtonClick($event)"
-      class="w-full py-3 rounded-xl font-btn transition-all duration-150 active:scale-95
-             bg-transparent text-[#a00691] border border-[#a00691] hover:bg-[#a00691] hover:text-white">
+    <button
+      (click)="onAddButtonClick($event)"
+      class="w-full py-3 rounded-xl font-btn transition-all duration-150 active:scale-95 bg-transparent text-[#a00691] border border-[#a00691] hover:bg-[#a00691] hover:text-white"
+    >
       Agregar
     </button>
   </div>
-
 </div>
 
 @if (selectedProduct()) {
