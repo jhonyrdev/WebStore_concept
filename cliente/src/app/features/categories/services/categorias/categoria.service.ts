@@ -1,12 +1,19 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { map } from 'rxjs';
 import { Category, CategoryWithConfig } from '../../models/category.model';
 import { CATEGORIA_CONFIG } from '../../../../shared/constants/categoria.config';
-import { HttpClient } from '@angular/common/http';
 import { FallbackService } from '@/app/core/services/fallback/fallback.service';
+
+interface CategoriaApiDto {
+  idCat?: number;
+  id?: number;
+  nombre: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class CategoriaService {
   private readonly fallback = inject(FallbackService);
+  private readonly API_PUBLIC = 'api/public/categorias';
 
   private readonly _categories = signal<Category[]>([]);
 
@@ -30,15 +37,32 @@ export class CategoriaService {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.fallback.getWithFallback<Category[]>('categorias', 'data/categorias.json').subscribe({
-      next: (data) => {
-        this._categories.set(data);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.error.set('No se pudieron cargar las categorías.');
-        this.isLoading.set(false);
-      },
-    });
+    this.fallback
+      .getWithFallback<{ data: CategoriaApiDto[] } | CategoriaApiDto[]>(
+        this.API_PUBLIC,
+        'data/categorias.json',
+      )
+      .pipe(
+        map((response) => (Array.isArray(response) ? response : (response.data ?? []))),
+        map((items) =>
+          items.map(
+            (item) =>
+              ({
+                id: item.id ?? item.idCat ?? 0,
+                nombre: item.nombre,
+              }) satisfies Category,
+          ),
+        ),
+      )
+      .subscribe({
+        next: (data) => {
+          this._categories.set(data);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.error.set('No se pudieron cargar las categorías.');
+          this.isLoading.set(false);
+        },
+      });
   }
 }

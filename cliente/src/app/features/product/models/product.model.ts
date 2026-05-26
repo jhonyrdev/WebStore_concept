@@ -4,6 +4,8 @@ export interface Producto {
   precio: number;
   stock: number;
   categoriaId: number;
+  subCategoriaId: number; // ← agregar
+  marcaId: number;
   imagen?: string;
 }
 

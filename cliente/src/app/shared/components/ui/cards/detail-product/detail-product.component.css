@@ -8,3 +8,19 @@
     transform: scale(1) translateY(0);
   }
 }
+
+.title-product {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+.price-product {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+}
+
+.description-product {
+  font-size: clamp(0.8rem, 2vw, 1rem);
+}
+
+@media (min-width: 768px) {
+  
+}

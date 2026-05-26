@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class SubCategoriaListDto {
+    private Integer idSubcat;
     private String nombre;
 }

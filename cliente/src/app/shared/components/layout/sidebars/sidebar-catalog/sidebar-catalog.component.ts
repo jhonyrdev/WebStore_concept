@@ -1,8 +1,7 @@
-import { CatalogService } from '@/app/pages/landing/catalogo/services/catalog.service';
-import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { ScrollLockService } from '@shared/services/scroll-lock.service';
 import { SidebarShellComponent } from '../sidebar-shell/sidebar-shell.component';
+import { CatalogService } from '@/app/pages/landing/catalogo/components/services/catalog.service';
 
 @Component({
   selector: 'app-sidebar-catalog',
