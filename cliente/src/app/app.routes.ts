@@ -8,7 +8,7 @@ import { authAdminGuard, adminLoginGuard, authClientGuard } from './core/guards'
 
 import { HomeComponent, CatalogoComponent } from './pages/landing';
 
-import { PerfilComponent } from './pages/client';
+import { CheckoutComponent, PerfilComponent } from './pages/client';
 
 import {
   Home,
@@ -48,6 +48,11 @@ export const routes: Routes = [
         path: 'perfil',
         component: PerfilComponent,
         //canActivate: [authClientGuard],
+      },
+      {
+        path: 'checkout',
+        component: CheckoutComponent,
+        canActivate: [authClientGuard],
       },
     ],
   },

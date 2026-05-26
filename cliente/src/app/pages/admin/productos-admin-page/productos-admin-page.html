@@ -1,7 +1,32 @@
-<div class="min-h-screen">
-  <div class="min-h-screen transition-colors duration-300">
-    <header class="bg-transparent border-b border-[var(--border-color)] shadow-sm">
-      <nav class="flex items-center px-6 gap-4">
+<div class="min-h-screen bg-[linear-gradient(180deg,rgba(10,10,20,0.96)_0%,rgba(15,15,32,0.92)_100%)] text-white">
+  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <header class="mb-6 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+      <div class="flex flex-col gap-6 p-6 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-[0.35em] text-amber-300/80">Administrador</p>
+          <h1 class="mt-2 text-3xl font-semibold sm:text-4xl">Productos</h1>
+          <p class="mt-2 max-w-2xl text-sm text-slate-300">
+            Revisa el inventario registrado, su stock actual y el estado operativo de cada producto.
+          </p>
+        </div>
+
+          <div class="grid grid-cols-3 gap-3 text-center sm:min-w-[420px]">
+          <div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+            <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Productos</p>
+            <p class="mt-1 text-2xl font-semibold">{{ totalProductos }}</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+            <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Stock</p>
+            <p class="mt-1 text-2xl font-semibold">{{ totalStock }}</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+            <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Activos</p>
+            <p class="mt-1 text-2xl font-semibold">{{ inventarioDisponible }}</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="border-t border-white/10 px-6">
         <app-tabs
           class="flex-1 min-w-0"
           [tabs]="tabs"

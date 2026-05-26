@@ -12,6 +12,7 @@ interface CategoriaApiDto {
 
 @Injectable({ providedIn: 'root' })
 export class CategoriaService {
+  private readonly api = inject(ApiService);
   private readonly fallback = inject(FallbackService);
   private readonly API_PUBLIC = 'api/public/categorias';
 

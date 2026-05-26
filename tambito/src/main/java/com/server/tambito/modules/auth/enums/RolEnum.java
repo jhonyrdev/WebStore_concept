@@ -1,10 +1,17 @@
 package com.server.tambito.modules.auth.enums;
 
 public enum RolEnum {
-    ADMIN,
-    CLIENTE;
+
+    ADMIN("ROLE_ADMIN"),
+    CLIENTE("ROLE_CLIENTE");
+
+    private final String authority;
+
+    RolEnum(String authority) {
+        this.authority = authority;
+    }
 
     public String getAuthority() {
-        return "ROLE_" + this.name();
+        return authority;
     }
 }
