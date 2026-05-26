@@ -1,12 +1,114 @@
-<div class="min-h-screen">
-  <div class="min-h-screen transition-colors duration-300">
-    <header class="bg-transparent pt-4">
-      <div class="px-6 py-4">
-        <h1 class="text-2xl font-bold text-[var(--text-general)]">Gestión de Clientes</h1>
+<div class="min-h-screen bg-[linear-gradient(180deg,rgba(10,10,20,0.96)_0%,rgba(15,15,32,0.92)_100%)] text-white">
+  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <header class="mb-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+      <p class="text-xs uppercase tracking-[0.35em] text-fuchsia-300/80">Administración</p>
+      <div class="mt-2 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h1 class="text-3xl font-semibold sm:text-4xl">Clientes registrados</h1>
+          <p class="mt-2 max-w-3xl text-sm text-slate-300">
+            Revisa la información básica de los usuarios registrados en la plataforma y su estado actual.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 sm:min-w-[500px]">
+          <div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-center">
+            <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Clientes</p>
+            <p class="mt-1 text-2xl font-semibold">{{ totalClientes() }}</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-center">
+            <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Activos</p>
+            <p class="mt-1 text-2xl font-semibold">{{ clientesActivos() }}</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-center">
+            <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Inactivos</p>
+            <p class="mt-1 text-2xl font-semibold">{{ clientesInactivos() }}</p>
+          </div>
+        </div>
       </div>
     </header>
 
-    <main class="p-6">
-    </main>
+    @if (isLoading()) {
+      <section class="rounded-3xl border border-white/10 bg-white/5 p-10 text-center text-slate-300 backdrop-blur-xl">
+        Cargando clientes...
+      </section>
+    } @else if (error()) {
+      <section class="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-8 text-center text-rose-100">
+        <p class="font-semibold">No se pudieron cargar los clientes.</p>
+        <p class="mt-2 text-sm">{{ error() }}</p>
+      </section>
+    } @else {
+      <div class="grid gap-6 xl:grid-cols-3">
+        <section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.2)] xl:col-span-2">
+          <div class="mb-4 flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-semibold">Tabla de clientes</h2>
+              <p class="text-sm text-slate-300">Información registrada de cada usuario del sistema.</p>
+            </div>
+          </div>
+
+          @if (clientes().length === 0) {
+            <div class="rounded-2xl border border-dashed border-white/15 bg-black/20 px-6 py-10 text-center text-slate-300">
+              No hay clientes registrados.
+            </div>
+          } @else {
+            <div class="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-white/10 text-left text-sm">
+                  <thead class="bg-white/5 text-xs uppercase tracking-[0.24em] text-slate-400">
+                    <tr>
+                      <th class="px-4 py-3">Código</th>
+                      <th class="px-4 py-3">Nombre</th>
+                      <th class="px-4 py-3">Correo</th>
+                      <th class="px-4 py-3">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-white/10">
+                    @for (cliente of clientes(); track cliente.idCli) {
+                      <tr class="hover:bg-white/5 transition-colors">
+                        <td class="px-4 py-3 font-mono text-xs text-slate-300">{{ cliente.codCli }}</td>
+                        <td class="px-4 py-3 font-medium text-white">{{ cliente.nombreCompleto }}</td>
+                        <td class="px-4 py-3 text-slate-300">{{ cliente.email }}</td>
+                        <td class="px-4 py-3">
+                          <span
+                            class="rounded-full px-3 py-1 text-xs font-semibold capitalize"
+                            [class]="estadoClase[cliente.estado.toString().toLowerCase()] || 'bg-white/10 text-slate-200'"
+                          >
+                            {{ formatEstado(cliente.estado.toString()) }}
+                          </span>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
+        </section>
+
+        <section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+          <div class="mb-4">
+            <h2 class="text-xl font-semibold">Dominio de correos</h2>
+            <p class="text-sm text-slate-300">Distribución de usuarios por dominio de email.</p>
+          </div>
+
+          @if (dominiosEmail().length === 0) {
+            <div class="rounded-2xl border border-dashed border-white/15 bg-black/20 px-6 py-10 text-center text-slate-300">
+              Sin datos disponibles.
+            </div>
+          } @else {
+            <div class="space-y-3">
+              @for (item of dominiosEmail(); track item.dominio) {
+                <div class="rounded-2xl border border-white/10 bg-black/20 p-4">
+                  <div class="flex items-center justify-between gap-4">
+                    <span class="font-medium text-white">{{ item.dominio }}</span>
+                    <span class="text-sm text-slate-300">{{ item.total }} usuarios</span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </section>
+      </div>
+    }
   </div>
 </div>
