@@ -1,0 +1,36 @@
+<app-base-form
+  [form]="form"
+  [initialData]="initialData"
+  [title]="initialData ? 'Método de Pago' : 'Método de Pago'"
+  (submitForm)="onSubmit($event)"
+  (close)="onClose()"
+>
+  <div [formGroup]="form" class="space-y-4">
+    <div>
+      <label class="mb-1 block text-sm font-medium text-gray-700"> Nombre </label>
+      <input
+        type="text"
+        formControlName="nombre"
+        placeholder="Ej: Yape, Plin, Visa..."
+        class="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+      />
+      <small
+        *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched"
+        class="text-red-500 text-xs"
+      >
+        El nombre es requerido y no debe exceder los 50 caracteres.
+      </small>
+    </div>
+    <div>
+      <label class="mb-1 block text-sm font-medium text-gray-700"> Tipo </label>
+      <select
+        formControlName="tipo"
+        class="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+      >
+        @for (tipo of tipos; track tipo.value) {
+          <option [value]="tipo.value">{{ tipo.label }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</app-base-form>

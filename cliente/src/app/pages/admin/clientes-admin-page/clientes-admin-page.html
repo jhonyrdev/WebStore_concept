@@ -7,6 +7,75 @@
     </header>
 
     <main class="p-6">
+      <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
+        <app-table-search
+          placeholder="Buscar por nombre…"
+          [(query)]="searchQuery"
+          class="w-full sm:flex-1"
+        />
+
+        <div class="sort-container flex item-start sm:items-end gap-8 shrink-0">
+          <app-sort-select
+            label="Estado:"
+            [options]="stateOptions"
+            [(value)]="stateFilter"
+            [fullWidth]="true"
+            class="flex-1"
+          />
+          <app-sort-select
+            label="Ordenar:"
+            [options]="orderOptions"
+            [(value)]="order"
+            [fullWidth]="true"
+            class="flex-1"
+          />
+        </div>
+      </div>
+
+      <div class="overflow-hidden">
+        <app-data-table
+          [columns]="clienteColumns"
+          [data]="clientesPaginados()"
+          [rowTemplate]="clienteRow"
+          [scrollable]="true"
+        ></app-data-table>
+
+        @if (totalPages() > 1) {
+          <div class="mt-4 flex justify-center">
+            <app-pagination
+              [currentPage]="currentPage()"
+              [totalPages]="totalPages()"
+              (pageChange)="currentPage.set($event)"
+            ></app-pagination>
+          </div>
+        }
+
+        <ng-template #clienteRow let-cliente let-emit="emit">
+          <td class="px-6 py-3.5" data-label="Nombre">
+            {{ cliente.nombreCompleto }}
+          </td>
+
+          <td class="px-6 py-3.5" data-label="Correo">
+            {{ cliente.email }}
+          </td>
+
+          <td class="px-6 py-3.5 text-center font-medium" data-label="Estado">
+            <span [ngClass]="cliente.estado === 'ACTIVO' ? 'text-green-500' : 'text-red-500'">
+              {{ cliente.estado }}
+            </span>
+          </td>
+
+          <td class="px-6 py-3.5 text-center" data-label="Acciones">
+            <button
+              (click)="verHistorial(cliente)"
+              class="bg-[var(--color-blue-inverso)] sm:bg-[var(--color-blue)] text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-80"
+            >
+              <i class="fas fa-history mr-1" aria-hidden="true"></i>
+              Historial
+            </button>
+          </td>
+        </ng-template>
+      </div>
     </main>
   </div>
 </div>
