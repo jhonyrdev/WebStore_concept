@@ -47,7 +47,7 @@ export const routes: Routes = [
       {
         path: 'perfil',
         component: PerfilComponent,
-        canActivate: [authClientGuard],
+        //canActivate: [authClientGuard],
       },
       {
         path: 'checkout',

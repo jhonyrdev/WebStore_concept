@@ -1,13 +1,12 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { map } from 'rxjs';
-import { ApiService } from '@/app/core/services/api/api.service';
-import { ApiResponse } from '@/app/core/models/api-response';
 import { Category, CategoryWithConfig } from '../../models/category.model';
 import { CATEGORIA_CONFIG } from '../../../../shared/constants/categoria.config';
 import { FallbackService } from '@/app/core/services/fallback/fallback.service';
 
-interface CategoriaListDto {
-  idCat: number;
+interface CategoriaApiDto {
+  idCat?: number;
+  id?: number;
   nombre: string;
 }
 
@@ -15,6 +14,7 @@ interface CategoriaListDto {
 export class CategoriaService {
   private readonly api = inject(ApiService);
   private readonly fallback = inject(FallbackService);
+  private readonly API_PUBLIC = 'api/public/categorias';
 
   private readonly _categories = signal<Category[]>([]);
 
@@ -39,28 +39,31 @@ export class CategoriaService {
     this.error.set(null);
 
     this.fallback
-      .getWithFallback<ApiResponse<CategoriaListDto[]> | Category[]>('api/public/categorias', 'data/categorias.json')
+      .getWithFallback<{ data: CategoriaApiDto[] } | CategoriaApiDto[]>(
+        this.API_PUBLIC,
+        'data/categorias.json',
+      )
       .pipe(
-        map((response) => {
-          if (Array.isArray(response)) {
-            return response;
-          }
-
-          return (response.data ?? []).map((item) => ({
-            id: item.idCat,
-            nombre: item.nombre,
-          }));
-        }),
+        map((response) => (Array.isArray(response) ? response : (response.data ?? []))),
+        map((items) =>
+          items.map(
+            (item) =>
+              ({
+                id: item.id ?? item.idCat ?? 0,
+                nombre: item.nombre,
+              }) satisfies Category,
+          ),
+        ),
       )
       .subscribe({
-      next: (data) => {
-        this._categories.set(data);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.error.set('No se pudieron cargar las categorías.');
-        this.isLoading.set(false);
-      },
-    });
+        next: (data) => {
+          this._categories.set(data);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.error.set('No se pudieron cargar las categorías.');
+          this.isLoading.set(false);
+        },
+      });
   }
 }

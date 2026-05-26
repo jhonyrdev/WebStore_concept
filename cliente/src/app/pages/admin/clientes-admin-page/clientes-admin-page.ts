@@ -1,66 +1,116 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { ClientesAdminService, AdminClientRecord } from '@/app/features/auth/service/admin/clientes-admin.service';
+import { Component, OnInit, computed, inject, signal, effect } from '@angular/core';
+import {
+  DataTableComponent,
+  TableColumn,
+} from '../../../shared/components/ui/data-table/data-table.component';
+import {
+  SortOption,
+  SortSelectComponent,
+} from '../../../shared/components/ui/sort-select/sort-select.component';
+import { CommonModule } from '@angular/common';
+import { ClienteService } from './service/cliente.service';
+import { ClienteListDto } from './models/cliente-list-dto.model';
+import { PaginationComponent } from '../../../shared/components/ui/pagination/pagination.component';
+import { ScreenSizeService } from '@/app/core/services/screen-size/screen-size.service';
+import { TableSearchComponent } from '@/app/shared/components/ui/search/table-search/table-search.component';
+
+type ClienteStateFilter = 'all' | 'ACTIVO' | 'INACTIVO';
+type ClienteOrder = 'az' | 'za';
 
 @Component({
   selector: 'app-clientes-admin-page',
   standalone: true,
+  imports: [
+    CommonModule,
+    DataTableComponent,
+    SortSelectComponent,
+    PaginationComponent,
+    TableSearchComponent,
+  ],
   templateUrl: './clientes-admin-page.html',
   styleUrl: './clientes-admin-page.css',
 })
-export class ClientesAdminPage {
-  private readonly clientesService = inject(ClientesAdminService);
+export class ClientesAdminPage implements OnInit {
+  private clienteService = inject(ClienteService);
+  private screenSizeService = inject(ScreenSizeService);
 
-  clientes = signal<AdminClientRecord[]>([]);
-  isLoading = signal(false);
-  error = signal<string | null>(null);
+  clientes = signal<ClienteListDto[]>([]);
+  stateFilter = signal<ClienteStateFilter>('all');
+  order = signal<ClienteOrder>('az');
+  searchQuery = signal('');
 
-  readonly totalClientes = computed(() => this.clientes().length);
-  readonly clientesActivos = computed(() =>
-    this.clientes().filter((cliente) => cliente.estado.toUpperCase() === 'ACTIVO').length,
-  );
-  readonly clientesInactivos = computed(() => this.totalClientes() - this.clientesActivos());
-  readonly dominiosEmail = computed(() => {
-    const domains = new Map<string, number>();
-
-    for (const cliente of this.clientes()) {
-      const dominio = cliente.email?.split('@')[1]?.toLowerCase() ?? 'sin correo';
-      domains.set(dominio, (domains.get(dominio) ?? 0) + 1);
-    }
-
-    return [...domains.entries()]
-      .map(([dominio, total]) => ({ dominio, total }))
-      .sort((a, b) => b.total - a.total)
-      .slice(0, 5);
-  });
+  currentPage = signal(1);
+  pageSize = this.screenSizeService.pageSize;
 
   constructor() {
-    this.loadClientes();
+    // Reset to page 1 when filters change
+    effect(
+      () => {
+        this.stateFilter();
+        this.order();
+        this.searchQuery();
+        this.currentPage.set(1);
+      },
+      { allowSignalWrites: true },
+    );
   }
 
-  loadClientes(): void {
-    this.isLoading.set(true);
-    this.error.set(null);
+  ngOnInit(): void {
+    this.cargarClientes();
+  }
 
-    this.clientesService.listar().subscribe({
-      next: (clientes) => {
-        this.clientes.set(clientes);
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        this.error.set(err?.message || 'No se pudieron cargar los clientes');
-        this.isLoading.set(false);
-      },
+  cargarClientes() {
+    this.clienteService.listar().subscribe({
+      next: (data) => this.clientes.set(data),
+      error: (err) => console.error('Error al cargar clientes:', err),
     });
   }
 
-  formatEstado(estado: string): string {
-    return estado.charAt(0).toUpperCase() + estado.slice(1).toLowerCase();
-  }
+  stateOptions: SortOption<ClienteStateFilter>[] = [
+    { value: 'all', label: 'Todos' },
+    { value: 'ACTIVO', label: 'Activo' },
+    { value: 'INACTIVO', label: 'Inactivo' },
+  ];
 
-  get estadoClase(): Record<string, string> {
-    return {
-      activo: 'bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/30',
-      inactivo: 'bg-rose-500/15 text-rose-300 ring-1 ring-rose-500/30',
-    };
+  orderOptions: SortOption<ClienteOrder>[] = [
+    { value: 'az', label: 'A-Z' },
+    { value: 'za', label: 'Z-A' },
+  ];
+
+  clienteColumns: TableColumn[] = [
+    { key: 'nombreCompleto', label: 'Nombre Completo', align: 'left' },
+    { key: 'email', label: 'Correo', align: 'left' },
+    { key: 'estado', label: 'Estado', align: 'center', width: 'w-32' },
+    { key: 'accion', label: 'Acción', align: 'center', width: 'w-40' },
+  ];
+
+  clientesOrdenados = computed(() => {
+    const data = this.clientes();
+    const filter = this.stateFilter();
+    const order = this.order();
+    const query = this.searchQuery().toLowerCase().trim();
+
+    const filtered = data.filter((cliente) => {
+      const matchesState = filter === 'all' || cliente.estado === filter;
+      const matchesSearch = !query || cliente.nombreCompleto.toLowerCase().includes(query);
+      return matchesState && matchesSearch;
+    });
+
+    return [...filtered].sort((left, right) => {
+      const comparison = left.nombreCompleto.localeCompare(right.nombreCompleto, 'es');
+      return order === 'za' ? comparison * -1 : comparison;
+    });
+  });
+
+  totalPages = computed(() => Math.ceil(this.clientesOrdenados().length / this.pageSize()));
+
+  clientesPaginados = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.clientesOrdenados().slice(start, end);
+  });
+
+  verHistorial(cliente: ClienteListDto) {
+    console.log('Ver historial de:', cliente.nombreCompleto);
   }
 }

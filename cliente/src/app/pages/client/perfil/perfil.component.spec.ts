@@ -29,20 +29,20 @@ describe('PerfilComponent', () => {
   };
 
   beforeEach(async () => {
+    // Al ser un componente Standalone, se importa en lugar de declararse
     await TestBed.configureTestingModule({
-      imports: [PerfilComponent, HttpClientTestingModule],
-      providers: [
-        { provide: ClientAuthService, useValue: authServiceMock },
-        { provide: AlertService, useValue: alertServiceMock },
-        { provide: PurchaseHistoryService, useValue: purchaseHistoryServiceMock },
-      ],
-    }).compileComponents();
+      imports: [PerfilComponent] 
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(PerfilComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    
+    // Dispara el ciclo de vida de Angular (ngOnInit)
+    fixture.detectChanges(); 
   });
 
+  // Test 1: Verifica que el componente logre compilar sin errores
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -54,3 +54,4 @@ describe('PerfilComponent', () => {
     expect(component.historialPedidos().length).toBe(0);
   });
 });
+ 

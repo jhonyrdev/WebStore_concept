@@ -1,34 +1,108 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { CategoriaService } from '@/app/features/categories/services/categorias/categoria.service';
-import { ProductoService } from '@/app/features/product/services/producto/producto.service';
-import { MarcaService } from '@/app/features/product/services/Marca/marca.service';
+import { CommonModule } from '@angular/common';
+import { Component, computed, signal, inject, effect, OnInit } from '@angular/core';
 import { TabItem, TabsComponent } from '@/app/shared/components/ui/tabs/tabs.component';
-import { CategoryWithConfig } from '@/app/features/categories/models/category.model';
+import {
+  DataTableComponent,
+  TableActionEvent,
+  TableColumn,
+} from '@/app/shared/components/ui/data-table/data-table.component';
+import {
+  SortOption,
+  SortSelectComponent,
+} from '@/app/shared/components/ui/sort-select/sort-select.component';
+import { PaginationComponent } from '@/app/shared/components/ui/pagination/pagination.component';
+import { ScreenSizeService } from '@/app/core/services/screen-size/screen-size.service';
+import { MarcaService } from '@/app/features/product/services/Marca/marca.service';
+import { MarcaFormComponent } from './components/marca-form/marca-form.component';
+import { MarcaListDto, MarcaDto } from '@/app/features/product/models/marca.model';
+import { ProductoService } from '@/app/features/product/services/producto/producto.service';
+import { ToastService } from '@/app/shared/services/toast.service';
+import { AlertService } from '@/app/shared/services/alert.service';
+import { TableSearchComponent } from '@/app/shared/components/ui/search/table-search/table-search.component';
+import { SubcategoriaFacade } from '@/app/features/categories/services/subcategorias/subcategoria.facade';
 import { ProductoAdminDto } from '@/app/features/product/models/product.model';
-import { MarcaListDto } from '@/app/features/product/models/marca.model';
 
 type Tab = 'productos' | 'categorias' | 'marca';
+type ProductField = 'nomProd' | 'nombreCategoria' | 'precioProd';
+type ProductOrder = 'az' | 'za' | 'menorPrecio' | 'mayorPrecio';
 
 @Component({
   selector: 'app-productos-admin-page',
   standalone: true,
-  imports: [TabsComponent],
+  imports: [
+    CommonModule,
+    TabsComponent,
+    DataTableComponent,
+    SortSelectComponent,
+    PaginationComponent,
+    MarcaFormComponent,
+    TableSearchComponent,
+  ],
   templateUrl: './productos-admin-page.html',
   styleUrl: './productos-admin-page.css',
 })
-export class ProductosAdminPage {
-  private readonly categoriaService = inject(CategoriaService);
-  private readonly productService = inject(ProductoService);
-  private readonly marcaService = inject(MarcaService);
+export class ProductosAdminPage implements OnInit {
+  private screenSizeService = inject(ScreenSizeService);
+  private marcaService = inject(MarcaService);
+  private productoService = inject(ProductoService);
+  private subcategoriaFacade = inject(SubcategoriaFacade);
+  private toastService = inject(ToastService);
+  private alertService = inject(AlertService);
 
   activeTab = signal<Tab>('productos');
-  productos = signal<ProductoAdminDto[]>([]);
-  readonly categorias = this.categoriaService.categories;
+  productField = signal<ProductField>('nomProd');
+  productOrder = signal<ProductOrder>('az');
+  searchQuery = signal('');
+
+  // Marcas
   marcas = signal<MarcaListDto[]>([]);
-  isLoading = signal(false);
-  error = signal<string | null>(null);
-  pageSize = signal(12);
+  selectedMarca = signal<MarcaListDto | null>(null);
+  showMarcaModal = signal(false);
+
+  readonly categorias = this.subcategoriaFacade.subcategorias;
+  productos = signal<ProductoAdminDto[]>([]);
+
+  // Pagination
   currentPage = signal(1);
+  pageSize = this.screenSizeService.pageSize;
+
+  constructor() {
+    // Reset page when tab or filters change
+    effect(
+      () => {
+        this.activeTab();
+        this.productField();
+        this.productOrder();
+        this.searchQuery();
+        this.currentPage.set(1);
+      },
+      { allowSignalWrites: true },
+    );
+  }
+
+  ngOnInit(): void {
+    this.cargarProductos();
+    this.cargarMarcas();
+    this.cargarCategorias();
+  }
+
+  cargarProductos() {
+    this.productoService.listarAdmin().subscribe({
+      next: (data) => this.productos.set(data),
+      error: (err) => console.error('Error al cargar productos:', err),
+    });
+  }
+
+  cargarMarcas() {
+    this.marcaService.listar().subscribe({
+      next: (data) => this.marcas.set(data),
+      error: (err) => console.error('Error al cargar marcas:', err),
+    });
+  }
+
+  cargarCategorias() {
+    this.subcategoriaFacade.loadSubcategoriasConDetalles();
+  }
 
   tabs: TabItem<Tab>[] = [
     { key: 'productos', label: 'Productos' },
@@ -36,85 +110,170 @@ export class ProductosAdminPage {
     { key: 'marca', label: 'Marca' },
   ];
 
-  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.productos().length / this.pageSize())));
-  readonly paginatedProductos = computed(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return this.productos().slice(start, start + this.pageSize());
-  });
-  readonly pageNumbers = computed(() => Array.from({ length: this.totalPages() }, (_, index) => index + 1));
+  productFieldOptions: SortOption<ProductField>[] = [
+    { value: 'nomProd', label: 'Producto' },
+    { value: 'nombreCategoria', label: 'Categoria' },
+    { value: 'precioProd', label: 'Precio' },
+  ];
 
-  constructor() {
-    this.cargarProductos();
-    this.cargarCategorias();
-    this.cargarMarcas();
-  }
+  productOrderOptions: SortOption<ProductOrder>[] = [
+    { value: 'az', label: 'A-Z' },
+    { value: 'za', label: 'Z-A' },
+    { value: 'menorPrecio', label: 'Menor precio' },
+    { value: 'mayorPrecio', label: 'Mayor precio' },
+  ];
+
+  productoColumns: TableColumn[] = [
+    { key: 'codProd', label: 'Codigo', align: 'center', width: 'w-28' },
+    { key: 'nomProd', label: 'Producto', align: 'left' },
+    { key: 'precioProd', label: 'Precio', align: 'center', width: 'w-28' },
+    { key: 'cantProd', label: 'Cantidad', align: 'center', width: 'w-28' },
+    { key: 'nombreCategoria', label: 'Categoria', align: 'center', width: 'w-40' },
+    { key: 'estado', label: 'Estado', align: 'center', width: 'w-32' },
+    { key: 'accion', label: 'Accion', align: 'center', width: 'w-32' },
+  ];
+
+  categoriaColumns: TableColumn[] = [
+    { key: 'categoriaNombre', label: 'Categoria', align: 'left' },
+    { key: 'nombre', label: 'Subcategoria', align: 'center', width: 'w-56' },
+    { key: 'accion', label: 'Accion', align: 'center', width: 'w-32' },
+  ];
+
+  marcaColumns: TableColumn[] = [
+    { key: 'nombre', label: 'Marca', align: 'left' },
+    { key: 'accion', label: 'Acción', align: 'center', width: 'w-32' },
+  ];
+
+  productosOrdenados = computed(() => {
+    const field = this.productField();
+    const order = this.productOrder();
+    const query = this.searchQuery().toLowerCase().trim();
+
+    const filtered = this.productos().filter((producto) => {
+      const matchesSearch =
+        !query ||
+        producto.nomProd.toLowerCase().includes(query) ||
+        producto.nombreCategoria.toLowerCase().includes(query);
+      return matchesSearch;
+    });
+
+    return [...filtered].sort((left, right) => {
+      if (order === 'menorPrecio' || order === 'mayorPrecio' || field === 'precioProd') {
+        const direction = order === 'mayorPrecio' || order === 'za' ? -1 : 1;
+        return (left.precioProd - right.precioProd) * direction;
+      }
+
+      const leftValue = String(left[field]);
+      const rightValue = String(right[field]);
+      const direction = order === 'za' ? -1 : 1;
+
+      return leftValue.localeCompare(rightValue, 'es') * direction;
+    });
+  });
+
+  productosPaginados = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.productosOrdenados().slice(start, start + this.pageSize());
+  });
+
+  totalProductosPages = computed(() =>
+    Math.ceil(this.productosOrdenados().length / this.pageSize()),
+  );
+
+  categoriasPaginadas = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.categorias().slice(start, start + this.pageSize());
+  });
+
+  totalCategoriasPages = computed(() => Math.ceil(this.categorias().length / this.pageSize()));
+
+  marcasPaginadas = computed(() => {
+    const data = this.marcas();
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return data.slice(start, start + this.pageSize());
+  });
+
+  totalMarcasPages = computed(() => Math.ceil(this.marcas().length / this.pageSize()));
 
   changeTab(tab: Tab) {
     this.activeTab.set(tab);
   }
 
-  changePage(page: number): void {
-    if (page < 1 || page > this.totalPages()) return;
-    this.currentPage.set(page);
+  changeProductField(field: ProductField) {
+    this.productField.set(field);
   }
 
-  cargarProductos(): void {
-    this.isLoading.set(true);
-    this.error.set(null);
-
-    this.productService.listarAdmin().subscribe({
-      next: (productos) => {
-        this.productos.set(productos);
-        this.currentPage.set(1);
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        this.error.set(err?.message || 'No se pudieron cargar los productos');
-        this.isLoading.set(false);
-      },
-    });
+  changeProductOrder(order: ProductOrder) {
+    this.productOrder.set(order);
   }
 
-  cargarCategorias(): void {
-    this.categoriaService.loadCategories();
+  openAddModal() {
+    if (this.activeTab() === 'marca') {
+      this.selectedMarca.set(null);
+      this.showMarcaModal.set(true);
+      return;
+    }
+    console.log('Agregar registro');
   }
 
-  cargarMarcas(): void {
-    this.marcaService.listar().subscribe({
-      next: (marcas) => this.marcas.set(marcas),
-      error: () => this.marcas.set([]),
-    });
+  onMarcaSubmit(dto: MarcaDto) {
+    const selected = this.selectedMarca();
+    if (selected) {
+      this.marcaService.actualizar(selected.idMarca, dto).subscribe({
+        next: () => {
+          this.toastService.success('Marca actualizada correctamente');
+          this.cargarMarcas();
+        },
+        error: () => this.toastService.error('Error al actualizar marca'),
+      });
+    } else {
+      this.marcaService.crear(dto).subscribe({
+        next: () => {
+          this.toastService.success('Marca registrada correctamente');
+          this.cargarMarcas();
+        },
+        error: () => this.toastService.error('Error al registrar marca'),
+      });
+    }
   }
 
-  get totalProductos(): number {
-    return this.productos().length;
+  editItem(item: any) {
+    if (this.activeTab() === 'marca') {
+      this.selectedMarca.set(item as MarcaListDto);
+      this.showMarcaModal.set(true);
+      return;
+    }
+    console.log('Editar', item);
   }
 
-  get totalStock(): number {
-    return this.productos().reduce((total, producto) => total + producto.cantProd, 0);
+  deleteItem(item: any) {
+    if (this.activeTab() === 'marca') {
+      this.alertService
+        .confirm('¿Estás seguro?', 'Esta acción no se puede deshacer', 'Eliminar')
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.marcaService.eliminar(item.idMarca).subscribe({
+              next: () => {
+                this.toastService.success('Marca eliminada correctamente');
+                this.cargarMarcas();
+              },
+              error: () => this.toastService.error('Error al eliminar marca'),
+            });
+          }
+        });
+      return;
+    }
+    console.log('Eliminar', item);
   }
 
-  get inventarioDisponible(): number {
-    return this.productos().filter((producto) => producto.estado.toLowerCase() !== 'agotado').length;
-  }
+  onTableAction(event: TableActionEvent) {
+    if (event.type === 'edit') {
+      this.editItem(event.row);
+      return;
+    }
 
-  get categoriaCount(): number {
-    return this.categorias().length;
-  }
-
-  get marcaCount(): number {
-    return this.marcas().length;
-  }
-
-  get estadoClase(): Record<string, string> {
-    return {
-      disponible: 'bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/30',
-      critico: 'bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/30',
-      agotado: 'bg-rose-500/15 text-rose-300 ring-1 ring-rose-500/30',
-    };
-  }
-
-  formatearEstado(estado: string): string {
-    return estado.charAt(0).toUpperCase() + estado.slice(1).toLowerCase();
+    if (event.type === 'delete') {
+      this.deleteItem(event.row);
+    }
   }
 }

@@ -36,149 +36,214 @@
       </nav>
     </header>
 
-    @if (activeTab() === 'productos') {
-      <section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
-        @if (isLoading()) {
-          <div class="flex min-h-[320px] items-center justify-center text-slate-300">
-            <div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/20 px-5 py-3">
-              <span class="h-3 w-3 animate-pulse rounded-full bg-amber-300"></span>
-              Cargando productos...
-            </div>
-          </div>
-        } @else if (error()) {
-          <div class="flex min-h-[320px] items-center justify-center text-center">
-            <div class="max-w-md rounded-2xl border border-rose-500/30 bg-rose-500/10 px-6 py-5 text-rose-100">
-              <p class="font-semibold">No fue posible cargar el inventario.</p>
-              <p class="mt-2 text-sm text-rose-100/80">{{ error() }}</p>
-            </div>
-          </div>
-        } @else if (productos().length === 0) {
-          <div class="flex min-h-[320px] items-center justify-center text-center text-slate-300">
-            <div class="max-w-sm rounded-2xl border border-dashed border-white/15 bg-black/20 px-6 py-8">
-              <p class="text-lg font-medium text-white">No hay productos cargados</p>
-              <p class="mt-2 text-sm text-slate-400">Cuando existan registros, aparecerán aquí con stock y estado.</p>
-            </div>
-          </div>
-        } @else {
-          <div class="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-white/10 text-left text-sm">
-                <thead class="bg-white/5 text-xs uppercase tracking-[0.24em] text-slate-400">
-                  <tr>
-                    <th class="px-5 py-4">Código</th>
-                    <th class="px-5 py-4">Producto</th>
-                    <th class="px-5 py-4">Categoría</th>
-                    <th class="px-5 py-4">Precio</th>
-                    <th class="px-5 py-4">Stock</th>
-                    <th class="px-5 py-4">Estado</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-white/10">
-                  @for (producto of paginatedProductos(); track producto.codProd) {
-                    <tr class="hover:bg-white/5 transition-colors">
-                      <td class="px-5 py-4 font-mono text-xs text-slate-300">{{ producto.codProd }}</td>
-                      <td class="px-5 py-4">
-                        <div class="font-medium text-white">{{ producto.nomProd }}</div>
-                      </td>
-                      <td class="px-5 py-4 text-slate-300">{{ producto.nombreCategoria }}</td>
-                      <td class="px-5 py-4 text-slate-300">S/ {{ producto.precioProd.toFixed(2) }}</td>
-                      <td class="px-5 py-4">
-                        <span class="rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset"
-                              [class]="producto.cantProd > 0 ? 'bg-sky-500/15 text-sky-200 ring-sky-500/30' : 'bg-slate-500/15 text-slate-200 ring-slate-500/30'">
-                          {{ producto.cantProd }} uds
-                        </span>
-                      </td>
-                      <td class="px-5 py-4">
-                        <span class="rounded-full px-3 py-1 text-xs font-semibold capitalize"
-                              [class]="estadoClase[producto.estado.toLowerCase()] || 'bg-white/10 text-slate-200'">
-                          {{ formatearEstado(producto.estado) }}
-                        </span>
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          </div>
+    <main class="p-6">
+      @if (activeTab() === 'productos') {
+        <div class="flex justify-end mb-4">
+          <button
+            (click)="openAddModal()"
+            class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full w-9 h-9 md:w-auto md:px-3 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105"
+            aria-label="Agregar producto"
+          >
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span class="hidden md:inline ml-2 text-sm font-medium">Agregar</span>
+          </button>
+        </div>
 
-          <div class="mt-5 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
-            <p class="text-sm text-slate-300">
-              Página {{ currentPage() }} de {{ totalPages() }} · {{ totalProductos }} productos
-            </p>
+        <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
+          <app-table-search
+            placeholder="Buscar por nombre…"
+            [(query)]="searchQuery"
+            class="w-full sm:flex-1"
+          />
 
-            <div class="flex flex-wrap gap-2">
-              @for (page of pageNumbers(); track page) {
+          <div class="sort-container flex item-start sm:items-end gap-8 shrink-0">
+            <app-sort-select
+              label="Filtrar por:"
+              [options]="productFieldOptions"
+              [(value)]="productField"
+              [fullWidth]="true"
+              class="flex-1"
+            ></app-sort-select>
+
+            <app-sort-select
+              label="Ordenar:"
+              [options]="productOrderOptions"
+              [(value)]="productOrder"
+              [fullWidth]="true"
+              class="flex-1"
+            ></app-sort-select>
+          </div>
+        </div>
+
+        <div class="w-full">
+          <app-data-table
+            [columns]="productoColumns"
+            [data]="productosPaginados()"
+            [rowTemplate]="productoRow"
+            (action)="onTableAction($event)"
+            [scrollable]="true"
+          ></app-data-table>
+
+          @if (totalProductosPages() > 1) {
+            <div class="mt-4 flex justify-center">
+              <app-pagination
+                [currentPage]="currentPage()"
+                [totalPages]="totalProductosPages()"
+                (pageChange)="currentPage.set($event)"
+              ></app-pagination>
+            </div>
+          }
+
+          <ng-template #productoRow let-producto let-emit="emit">
+            <td class="px-6 py-3.5 text-center" data-label="Codigo">{{ producto.codProd }}</td>
+            <td class="px-6 py-3.5" data-label="Producto">{{ producto.nomProd }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="Precio">
+              {{ producto.precioProd | currency }}
+            </td>
+            <td class="px-6 py-3.5 text-center" data-label="Cantidad">{{ producto.cantProd }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="Categoria">
+              {{ producto.nombreCategoria }}
+            </td>
+            <td class="px-6 py-3.5 text-center" data-label="Estado">{{ producto.estado }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="Acciones">
+              <div class="flex items-center justify-center gap-3">
                 <button
-                  type="button"
-                  class="min-w-10 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors"
-                  [class.border-amber-400]="currentPage() === page"
-                  [class.bg-amber-400]="currentPage() === page"
-                  [class.text-slate-950]="currentPage() === page"
-                  [class.border-white/10]="currentPage() !== page"
-                  [class.bg-white/5]="currentPage() !== page"
-                  [class.text-slate-200]="currentPage() !== page"
-                  (click)="changePage(page)"
+                  (click)="emit('edit', producto)"
+                  class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                  aria-label="Editar producto"
                 >
-                  {{ page }}
+                  <i class="fas fa-edit"></i>
                 </button>
-              }
+                <button
+                  (click)="emit('delete', producto)"
+                  class="text-[var(--color-red-inverso)] sm:text-[var(--color-red)]"
+                  aria-label="Eliminar producto"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </ng-template>
+        </div>
+      }
+
+      @if (activeTab() === 'categorias') {
+        <div class="flex justify-end mb-4">
+          <button
+            (click)="openAddModal()"
+            class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full w-9 h-9 md:w-auto md:px-3 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105"
+            aria-label="Agregar categoria"
+          >
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span class="hidden md:inline ml-2 text-sm font-medium">Agregar</span>
+          </button>
+        </div>
+
+        <div>
+          <app-data-table
+            [columns]="categoriaColumns"
+            [data]="categoriasPaginadas()"
+            [rowTemplate]="categoriaRow"
+            (action)="onTableAction($event)"
+          ></app-data-table>
+
+          @if (totalCategoriasPages() > 1) {
+            <div class="mt-4 flex justify-center">
+              <app-pagination
+                [currentPage]="currentPage()"
+                [totalPages]="totalCategoriasPages()"
+                (pageChange)="currentPage.set($event)"
+              ></app-pagination>
             </div>
-          </div>
-        }
-      </section>
-    } @else if (activeTab() === 'categorias') {
-      <section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
-        <div class="mb-5 flex items-center justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-semibold">Categorías</h2>
-            <p class="mt-1 text-sm text-slate-300">{{ categoriaCount }} categorías disponibles en el catálogo.</p>
-          </div>
+          }
+
+          <ng-template #categoriaRow let-categoria let-emit="emit">
+            <td class="px-6 py-3.5" data-label="Categoria">{{ categoria.categoriaNombre }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="subcategoria">
+              {{ categoria.nombre }}
+            </td>
+            <td class="px-6 py-3.5 text-center" data-label="Acciones">
+              <div class="flex items-center justify-center gap-3">
+                <button
+                  (click)="emit('edit', categoria)"
+                  class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                  aria-label="Editar categoria"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  (click)="emit('delete', categoria)"
+                  class="text-[var(--color-red-inverso)] sm:text-[var(--color-red)]"
+                  aria-label="Eliminar categoria"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </ng-template>
+        </div>
+      }
+
+      @if (activeTab() === 'marca') {
+        <div class="flex justify-end mb-4">
+          <button
+            (click)="openAddModal()"
+            class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full w-9 h-9 md:w-auto md:px-3 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105"
+            aria-label="Agregar marca"
+          >
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span class="hidden md:inline ml-2 text-sm font-medium">Agregar</span>
+          </button>
         </div>
 
-        @if (categorias().length === 0) {
-          <div class="rounded-2xl border border-dashed border-white/15 bg-black/20 px-6 py-10 text-center text-slate-300">
-            No hay categorías cargadas.
-          </div>
-        } @else {
-          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            @for (categoria of categorias(); track categoria.id) {
-              <article class="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
-                <div class="h-32 bg-cover bg-center" [style.background-image]="'url(' + categoria.imgSrc + ')'">
-                </div>
-                <div class="p-4">
-                  <p class="text-xs uppercase tracking-[0.28em] text-amber-300/80">Categoría #{{ categoria.id }}</p>
-                  <h3 class="mt-2 text-lg font-semibold text-white">{{ categoria.nombre }}</h3>
-                  <p class="mt-1 text-sm text-slate-400">Ruta: {{ categoria.route }}</p>
-                </div>
-              </article>
-            }
-          </div>
-        }
-      </section>
-    } @else if (activeTab() === 'marca') {
-      <section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
-        <div class="mb-5 flex items-center justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-semibold">Marcas</h2>
-            <p class="mt-1 text-sm text-slate-300">{{ marcaCount }} marcas registradas en el sistema.</p>
-          </div>
-        </div>
+        <div>
+          <app-data-table
+            [columns]="marcaColumns"
+            [data]="marcasPaginadas()"
+            [rowTemplate]="marcaRow"
+            (action)="onTableAction($event)"
+          ></app-data-table>
 
-        @if (marcas().length === 0) {
-          <div class="rounded-2xl border border-dashed border-white/15 bg-black/20 px-6 py-10 text-center text-slate-300">
-            No hay marcas cargadas.
-          </div>
-        } @else {
-          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            @for (marca of marcas(); track marca.idMarca) {
-              <article class="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <p class="text-xs uppercase tracking-[0.28em] text-cyan-300/80">Marca #{{ marca.idMarca }}</p>
-                <h3 class="mt-2 text-lg font-semibold text-white">{{ marca.nombre }}</h3>
-              </article>
-            }
-          </div>
-        }
-      </section>
-    }
+          @if (totalMarcasPages() > 1) {
+            <div class="mt-4 flex justify-center">
+              <app-pagination
+                [currentPage]="currentPage()"
+                [totalPages]="totalMarcasPages()"
+                (pageChange)="currentPage.set($event)"
+              ></app-pagination>
+            </div>
+          }
+
+          <ng-template #marcaRow let-marca let-emit="emit">
+            <td class="px-6 py-3.5" data-label="Marca">{{ marca.nombre }}</td>
+            <td class="px-6 py-3.5 text-center" data-label="Acciones">
+              <div class="flex items-center justify-center gap-3">
+                <button
+                  (click)="emit('edit', marca)"
+                  class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                  aria-label="Editar marca"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  (click)="emit('delete', marca)"
+                  class="text-[var(--color-red-inverso)] sm:text-[var(--color-red)]"
+                  aria-label="Eliminar marca"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </ng-template>
+        </div>
+      }
+    </main>
+
+    <app-marca-form
+      *ngIf="showMarcaModal()"
+      [initialData]="selectedMarca()!"
+      (submitForm)="onMarcaSubmit($event)"
+      (close)="showMarcaModal.set(false)"
+    ></app-marca-form>
   </div>
 </div>
