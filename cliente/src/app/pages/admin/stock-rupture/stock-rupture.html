@@ -1,0 +1,176 @@
+<div class="p-6 bg-[#1f051e] min-h-screen text-white">
+  
+  <!-- Encabezado -->
+  <div class="mb-8 flex justify-between items-center">
+    <div>
+      <h1 class="text-3xl font-bold text-[#ffc107]">Análisis de Quiebre de Stock</h1>
+      <p class="text-gray-400 text-sm">Predicción de agotamiento de productos basado en velocidad de venta diaria.</p>
+    </div>
+    <span class="bg-[#3d123f] text-yellow-400 border border-yellow-600/30 px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider">
+      Panel Predictivo Activo
+    </span>
+  </div>
+
+  <!-- Fila de Tarjetas (KPIs) -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Tarjeta 1: Agotados -->
+    <div class="bg-[#300c31] border-l-4 border-red-500 p-6 rounded-lg shadow-md">
+      <div class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Productos Agotados</div>
+      <div class="flex items-baseline mt-2">
+        <span class="text-4xl font-extrabold text-red-500">{{ totalAgotados }}</span>
+        <span class="ml-2 text-sm text-gray-400">requieren reabastecimiento</span>
+      </div>
+    </div>
+
+    <!-- Tarjeta 2: En Riesgo -->
+    <div class="bg-[#300c31] border-l-4 border-amber-500 p-6 rounded-lg shadow-md">
+      <div class="text-gray-400 text-xs font-semibold uppercase tracking-wider">En Riesgo de Quiebre (&lt; 3 días)</div>
+      <div class="flex items-baseline mt-2">
+        <span class="text-4xl font-extrabold text-amber-500">{{ totalEnRiesgo }}</span>
+        <span class="ml-2 text-sm text-gray-400">alta velocidad de venta</span>
+      </div>
+    </div>
+
+    <!-- Tarjeta 3: Categoría Crítica -->
+    <div class="bg-[#300c31] border-l-4 border-yellow-500 p-6 rounded-lg shadow-md">
+      <div class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Categoría con Mayor Demanda</div>
+      <div class="mt-2">
+        <div class="text-xl font-bold text-yellow-500">{{ categoriaCritica }}</div>
+        <span class="text-xs text-gray-500">Mayor rotación en las últimas 48 hrs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUEVA SECCIÓN: Gráfico de Tendencia Nativo y Sugerencias de Reabastecimiento -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    
+    <!-- Gráfico de barras horizontal nativo con Tailwind -->
+    <div class="lg:col-span-2 bg-[#2d0a2f] rounded-lg shadow-md p-6">
+      <h2 class="text-lg font-semibold text-gray-200 mb-4">Top 5 Proximidad de Ruptura (Días Restantes)</h2>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-gray-300 font-medium">Cerveza Pilsen Callao 310ml (Sixpack)</span>
+            <span class="text-red-500 font-bold">0 días (Agotado)</span>
+          </div>
+          <div class="w-full bg-[#1f051e] rounded-full h-3">
+            <div class="bg-red-600 h-3 rounded-full" style="width: 0%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-gray-300 font-medium">Four Loko Gold 473ml</span>
+            <span class="text-red-400 font-bold">0.5 días</span>
+          </div>
+          <div class="w-full bg-[#1f051e] rounded-full h-3">
+            <div class="bg-red-500 h-3 rounded-full" style="width: 12%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-gray-300 font-medium">Papas Nativas Lay's Al Hilo 100g</span>
+            <span class="text-amber-400 font-bold">1.5 días</span>
+          </div>
+          <div class="w-full bg-[#1f051e] rounded-full h-3">
+            <div class="bg-amber-500 h-3 rounded-full" style="width: 35%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-gray-300 font-medium">Pisco Cuatro Gallos Acholado 750ml</span>
+            <span class="text-amber-300 font-bold">2.6 días</span>
+          </div>
+          <div class="w-full bg-[#1f051e] rounded-full h-3">
+            <div class="bg-amber-400 h-3 rounded-full" style="width: 60%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-gray-300 font-medium">Whisky Johnnie Walker Red Label 1L</span>
+            <span class="text-green-400 font-bold">3.0 días</span>
+          </div>
+          <div class="w-full bg-[#1f051e] rounded-full h-3">
+            <div class="bg-green-500 h-3 rounded-full" style="width: 85%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel de Sugerencias de Compra -->
+    <div class="bg-[#2d0a2f] rounded-lg shadow-md p-6 flex flex-col justify-between">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-200 mb-1">Sugerencia de Compra</h2>
+        <p class="text-xs text-gray-400 mb-4">Cálculo automatizado para cubrir inventario por 30 días.</p>
+        
+        <div class="space-y-3">
+          <div class="bg-[#3d123f] p-3 rounded border border-red-500/20 flex justify-between items-center">
+            <div>
+              <div class="text-xs font-medium text-white truncate w-40">Pilsen Callao (Sixpack)</div>
+              <div class="text-[10px] text-gray-400">Proveedor: Backus</div>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-bold text-yellow-400 block">+360 unid</span>
+              <span class="text-[10px] text-red-400">Prioridad Alta</span>
+            </div>
+          </div>
+          <div class="bg-[#3d123f] p-3 rounded border border-amber-500/20 flex justify-between items-center">
+            <div>
+              <div class="text-xs font-medium text-white truncate w-40">Four Loko Gold 473ml</div>
+              <div class="text-[10px] text-gray-400">Proveedor: Perufarma</div>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-bold text-yellow-400 block">+240 unid</span>
+              <span class="text-[10px] text-amber-400">Prioridad Media</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="w-full mt-4 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded text-xs transition-colors uppercase tracking-wider">
+        Generar Órdenes de Pedido
+      </button>
+    </div>
+  </div>
+
+  <!-- Sección de Tabla Analítica -->
+  <div class="bg-[#2d0a2f] rounded-lg shadow-md overflow-hidden">
+    <div class="p-6 border-b border-[#441546]">
+      <h2 class="text-lg font-semibold text-gray-200">Previsión e Indicador de Ruptura de Inventario</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-[#3d123f] text-gray-300 text-xs uppercase font-medium">
+            <th class="p-4">Producto</th>
+            <th class="p-4 text-center">Stock Actual</th>
+            <th class="p-4 text-center">Ventas Promedio / Día</th>
+            <th class="p-4 text-center">Tiempo Estimado de Vida</th>
+            <th class="p-4 text-center">Estado</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#441546] text-sm text-gray-300">
+          <tr *ngFor="let prod of productosCriticos" class="hover:bg-[#411643] transition-colors">
+            <td class="p-4 font-medium text-white">{{ prod.nombre }}</td>
+            <td class="p-4 text-center">
+              <span [class.text-red-500]="prod.stockActual === 0" [class.font-bold]="prod.stockActual === 0" [class.text-gray-300]="prod.stockActual > 0">
+                {{ prod.stockActual }} unid
+              </span>
+            </td>
+            <td class="p-4 text-center text-amber-300 font-semibold">{{ prod.ventasDiariasPromedio }} / día</td>
+            <td class="p-4 text-center font-medium">
+              <span *ngIf="prod.diasRestantes === 0" class="text-red-500 font-bold">¡AGOTADO!</span>
+              <span *ngIf="prod.diasRestantes > 0 && prod.diasRestantes < 1" class="text-red-400 font-semibold">Quedan horas</span>
+              <span *ngIf="prod.diasRestantes >= 1" class="text-gray-200">{{ prod.diasRestantes }} días</span>
+            </td>
+            <td class="p-4 text-center">
+              <span *ngIf="prod.estado === 'CRÍTICO'" class="px-2 py-1 text-xs font-bold rounded bg-red-900/50 text-red-400 border border-red-700">CRÍTICO</span>
+              <span *ngIf="prod.estado === 'ALERTA'" class="px-2 py-1 text-xs font-bold rounded bg-amber-900/50 text-amber-400 border border-amber-700">ALERTA</span>
+              <span *ngIf="prod.estado === 'OK'" class="px-2 py-1 text-xs font-bold rounded bg-green-900/50 text-green-400 border border-green-700">ESTABLE</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -1,1 +1,171 @@
-<p>ventas-admin-page works!</p>
+<div class="min-h-screen bg-[linear-gradient(180deg,rgba(10,10,20,0.96)_0%,rgba(15,15,32,0.92)_100%)] text-white">
+	<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+		<header class="mb-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+			<p class="text-xs uppercase tracking-[0.35em] text-cyan-300/80">Administración</p>
+			<div class="mt-2 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+				<div>
+					<h1 class="text-3xl font-semibold sm:text-4xl">Estadísticas de ventas</h1>
+					<p class="mt-2 max-w-3xl text-sm text-slate-300">
+						Revisión de las ventas registradas en el sistema: ingresos, ticket promedio, métodos de pago y productos más vendidos.
+					</p>
+				</div>
+
+				<div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:min-w-[600px]">
+					<div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+						<p class="text-xs uppercase tracking-[0.24em] text-slate-400">Ventas</p>
+						<p class="mt-1 text-2xl font-semibold">{{ totalVentas() }}</p>
+					</div>
+					<div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+						<p class="text-xs uppercase tracking-[0.24em] text-slate-400">Ingresos</p>
+						<p class="mt-1 text-2xl font-semibold">{{ formatCurrency(ingresosTotales()) }}</p>
+					</div>
+					<div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+						<p class="text-xs uppercase tracking-[0.24em] text-slate-400">Ticket</p>
+						<p class="mt-1 text-2xl font-semibold">{{ formatCurrency(ticketPromedio()) }}</p>
+					</div>
+					<div class="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+						<p class="text-xs uppercase tracking-[0.24em] text-slate-400">Ítems</p>
+						<p class="mt-1 text-2xl font-semibold">{{ totalItemsVendidos() }}</p>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		@if (isLoading()) {
+			<section class="rounded-3xl border border-white/10 bg-white/5 p-10 text-center text-slate-300 backdrop-blur-xl">
+				Cargando estadísticas...
+			</section>
+		} @else if (error()) {
+			<section class="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-8 text-center text-rose-100">
+				<p class="font-semibold">No se pudieron cargar las ventas.</p>
+				<p class="mt-2 text-sm">{{ error() }}</p>
+			</section>
+		} @else {
+			<div class="grid gap-6 xl:grid-cols-2">
+				<section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+					<div class="mb-4 flex items-center justify-between">
+						<div>
+							<h2 class="text-xl font-semibold">Ventas por método de pago</h2>
+							<p class="text-sm text-slate-300">Distribución e ingresos agrupados por tipo de pago.</p>
+						</div>
+					</div>
+
+					<div class="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+						<table class="min-w-full divide-y divide-white/10 text-left text-sm">
+							<thead class="bg-white/5 text-xs uppercase tracking-[0.24em] text-slate-400">
+								<tr>
+									<th class="px-4 py-3">Método</th>
+									<th class="px-4 py-3">Ventas</th>
+									<th class="px-4 py-3">Ingresos</th>
+									<th class="px-4 py-3">Peso</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-white/10">
+								@for (item of ventasPorMetodo(); track item.metodo) {
+									<tr>
+										<td class="px-4 py-3 font-medium text-white">{{ item.metodo }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ item.ventas }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ formatCurrency(item.ingresos) }}</td>
+										<td class="px-4 py-3 text-slate-300">
+											{{ totalVentas() === 0 ? '0%' : ((item.ventas / totalVentas()) * 100).toFixed(1) + '%' }}
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+				<section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+					<div class="mb-4">
+						<h2 class="text-xl font-semibold">Ventas por día</h2>
+						<p class="text-sm text-slate-300">Resumen diario con conteo de ventas e ingresos.</p>
+					</div>
+
+					<div class="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+						<table class="min-w-full divide-y divide-white/10 text-left text-sm">
+							<thead class="bg-white/5 text-xs uppercase tracking-[0.24em] text-slate-400">
+								<tr>
+									<th class="px-4 py-3">Fecha</th>
+									<th class="px-4 py-3">Ventas</th>
+									<th class="px-4 py-3">Ingresos</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-white/10">
+								@for (item of ventasPorDia(); track item.fecha) {
+									<tr>
+										<td class="px-4 py-3 font-medium text-white">{{ formatDate(item.fecha) }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ item.ventas }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ formatCurrency(item.ingresos) }}</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+				<section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.2)] xl:col-span-2">
+					<div class="mb-4">
+						<h2 class="text-xl font-semibold">Productos más vendidos</h2>
+						<p class="text-sm text-slate-300">Ranking por unidades vendidas e ingresos generados.</p>
+					</div>
+
+					<div class="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+						<table class="min-w-full divide-y divide-white/10 text-left text-sm">
+							<thead class="bg-white/5 text-xs uppercase tracking-[0.24em] text-slate-400">
+								<tr>
+									<th class="px-4 py-3">Producto</th>
+									<th class="px-4 py-3">Unidades</th>
+									<th class="px-4 py-3">Ingresos</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-white/10">
+								@for (item of topProductos(); track item.nombre) {
+									<tr>
+										<td class="px-4 py-3 font-medium text-white">{{ item.nombre }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ item.unidades }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ formatCurrency(item.ingresos) }}</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+				<section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.2)] xl:col-span-2">
+					<div class="mb-4">
+						<h2 class="text-xl font-semibold">Ventas recientes</h2>
+						<p class="text-sm text-slate-300">Últimas operaciones registradas en el sistema.</p>
+					</div>
+
+					<div class="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+						<table class="min-w-full divide-y divide-white/10 text-left text-sm">
+							<thead class="bg-white/5 text-xs uppercase tracking-[0.24em] text-slate-400">
+								<tr>
+									<th class="px-4 py-3">Compra</th>
+									<th class="px-4 py-3">Fecha</th>
+									<th class="px-4 py-3">Cliente</th>
+									<th class="px-4 py-3">Método</th>
+									<th class="px-4 py-3">Total</th>
+									<th class="px-4 py-3">Ítems</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-white/10">
+								@for (venta of ventasRecientes(); track venta.idVenta) {
+									<tr>
+										<td class="px-4 py-3 font-mono text-xs text-slate-300">#{{ venta.idVenta }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ formatDate(venta.fecha) }} {{ formatTime(venta.hora) }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ venta.clienteNombre }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ venta.metodoPago ?? 'Sin método' }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ formatCurrency(venta.total) }}</td>
+										<td class="px-4 py-3 text-slate-300">{{ venta.items.length }}</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</section>
+			</div>
+		}
+	</div>
+</div>

@@ -8,7 +8,7 @@ import { authAdminGuard, adminLoginGuard, authClientGuard } from './core/guards'
 
 import { HomeComponent, CatalogoComponent } from './pages/landing';
 
-import { PerfilComponent } from './pages/client';
+import { CheckoutComponent, PerfilComponent } from './pages/client';
 
 import {
   Home,
@@ -19,6 +19,7 @@ import {
   ReclamosAdminPage,
   VentasAdminPage,
   ProductosAdminPage,
+  StockRuptureAdminPage,
 } from './pages/admin';
 
 export const routes: Routes = [
@@ -49,6 +50,11 @@ export const routes: Routes = [
         component: PerfilComponent,
         canActivate: [authClientGuard],
       },
+      {
+        path: 'checkout',
+        component: CheckoutComponent,
+        canActivate: [authClientGuard],
+      },
     ],
   },
 
@@ -70,6 +76,7 @@ export const routes: Routes = [
         children: [
           { path: 'home', component: Home },
           { path: 'products', component: ProductosAdminPage },
+          { path: 'stock-rupture', component: StockRuptureAdminPage },
           { path: 'sales', component: VentasAdminPage },
           { path: 'complaints', component: ReclamosAdminPage },
           { path: 'users', component: ClientesAdminPage },
