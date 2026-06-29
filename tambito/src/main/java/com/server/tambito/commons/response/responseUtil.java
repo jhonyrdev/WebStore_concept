@@ -1,15 +1,15 @@
 package com.server.tambito.commons.response;
 
-public class responseUtil {
-    public static <T> apiResponse<T> success(T data, String message) {
-        return new apiResponse<>(true, message, data);
+public class ResponseUtil {
+    public static <T> ApiResponse<T> success(T data, String message) {
+        return new ApiResponse<>(true, message, data);
     }
 
-    public static <T> apiResponse<T> success(T data) {
-        return new apiResponse<>(true, "Operación exitosa", data);
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(true, "Operación exitosa", data);
     }
 
-    public static <T> apiResponse<T> error(String message) {
-        return new apiResponse<>(false, message, null);
+    public static <T> ApiResponse<T> error(String message) {
+        return new ApiResponse<>(false, message, null);
     }
 }
