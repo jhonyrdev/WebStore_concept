@@ -46,7 +46,7 @@
     
     <!-- Gráfico de barras horizontal nativo con Tailwind -->
     <div class="lg:col-span-2 bg-[#2d0a2f] rounded-lg shadow-md p-6">
-      <h2 class="text-lg font-semibold text-gray-200 mb-4">Top 5 Proximidad de Ruptura (Días Restantes)</h2>
+      <h2 class="text-lg font-semibold text-gray-200 mb-4">Top 5 en obsolescencia (Días Restantes)</h2>
       <div class="space-y-4">
         <div>
           <div class="flex justify-between text-xs mb-1">
@@ -131,6 +131,52 @@
       </button>
     </div>
   </div>
+
+<!-- CONTENEDOR GRID PARA DARLE ESTRUCTURA Y SEPARACIÓN -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-8">
+  
+  <!-- PANEL DE PROMOCIONES SUGERIDAS (Ocupa 2 columnas igual que el gráfico de arriba) -->
+  <div class="lg:col-span-3 bg-[#2d0a2f] rounded-lg shadow-md p-6 flex flex-col justify-between border border-purple-900/30">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-200 mb-1">Estrategia Comercial (Promociones)</h2>
+      <p class="text-xs text-gray-400 mb-4">Campañas automáticas sugeridas para acelerar productos de baja rotación o próximos a vencer.</p>
+      
+      <div class="space-y-3">
+        <!-- Promoción 1 -->
+        <div class="bg-[#3d123f] p-3 rounded border border-yellow-500/10 flex justify-between items-center">
+          <div>
+            <div class="text-xs font-medium text-white truncate w-48 md:w-auto">Pisco Cuatro Gallos Acholado 750ml</div>
+            <div class="text-[10px] text-amber-400">Estado: Alerta de rotación (2.6 días estimados)</div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-bold text-yellow-400 block">Dscto. 15%</span>
+            <span class="text-[10px] text-gray-400">Sugerido</span>
+          </div>
+        </div>
+
+        <!-- Promoción 2 -->
+        <div class="bg-[#3d123f] p-3 rounded border border-yellow-500/10 flex justify-between items-center">
+          <div>
+            <div class="text-xs font-medium text-white truncate w-48 md:w-auto">Papas Nativas Lay's Al Hilo 100g</div>
+            <div class="text-[10px] text-amber-400">Estado: Próximo a estancarse (1.5 días estimados)</div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-bold text-yellow-400 block">Lleva 2 por S/ 5.00</span>
+            <span class="text-[10px] text-gray-400">Sugerido</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="w-full mt-4 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold py-2 px-4 rounded text-xs transition-colors uppercase tracking-wider">
+      Activar Promociones en Tienda
+    </button>
+  </div>
+
+  <!-- Columna vacía a la derecha para mantener la simetría con el diseño superior -->
+  <div class="hidden lg:block"></div>
+
+</div>
 
   <!-- Sección de Tabla Analítica -->
   <div class="bg-[#2d0a2f] rounded-lg shadow-md overflow-hidden">
