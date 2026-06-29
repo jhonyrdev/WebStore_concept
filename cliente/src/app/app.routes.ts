@@ -19,6 +19,7 @@ import {
   ReclamosAdminPage,
   VentasAdminPage,
   ProductosAdminPage,
+  StockRuptureAdminPage,
 } from './pages/admin';
 
 export const routes: Routes = [
@@ -75,6 +76,7 @@ export const routes: Routes = [
         children: [
           { path: 'home', component: Home },
           { path: 'products', component: ProductosAdminPage },
+          { path: 'stock-rupture', component: StockRuptureAdminPage },
           { path: 'sales', component: VentasAdminPage },
           { path: 'complaints', component: ReclamosAdminPage },
           { path: 'users', component: ClientesAdminPage },
