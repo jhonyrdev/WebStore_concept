@@ -1,0 +1,28 @@
+<app-base-form
+  [form]="form"
+  [initialData]="initialData"
+  [title]="initialData ? 'Actualizar Marca' : 'Registrar Marca'"
+  (submitForm)="onSubmit($event)"
+  (close)="onClose()"
+>
+  <div [formGroup]="form" class="space-y-4">
+    <div class="grid grid-cols-1 gap-4">
+      <div class="flex flex-col gap-1">
+        <label class="mb-1 block text-sm font-medium text-gray-700">
+          Nombre de la Marca
+        </label>
+        <input
+          type="text"
+          formControlName="nombre"
+          placeholder="Ej: Costeño, Nestle, CocaCola..."
+          class="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+        />
+        @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+          <small class="text-red-500 text-xs">
+            El nombre es requerido y no debe exceder los 50 caracteres.
+          </small>
+        }
+      </div>
+    </div>
+  </div>
+</app-base-form>

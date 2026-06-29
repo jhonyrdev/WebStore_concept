@@ -1,9 +1,32 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { AlertService } from '@/app/shared/services/alert.service';
+import { ClientAuthService } from '@/app/features/auth/service/client/login/client-auth.service';
+import { PurchaseHistoryService } from '@/app/features/sales/services/purchase-history/purchase-history.service';
 import { PerfilComponent } from './perfil.component';
 
 describe('PerfilComponent', () => {
   let component: PerfilComponent;
   let fixture: ComponentFixture<PerfilComponent>;
+
+  const authServiceMock = {
+    getSessionProfile: () => null,
+    logout: () => undefined,
+    username: () => null,
+    role: () => 'CLIENTE',
+  };
+
+  const alertServiceMock = {
+    custom: () => Promise.resolve({} as never),
+  };
+
+  const purchaseHistoryServiceMock = {
+    loadHistory: () => of([]),
+    getByClient: () => [],
+    getById: () => null,
+    descargarPdf: () => undefined,
+  };
 
   beforeEach(async () => {
     // Al ser un componente Standalone, se importa en lugar de declararse
@@ -24,15 +47,11 @@ describe('PerfilComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Test 2: Verifica que el Signal del usuario tenga los datos iniciales
-  it('debería cargar los datos del usuario por defecto', () => {
+  it('should initialize with default profile when session is missing', () => {
     const usuarioActual = component.usuario();
-    expect(usuarioActual.nombre).toBe('Franco Javier');
+    expect(usuarioActual.nombre).toBe('Cliente');
     expect(usuarioActual.rol).toBe('CLIENTE');
-  });
-
-  // Test 3: Verifica que el historial de compras inicie con los 4 pedidos mockeados
-  it('debería inicializar el historial con 4 pedidos', () => {
-    expect(component.historialPedidos().length).toBe(4);
+    expect(component.historialPedidos().length).toBe(0);
   });
 });
+ 

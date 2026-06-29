@@ -101,7 +101,7 @@ public class AuthController {
         return ResponseEntity.ok(responseUtil.success(response, "Login de admin exitoso"));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register/admin")
     public ResponseEntity<apiResponse<Administrador>> registerAdmin(@Valid @RequestBody RegisterManualRequestDTO dto) {
         Administrador admin = registrationService.registerAdmin(

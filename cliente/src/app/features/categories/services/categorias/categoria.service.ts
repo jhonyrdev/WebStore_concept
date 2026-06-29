@@ -1,11 +1,19 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { map } from 'rxjs';
+import { ApiService } from '@/app/core/services/api/api.service';
+import { ApiResponse } from '@/app/core/models/api-response';
 import { Category, CategoryWithConfig } from '../../models/category.model';
 import { CATEGORIA_CONFIG } from '../../../../shared/constants/categoria.config';
-import { HttpClient } from '@angular/common/http';
 import { FallbackService } from '@/app/core/services/fallback/fallback.service';
+
+interface CategoriaListDto {
+  idCat: number;
+  nombre: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class CategoriaService {
+  private readonly api = inject(ApiService);
   private readonly fallback = inject(FallbackService);
 
   private readonly _categories = signal<Category[]>([]);
@@ -30,7 +38,21 @@ export class CategoriaService {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.fallback.getWithFallback<Category[]>('categorias', 'data/categorias.json').subscribe({
+    this.fallback
+      .getWithFallback<ApiResponse<CategoriaListDto[]> | Category[]>('api/public/categorias', 'data/categorias.json')
+      .pipe(
+        map((response) => {
+          if (Array.isArray(response)) {
+            return response;
+          }
+
+          return (response.data ?? []).map((item) => ({
+            id: item.idCat,
+            nombre: item.nombre,
+          }));
+        }),
+      )
+      .subscribe({
       next: (data) => {
         this._categories.set(data);
         this.isLoading.set(false);

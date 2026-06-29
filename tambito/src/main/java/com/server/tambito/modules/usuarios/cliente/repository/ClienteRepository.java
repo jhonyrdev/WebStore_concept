@@ -8,4 +8,5 @@ import com.server.tambito.modules.usuarios.cliente.entity.Cliente;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Integer>{
     Optional<Cliente> findByCorreoCli(String correoCli);
+    Optional<Cliente> findByCredencial_IdCred(Integer idCred);
 }

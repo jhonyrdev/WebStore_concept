@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.server.tambito.commons.response.ApiResponse;
-import com.server.tambito.commons.response.ResponseUtil;
-import com.server.tambito.modules.venta.dto.VentaReportDto;
+import com.server.tambito.commons.response.apiResponse;
+import com.server.tambito.commons.response.responseUtil;
+import com.server.tambito.modules.venta.dto.venta.VentaReportDto;
 import com.server.tambito.modules.venta.service.VentaService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ public class VentaAdminController {
     private final VentaService ventaService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<VentaReportDto>>> listarTodas() {
-        return ResponseEntity.ok(ResponseUtil.success(
+    public ResponseEntity<apiResponse<List<VentaReportDto>>> listarTodas() {
+        return ResponseEntity.ok(responseUtil.success(
                 ventaService.listarTodasLasVentas(),
                 "Ventas listadas exitosamente"));
     }

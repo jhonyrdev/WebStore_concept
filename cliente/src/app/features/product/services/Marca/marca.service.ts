@@ -18,6 +18,18 @@ export class MarcaService {
       .pipe(map((res) => res.data));
   }
 
+  listarPorSubCategoria(idSubcat: number): Observable<MarcaListDto[]> {
+    return this.apiService
+      .get<ApiResponse<MarcaListDto[]>>(`${this.publicUrl}/subcategoria/${idSubcat}`)
+      .pipe(map((res) => res.data));
+  }
+
+  listarPorCategoria(idCat: number): Observable<MarcaListDto[]> {
+    return this.apiService
+      .get<ApiResponse<MarcaListDto[]>>(`${this.publicUrl}/categoria/${idCat}`)
+      .pipe(map((res) => res.data));
+  }
+
   crear(dto: MarcaDto): Observable<MarcaListDto> {
     return this.apiService
       .post<ApiResponse<MarcaListDto>, MarcaDto>(this.privateUrl, dto)

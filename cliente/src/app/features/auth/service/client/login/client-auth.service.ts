@@ -6,9 +6,18 @@ import { ApiService } from '@/app/core/services/api/api.service';
 import { ApiResponse } from '@/app/core/models/api-response';
 import { AuthResponse } from '../../../models/auth.types';
 
+export interface ClientSessionProfile {
+  userId: number;
+  username: string;
+  email: string | null;
+  rol: string;
+  loginType: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ClientAuthService {
   private readonly API = 'auth';
+  private readonly SESSION_PROFILE_KEY = 'tambito_client_session_profile';
 
   private readonly _authenticated = signal<boolean>(false);
   private readonly _loginModalOpen = signal<boolean>(false);
@@ -42,6 +51,7 @@ export class ClientAuthService {
         tap((data: AuthResponse) => {
           if (!data?.token) return;
           this.tokenService.set(data.token);
+          this.saveSessionProfile(data);
           this._authenticated.set(true);
           this.closeLoginModal();
         }),
@@ -54,8 +64,33 @@ export class ClientAuthService {
 
   logout(): void {
     this.tokenService.clear();
+    localStorage.removeItem(this.SESSION_PROFILE_KEY);
     this._authenticated.set(false);
     this.closeLoginModal();
+  }
+
+  saveSessionProfile(profile: AuthResponse): void {
+    const sessionProfile: ClientSessionProfile = {
+      userId: profile.userId,
+      username: profile.username,
+      email: profile.email ?? profile.username,
+      rol: profile.rol,
+      loginType: profile.loginType ?? null,
+    };
+
+    localStorage.setItem(this.SESSION_PROFILE_KEY, JSON.stringify(sessionProfile));
+  }
+
+  getSessionProfile(): ClientSessionProfile | null {
+    const rawProfile = localStorage.getItem(this.SESSION_PROFILE_KEY);
+
+    if (!rawProfile) return null;
+
+    try {
+      return JSON.parse(rawProfile) as ClientSessionProfile;
+    } catch {
+      return null;
+    }
   }
 
   openLoginModal(): void {

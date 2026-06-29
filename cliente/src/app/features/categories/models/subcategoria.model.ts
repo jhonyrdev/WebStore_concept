@@ -1,4 +1,5 @@
 export interface SubCategoriaListDto {
+  idSubcat: number;
   nombre: string;
 }
 

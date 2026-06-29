@@ -7,6 +7,115 @@
     </header>
 
     <main class="p-6">
+      <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <app-statis-card
+          title="Reclamos totales"
+          value="{{ totalReclamos }}"
+          subtitle=""
+          iconClass="fa-solid fa-bell"
+          variant="purple"
+        ></app-statis-card>
+        <app-statis-card
+          title="Resueltos"
+          value="{{ resolvedReclamos }}"
+          subtitle=""
+          iconClass="fa-solid fa-check-circle"
+          variant="green"
+        ></app-statis-card>
+        <app-statis-card
+          title="Pendientes"
+          value="{{ pendingReclamos }}"
+          subtitle=""
+          iconClass="fa-solid fa-hourglass-half"
+          variant="rose"
+        ></app-statis-card>
+      </div>
+      <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
+        <app-table-search
+          placeholder="Buscar por asunto…"
+          [(query)]="searchQuery"
+          class="w-full sm:flex-1"
+        />
+        <div class="sort-container flex item-start sm:items-end gap-8 shrink-0">
+          <app-sort-select
+            label="Estado:"
+            [options]="estadoOptions"
+            [(value)]="estadoFilter"
+            [fullWidth]="true"
+            class="flex-1"
+          ></app-sort-select>
+
+          <app-sort-select
+            label="Ordenar:"
+            [options]="orderOptions"
+            [(value)]="order"
+            [fullWidth]="true"
+            class="flex-1"
+          ></app-sort-select>
+        </div>
+      </div>
+
+      <div>
+        <app-data-table
+          [columns]="clienteColumns"
+          [data]="reclamosPaginados()"
+          [rowTemplate]="reclamoRow"
+          [scrollable]="true"
+        ></app-data-table>
+
+        @if (totalPages() > 1) {
+          <div class="mt-4 flex justify-center">
+            <app-pagination
+              [currentPage]="currentPage()"
+              [totalPages]="totalPages()"
+              (pageChange)="currentPage.set($event)"
+            ></app-pagination>
+          </div>
+        }
+
+        <ng-template #reclamoRow let-reclamo let-emit="emit">
+          <td class="px-6 py-3.5" data-label="Nombre">
+            {{ reclamo.codigo }}
+          </td>
+
+          <td class="px-6 py-3.5" data-label="Asunto">
+            {{ reclamo.asunto }}
+          </td>
+
+          <td class="px-6 py-3.5" data-label="Correo">
+            {{ reclamo.correo }}
+          </td>
+
+          <td
+            class="px-6 py-3.5 text-center text-[var(--text-general)] font-medium"
+            data-label="Estado"
+          >
+            <span [ngClass]="reclamo.estado === 'Resuelto' ? 'text-green-500' : 'text-red-500'">
+              {{ reclamo.estado }}
+            </span>
+          </td>
+
+          <td class="px-6 py-3.5 text-center" data-label="Acciones">
+            <div class="flex items-center justify-center gap-3">
+                    <button
+                      (click)="observeReclamo(reclamo)"
+                      class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                      aria-label="Observar reclamo"
+                    >
+                      <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                    </button>
+
+                    <button
+                      (click)="replyReclamo(reclamo)"
+                      class="text-[var(--color-green-inverso)] sm:text-[var(--color-green)]"
+                      aria-label="Responder reclamo"
+                    >
+                      <i class="fa-solid fa-reply" aria-hidden="true"></i>
+                    </button>
+                  </div>
+          </td>
+        </ng-template>
+      </div>
     </main>
   </div>
 </div>

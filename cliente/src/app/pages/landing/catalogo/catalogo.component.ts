@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, PLATFORM_ID, signal } from '@angular/core';
-import { CatalogService } from './services/catalog.service';
+
 import { ProductCardComponent } from '@/app/shared/components/ui';
 import { ActivatedRoute } from '@angular/router';
 import { ProductoService } from '@/app/features/product/services/producto/producto.service';
@@ -9,6 +9,7 @@ import { SortSelectComponent } from '@/app/shared/components/ui/sort-select/sort
 import { PaginationComponent } from '@/app/shared/components/ui/pagination/pagination.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { fromEvent, startWith, map } from 'rxjs';
+import { CatalogService } from './components/services/catalog.service';
 
 @Component({
   selector: 'app-catalogo.component',

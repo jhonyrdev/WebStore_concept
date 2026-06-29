@@ -1,5 +1,5 @@
-// Development environment configuration
+// Environment configuration for development
 export const environment = {
-  production: false,
-  serverUrl: 'http://localhost:8081',
+	production: false,
+	serverUrl: 'http://localhost:8081'
 };

@@ -1,0 +1,109 @@
+<div class="w-full max-w-7xl mx-auto p-4 md:p-8">
+  <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-6">
+    <section class="bg-[var(--bg-tercero)] rounded-3xl border border-[var(--border-color)] shadow-sm p-6 md:p-8">
+      <div class="flex items-start justify-between gap-4 mb-6">
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-primary)] font-bold">Checkout</p>
+          <h1 class="text-3xl font-black text-[var(--text-head-table)] mt-2">Resumen de compra</h1>
+          <p class="text-sm text-[var(--text-general-inverso)] mt-2">Revisa tu carrito, elige el método de pago y genera el reporte de tu compra.</p>
+        </div>
+        <button type="button" (click)="volverAlCatalogo()" class="text-sm font-semibold text-[var(--color-primary)] hover:underline">
+          Volver al catálogo
+        </button>
+      </div>
+
+      @if (hasItems()) {
+        <div class="space-y-3">
+          @for (item of cartItems(); track item.producto.id) {
+            <article class="rounded-2xl border border-[var(--border-color)] bg-white/70 dark:bg-black/15 p-4 flex items-center justify-between gap-4">
+              <div class="min-w-0">
+                <h3 class="font-bold text-[var(--text-head-table)] truncate">{{ item.producto.nombre }}</h3>
+                <p class="text-sm text-[var(--text-general-inverso)]">Cantidad: {{ item.cantidad }} · {{ formatCurrency(item.producto.precio) }} c/u</p>
+              </div>
+              <div class="text-right shrink-0">
+                <p class="text-xs uppercase tracking-wider text-[var(--text-general-inverso)]">Subtotal</p>
+                <p class="text-lg font-black text-[var(--text-head-table)]">{{ formatCurrency(item.producto.precio * item.cantidad) }}</p>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="rounded-2xl border border-dashed border-[var(--border-color)] bg-black/5 dark:bg-white/5 p-10 text-center">
+          <h3 class="text-xl font-bold text-[var(--text-head-table)]">Tu carrito está vacío</h3>
+          <p class="text-sm text-[var(--text-general-inverso)] mt-2">Agrega productos al carrito para poder generar una compra y su reporte.</p>
+          <button type="button" (click)="volverAlCatalogo()" class="mt-5 inline-flex items-center justify-center rounded-xl bg-[var(--color-primary)] text-white px-5 py-2.5 font-semibold">
+            Ir al catálogo
+          </button>
+        </div>
+      }
+    </section>
+
+    <aside class="space-y-6">
+      <section class="bg-[var(--bg-tercero)] rounded-3xl border border-[var(--border-color)] shadow-sm p-6">
+        <h2 class="text-xl font-black text-[var(--text-head-table)]">Pago</h2>
+
+        @if (isLoadingMetodos()) {
+          <p class="text-sm text-[var(--text-general-inverso)] mt-4">Cargando métodos de pago...</p>
+        } @else if (metodos().length > 0) {
+          <label class="block mt-4 space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-[var(--text-general-inverso)]">Selecciona un método</span>
+            <select
+              class="w-full rounded-2xl border border-[var(--border-color)] bg-white/80 dark:bg-black/20 px-4 py-3 text-[var(--text-head-table)] outline-none focus:border-[var(--color-primary)]"
+              [value]="selectedMetodoId() ?? ''"
+              (change)="selectMetodo($any($event.target).value)"
+            >
+              @for (metodo of metodos(); track metodo.id) {
+                <option [value]="metodo.id">{{ metodo.nombre }} · {{ metodo.tipo }}</option>
+              }
+            </select>
+          </label>
+        } @else {
+          <div class="mt-4 rounded-2xl border border-dashed border-[var(--border-color)] p-4 text-sm text-[var(--text-general-inverso)]">
+            No hay métodos de pago activos disponibles.
+          </div>
+        }
+
+        <div class="mt-6 space-y-3 border-t border-[var(--border-color)] pt-5">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-[var(--text-general-inverso)]">Subtotal</span>
+            <span class="font-semibold text-[var(--text-head-table)]">{{ formatCurrency(subtotal()) }}</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-[var(--text-general-inverso)]">IGV</span>
+            <span class="font-semibold text-[var(--text-head-table)]">{{ formatCurrency(igv()) }}</span>
+          </div>
+          <div class="flex items-center justify-between text-lg pt-2 border-t border-[var(--border-color)]">
+            <span class="font-black text-[var(--text-head-table)]">Total</span>
+            <span class="font-black text-[var(--color-primary)]">{{ formatCurrency(total()) }}</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="mt-6 w-full rounded-2xl bg-[var(--color-primary)] px-5 py-3 font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          [disabled]="!hasItems() || !selectedMetodoId()"
+          (click)="finalizarCompra()"
+        >
+          Finalizar compra
+        </button>
+
+        @if (mensaje()) {
+          <p class="mt-3 text-sm text-[var(--text-general-inverso)]">{{ mensaje() }}</p>
+        }
+      </section>
+
+      @if (reporteGenerado()) {
+        <section class="bg-[var(--bg-tercero)] rounded-3xl border border-[var(--border-color)] shadow-sm p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-green)] font-bold">Reporte generado</p>
+          <h2 class="text-xl font-black text-[var(--text-head-table)] mt-2">{{ reporteGenerado()!.id }}</h2>
+          <div class="mt-4 space-y-2 text-sm text-[var(--text-general-inverso)]">
+            <p><span class="font-semibold text-[var(--text-head-table)]">Cliente:</span> {{ reporteGenerado()!.clienteNombre }}</p>
+            <p><span class="font-semibold text-[var(--text-head-table)]">Método:</span> {{ reporteGenerado()!.metodoPago }}</p>
+            <p><span class="font-semibold text-[var(--text-head-table)]">Total:</span> {{ formatCurrency(reporteGenerado()!.total) }}</p>
+            <p><span class="font-semibold text-[var(--text-head-table)]">Items:</span> {{ reporteGenerado()!.items.length }}</p>
+          </div>
+        </section>
+      }
+    </aside>
+  </div>
+</div>

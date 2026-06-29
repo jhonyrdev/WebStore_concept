@@ -109,32 +109,35 @@
       </div>
     }
 
-      <!-- Sub-Categoría 
-      @if (catalog.hasSubCategorias()) {
+      @if (subCategorias().length > 0) {
         <div class="border-b border-gray-100">
           <button
             (click)="toggleSection('subcategoria')"
-            class="w-full flex items-center justify-between py-3 text-sm font-medium
-                   text-gray-800 hover:text-red-600 transition-colors"
+            class="w-full flex items-center justify-between py-3 text-sm font-medium text-gray-800 hover:text-red-600 transition-colors"
           >
             <span>Sub-Categoría</span>
-            <svg class="w-4 h-4 transition-transform duration-200"
-                 [class.rotate-180]="isSectionOpen('subcategoria')"
-                 xmlns="http://www.w3.org/2000/svg" fill="none"
-                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <svg
+              class="w-4 h-4 transition-transform duration-200"
+              [class.rotate-180]="isSectionOpen('subcategoria')"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+            >
               <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
             </svg>
           </button>
+
           @if (isSectionOpen('subcategoria')) {
             <div class="pb-3 space-y-0.5">
-              @for (sub of catalog.subCategorias(); track sub.id) {
+              @for (sub of subCategorias(); track sub.idSubcat) {
                 <button
-                  (click)="catalog.selectSubCategoria(sub.id)"
-                  class="w-full text-left px-2 py-1.5 rounded-lg text-sm text-gray-600
-                         hover:bg-gray-50 transition-colors"
-                  [class.bg-red-50]="catalog.subCategoriaId() === sub.id"
-                  [class.text-red-600]="catalog.subCategoriaId() === sub.id"
-                  [class.font-semibold]="catalog.subCategoriaId() === sub.id"
+                  (click)="catalog.selectSubCategoria(sub.idSubcat)"
+                  class="w-full text-left px-2 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+                  [class.bg-red-50]="catalog.subCategoriaId() === sub.idSubcat"
+                  [class.text-red-600]="catalog.subCategoriaId() === sub.idSubcat"
+                  [class.font-semibold]="catalog.subCategoriaId() === sub.idSubcat"
                 >
                   {{ sub.nombre }}
                 </button>
@@ -142,34 +145,38 @@
             </div>
           }
         </div>
-      }-->
+      }
 
-      <!-- Marca 
-      @if (catalog.hasMarcas()) {
+      <!-- Marca -->
+      @if (marcas().length > 0) {
         <div class="border-b border-gray-100">
           <button
             (click)="toggleSection('marca')"
-            class="w-full flex items-center justify-between py-3 text-sm font-medium
-                   text-gray-800 hover:text-red-600 transition-colors"
+            class="w-full flex items-center justify-between py-3 text-sm font-medium text-gray-800 hover:text-red-600 transition-colors"
           >
             <span>Marca</span>
-            <svg class="w-4 h-4 transition-transform duration-200"
-                 [class.rotate-180]="isSectionOpen('marca')"
-                 xmlns="http://www.w3.org/2000/svg" fill="none"
-                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <svg
+              class="w-4 h-4 transition-transform duration-200"
+              [class.rotate-180]="isSectionOpen('marca')"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+            >
               <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
             </svg>
           </button>
+
           @if (isSectionOpen('marca')) {
             <div class="pb-3 space-y-0.5">
-              @for (marca of catalog.marcas(); track marca.id) {
+              @for (marca of marcas(); track marca.idMarca) {
                 <button
-                  (click)="catalog.selectMarca(marca.id)"
-                  class="w-full text-left px-2 py-1.5 rounded-lg text-sm text-gray-600
-                         hover:bg-gray-50 transition-colors"
-                  [class.bg-red-50]="catalog.marcaId() === marca.id"
-                  [class.text-red-600]="catalog.marcaId() === marca.id"
-                  [class.font-semibold]="catalog.marcaId() === marca.id"
+                  (click)="catalog.selectMarca(marca.idMarca)"
+                  class="w-full text-left px-2 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+                  [class.bg-red-50]="catalog.marcaId() === marca.idMarca"
+                  [class.text-red-600]="catalog.marcaId() === marca.idMarca"
+                  [class.font-semibold]="catalog.marcaId() === marca.idMarca"
                 >
                   {{ marca.nombre }}
                 </button>
@@ -177,7 +184,7 @@
             </div>
           }
         </div>
-      }-->
+      }
     </div>
   </app-sidebar-shell>
 }
