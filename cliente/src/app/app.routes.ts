@@ -75,7 +75,6 @@ export const routes: Routes = [
         children: [
           { path: 'home', component: Home },
           { path: 'products', component: ProductosAdminPage },
-          { path: 'stock-rupture', component: ProductosAdminPage, data: { initialTab: 'stock' } },
           { path: 'sales', component: VentasAdminPage },
           { path: 'complaints', component: ReclamosAdminPage },
           { path: 'users', component: ClientesAdminPage },
