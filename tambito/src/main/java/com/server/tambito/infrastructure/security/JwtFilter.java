@@ -2,7 +2,6 @@ package com.server.tambito.infrastructure.security;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.server.tambito.modules.auth.enums.RolEnum;
 
+<<<<<<< Updated upstream
 import java.io.IOException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -23,10 +23,10 @@ import lombok.RequiredArgsConstructor;
 >>>>>>> Stashed changes
 
 @Component
+@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtils jwtUtil;
+    private final JwtUtils jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
