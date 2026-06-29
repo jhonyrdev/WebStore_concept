@@ -10,17 +10,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.server.tambito.modules.auth.enums.RolEnum;
 
-<<<<<<< Updated upstream
 import java.io.IOException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-=======
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
->>>>>>> Stashed changes
 
 @Component
 @RequiredArgsConstructor
