@@ -36,7 +36,6 @@
           ></app-data-table>
 
           <ng-template #unidadRow let-unidad let-emit="emit">
-
             <td class="px-6 py-3.5 text-center" data-label="Nombre">
               {{ unidad.nombre }}
             </td>
@@ -102,14 +101,13 @@
           ></app-data-table>
 
           <ng-template #pagoRow let-pago let-emit="emit">
-
             <td class="px-6 py-3.5 text-center" data-label="Nombre">
               {{ pago.nombre }}
             </td>
 
             <td class="px-6 py-3.5 text-center" data-label="tipo">
               <span
-                class="px-2 py-1 rounded-full text-xs font-semibold " 
+                class="px-2 py-1 rounded-full text-xs font-semibold"
                 [class]="getTipoBadgeClass(pago.tipo)"
               >
                 {{ pago.tipo }}
@@ -153,6 +151,351 @@
             (submitForm)="guardarMetodo($event)"
             (close)="closeMetodoModal()"
           />
+        }
+      }
+
+      @if (activeTab() === 'promociones') {
+        <!-- Toolbar -->
+        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+          <div class="flex flex-wrap gap-2">
+            <button
+              (click)="openAsignarModal()"
+              class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full h-9 px-4 flex items-center gap-2 shadow-md transition-all duration-200 hover:scale-105 text-sm font-medium"
+            >
+              <i class="fas fa-link" aria-hidden="true"></i>
+              <span class="hidden sm:inline">Asignar a producto</span>
+            </button>
+            <button
+              (click)="openQuitarModal()"
+              class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full h-9 px-4 flex items-center gap-2 shadow-md transition-all duration-200 hover:scale-105 text-sm font-medium"
+            >
+              <i class="fas fa-unlink" aria-hidden="true"></i>
+              <span class="hidden sm:inline">Quitar de producto</span>
+            </button>
+          </div>
+          <button
+            (click)="openPromoModal()"
+            class="bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] rounded-full w-9 h-9 md:w-auto md:px-3 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105"
+            aria-label="Agregar promoción"
+          >
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span class="hidden md:inline ml-2 text-sm font-medium">Agregar</span>
+          </button>
+        </div>
+
+        <!-- Loading -->
+        @if (isLoadingPromociones()) {
+          <div class="px-4 py-3 text-sm text-[var(--color-gray)]">Cargando promociones...</div>
+        }
+
+        <!-- Tabla reutilizando app-data-table -->
+        <app-data-table
+          [columns]="promocionColumns"
+          [data]="promociones()"
+          [rowTemplate]="promocionRow"
+          (action)="onPromocionAction($event)"
+        ></app-data-table>
+
+        <ng-template #promocionRow let-promo let-emit="emit">
+          <td class="px-6 py-3.5 text-center" data-label="Nombre">
+            {{ promo.nombre }}
+          </td>
+
+          <td class="px-6 py-3.5 text-center" data-label="Tipo">
+            <span class="font-mono text-sm">{{ getTipoLabel(promo.tipoDescuento) }}</span>
+          </td>
+
+          <td class="px-6 py-3.5 text-center font-mono" data-label="Valor">
+            {{ promo.valorDescuento }}
+          </td>
+
+          <td class="px-6 py-3.5 text-center text-sm" data-label="Inicio">
+            {{ promo.fechaInicio | date: 'dd/MM/yyyy' }}
+          </td>
+
+          <td class="px-6 py-3.5 text-center text-sm" data-label="Fin">
+            {{ promo.fechaFin | date: 'dd/MM/yyyy' }}
+          </td>
+
+          <td class="px-6 py-3.5 text-center" data-label="Estado">
+            <span class="text-xs font-semibold" [class]="getEstadoColor(promo.estado)">
+              {{ promo.estado }}
+            </span>
+          </td>
+
+          <td class="px-6 py-3.5" data-label="Acciones">
+            <div class="flex justify-center gap-2">
+              <button
+                (click)="openPromoModal(promo)"
+                class="text-[var(--color-blue-inverso)] sm:text-[var(--color-blue)]"
+                aria-label="Editar promoción"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                (click)="emit('delete', promo)"
+                class="text-[var(--color-red-inverso)] sm:text-[var(--color-red)]"
+                aria-label="Eliminar promoción"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </td>
+        </ng-template>
+
+        <!-- ── Modal: Crear / Editar Promoción ── -->
+        @if (showPromoModal()) {
+          <div
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          >
+            <div
+              class="bg-[var(--bg-principal)] rounded-xl shadow-2xl max-w-md w-full border border-[var(--border-color)]"
+            >
+              <div
+                class="flex justify-between items-center p-6 border-b border-[var(--border-color)]"
+              >
+                <h2 class="text-xl font-semibold text-[var(--text-general)]">
+                  {{ editingPromoId() ? 'Editar promoción' : 'Nueva promoción' }}
+                </h2>
+                <button
+                  (click)="closePromoModal()"
+                  class="text-[var(--color-gray)] hover:text-[var(--text-general)] text-2xl leading-none"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <form [formGroup]="promocionForm" class="p-6 space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                    >Nombre</label
+                  >
+                  <input
+                    formControlName="nombre"
+                    type="text"
+                    placeholder="Ej: Black Friday 20%"
+                    class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] placeholder-[var(--color-gray)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                    >Descripción</label
+                  >
+                  <textarea
+                    formControlName="descripcion"
+                    rows="2"
+                    class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] placeholder-[var(--color-gray)] focus:outline-none focus:border-[var(--color-blue)] transition-colors resize-none"
+                  ></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                      >Tipo de descuento</label
+                    >
+                    <select
+                      formControlName="tipoDescuento"
+                      class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                    >
+                      <option *ngFor="let t of tiposDescuento" [value]="t">{{ t }}</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                      >Valor</label
+                    >
+                    <input
+                      formControlName="valorDescuento"
+                      type="number"
+                      step="0.01"
+                      min="0.01"
+                      class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                      >Fecha inicio</label
+                    >
+                    <input
+                      formControlName="fechaInicio"
+                      type="date"
+                      class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                      >Fecha fin</label
+                    >
+                    <input
+                      formControlName="fechaFin"
+                      type="date"
+                      class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                    >Estado</label
+                  >
+                  <select
+                    formControlName="estado"
+                    class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                  >
+                    <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+                  </select>
+                </div>
+              </form>
+
+              <div class="flex gap-3 p-6 border-t border-[var(--border-color)]">
+                <button
+                  (click)="closePromoModal()"
+                  class="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg border border-[var(--border-color)] text-[var(--color-gray)] hover:bg-[var(--bg-secundario)] transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  (click)="savePromocion()"
+                  [disabled]="promocionForm.invalid"
+                  class="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                >
+                  {{ editingPromoId() ? 'Actualizar' : 'Crear' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- ── Modal: Asignar Promoción ── -->
+        @if (showAsignarModal()) {
+          <div
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          >
+            <div
+              class="bg-[var(--bg-principal)] rounded-xl shadow-2xl max-w-sm w-full border border-[var(--border-color)]"
+            >
+              <div
+                class="flex justify-between items-center p-6 border-b border-[var(--border-color)]"
+              >
+                <h2 class="text-xl font-semibold text-[var(--text-general)]">Asignar a producto</h2>
+                <button
+                  (click)="closeAsignarModal()"
+                  class="text-[var(--color-gray)] hover:text-[var(--text-general)] text-2xl leading-none"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <form [formGroup]="asignarForm" class="p-6 space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                    >ID del producto</label
+                  >
+                  <input
+                    formControlName="idProd"
+                    type="number"
+                    placeholder="Ej: 1"
+                    class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] placeholder-[var(--color-gray)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                    >ID de la promoción</label
+                  >
+                  <input
+                    formControlName="idPromocion"
+                    type="number"
+                    placeholder="Ej: 1"
+                    class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] placeholder-[var(--color-gray)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                  />
+                </div>
+              </form>
+
+              <div class="flex gap-3 p-6 border-t border-[var(--border-color)]">
+                <button
+                  (click)="closeAsignarModal()"
+                  class="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg border border-[var(--border-color)] text-[var(--color-gray)] hover:bg-[var(--bg-secundario)] transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  (click)="asignarPromocion()"
+                  [disabled]="asignarForm.invalid"
+                  class="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                >
+                  Asignar
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- ── Modal: Quitar Promoción ── -->
+        @if (showQuitarModal()) {
+          <div
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          >
+            <div
+              class="bg-[var(--bg-principal)] rounded-xl shadow-2xl max-w-sm w-full border border-[var(--border-color)]"
+            >
+              <div
+                class="flex justify-between items-center p-6 border-b border-[var(--border-color)]"
+              >
+                <h2 class="text-xl font-semibold text-[var(--text-general)]">Quitar de producto</h2>
+                <button
+                  (click)="closeQuitarModal()"
+                  class="text-[var(--color-gray)] hover:text-[var(--text-general)] text-2xl leading-none"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <form [formGroup]="quitarForm" class="p-6 space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                    >ID del producto</label
+                  >
+                  <input
+                    formControlName="idProd"
+                    type="number"
+                    placeholder="Ej: 1"
+                    class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] placeholder-[var(--color-gray)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-[var(--text-sub-form)] mb-1.5"
+                    >ID de la promoción</label
+                  >
+                  <input
+                    formControlName="idPromocion"
+                    type="number"
+                    placeholder="Ej: 1"
+                    class="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--border-color)] bg-[var(--bg-secundario)] text-[var(--text-general)] placeholder-[var(--color-gray)] focus:outline-none focus:border-[var(--color-blue)] transition-colors"
+                  />
+                </div>
+              </form>
+
+              <div class="flex gap-3 p-6 border-t border-[var(--border-color)]">
+                <button
+                  (click)="closeQuitarModal()"
+                  class="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg border border-[var(--border-color)] text-[var(--color-gray)] hover:bg-[var(--bg-secundario)] transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  (click)="quitarPromocion()"
+                  [disabled]="quitarForm.invalid"
+                  class="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg bg-[var(--bg-tercero)] text-[var(--text-general-inverso)] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                >
+                  Quitar
+                </button>
+              </div>
+            </div>
+          </div>
         }
       }
       @if (activeTab() === 'negocio') {
@@ -236,7 +579,7 @@
             </div>
           </div>
         </div>
-      }
+      }      
     </main>
   </div>
 </div>
