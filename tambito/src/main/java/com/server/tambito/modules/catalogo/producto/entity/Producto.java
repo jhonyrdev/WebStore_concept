@@ -2,9 +2,11 @@ package com.server.tambito.modules.catalogo.producto.entity;
 
 import lombok.*;
 import java.math.BigDecimal;
+import java.util.*;
 
 import com.server.tambito.modules.catalogo.producto.convert.EstadoProductoConverter;
 import com.server.tambito.modules.catalogo.producto.enums.EstadoProductoEnum;
+import com.server.tambito.modules.catalogo.promocion.entity.Promocion;
 import com.server.tambito.modules.catalogo.subcategoria.entity.SubCategoria;
 
 import jakarta.persistence.*;
@@ -12,14 +14,18 @@ import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "producto")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Producto {
-   
-   @Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_prod")
+    @EqualsAndHashCode.Include
     private Integer idProd;
 
     @NotBlank
@@ -59,5 +65,13 @@ public class Producto {
     @ManyToOne
     @JoinColumn(name = "id_subcat", nullable = false)
     private SubCategoria subcategoria;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "producto_promocion", joinColumns = @JoinColumn(name = "id_prod"), inverseJoinColumns = @JoinColumn(name = "id_promocion"))
+    @Builder.Default
+    private Set<Promocion> promociones = new HashSet<>();
 
 }
