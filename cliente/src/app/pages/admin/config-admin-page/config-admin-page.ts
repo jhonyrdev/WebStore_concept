@@ -4,7 +4,7 @@ import { ToastService } from '@/app/shared/services/toast.service';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal, effect } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DataTableComponent } from '@/app/shared/components/ui/data-table/data-table.component';
 import { UnidadFacade } from '@/app/features/product/services/Unidad/unidad.facade';
 import { Unidad } from '@/app/features/product/models/unidad.model';
@@ -18,8 +18,12 @@ import { AlertService } from '@/app/shared/services/alert.service';
 import { MetodoPagoFacade } from '@/app/features/sales/services/metodoPago/metodo-pago.facade';
 import { MetodoPago } from '@/app/features/sales/models/metodo-pago.model';
 import { SwitchComponent } from '@/app/shared/components/ui/switch/switch.component';
+import { PromocionService } from '@/app/features/promocion/service/promocion.service';
+import { ProductoPromocionService } from '@/app/features/promocion/service/productopromocion.service';
+import { PromocionRequestDto, PromocionResponseDto } from '@/app/features/promocion/models/promocion.model';
+import { ProductoPromocionRequestDto } from '@/app/features/promocion/models/producto-promocion.model';
 
-type Tab = 'unidades' | 'pagos' | 'negocio';
+type Tab = 'unidades' | 'pagos' | 'negocio' | 'promociones';
 
 @Component({
   selector: 'app-config-admin-page',
@@ -32,6 +36,7 @@ type Tab = 'unidades' | 'pagos' | 'negocio';
     UnidadFormComponent,
     MetodoPagoFormComponent,
     SwitchComponent,
+    ReactiveFormsModule,
   ],
   templateUrl: './config-admin-page.html',
   styleUrl: './config-admin-page.css',
@@ -42,6 +47,9 @@ export class ConfigAdminPage implements OnInit {
   private metodoPagoFacade = inject(MetodoPagoFacade);
   private toastService = inject(ToastService);
   private alertService = inject(AlertService);
+  private promocionService = inject(PromocionService);
+  private productoPromocionService = inject(ProductoPromocionService);
+  private fb = inject(FormBuilder);
 
   selectedUnidad = signal<Unidad | null>(null);
   showUnidadModal = signal(false);
@@ -49,12 +57,43 @@ export class ConfigAdminPage implements OnInit {
   selectedMetodo = signal<MetodoPago | null>(null);
   showMetodoModal = signal(false);
 
+  promociones = signal<PromocionResponseDto[]>([]);
+  isLoadingPromociones = signal(false);
+  showPromoModal = signal(false);
+  showAsignarModal = signal(false);
+  showQuitarModal = signal(false);
+  editingPromoId = signal<number | null>(null);
+
+  tiposDescuento = ['PORCENTAJE', 'MONTO_FIJO'];
+  estados = ['ACTIVA', 'INACTIVA', 'VENCIDA'];
+
+  promocionForm = this.fb.group({
+    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    descripcion: [''],
+    tipoDescuento: ['PORCENTAJE', Validators.required],
+    valorDescuento: ['', [Validators.required, Validators.min(0.01)]],
+    fechaInicio: ['', Validators.required],
+    fechaFin: ['', Validators.required],
+    estado: ['ACTIVA', Validators.required],
+  });
+
+  asignarForm = this.fb.group({
+    idProd: ['', Validators.required],
+    idPromocion: ['', Validators.required],
+  });
+
+  quitarForm = this.fb.group({
+    idProd: ['', Validators.required],
+    idPromocion: ['', Validators.required],
+  });
+
   darkMode = this.themeService.darkMode;
   activeTab = signal<Tab>('unidades');
 
   tabs: TabItem<Tab>[] = [
     { key: 'unidades', label: 'Unidades' },
-    { key: 'pagos', label: 'Pagos' },
+    { key: 'pagos', label: 'Pagos' },    
+    { key: 'promociones', label: 'Promociones' },
     { key: 'negocio', label: 'Negocio' },
   ];
 
@@ -70,6 +109,16 @@ export class ConfigAdminPage implements OnInit {
     { key: 'estado', label: 'Estado', align: 'center', width: 'w-32' },
     { key: 'accion', label: 'Acción', align: 'center', width: 'w-40' },
   ];
+
+  promocionColumns: TableColumn[] = [
+  { key: 'nombre', label: 'Nombre', align: 'center' },
+  { key: 'tipoDescuento', label: 'Tipo', align: 'center', width: 'w-32' },
+  { key: 'valorDescuento', label: 'Valor', align: 'center', width: 'w-24' },
+  { key: 'fechaInicio', label: 'Inicio', align: 'center', width: 'w-32' },
+  { key: 'fechaFin', label: 'Fin', align: 'center', width: 'w-32' },
+  { key: 'estado', label: 'Estado', align: 'center', width: 'w-28' },
+  { key: 'accion', label: 'Acciones', align: 'center', width: 'w-40' },
+];
 
   negocioNombre = 'Mi Empresa S.A.';
 
@@ -97,6 +146,7 @@ export class ConfigAdminPage implements OnInit {
   ngOnInit(): void {
     this.unidadFacade.loadUnidades();
     this.metodoPagoFacade.loadMetodos();
+    this.loadPromociones();
   }
 
   changeTab(tab: Tab) {
@@ -235,4 +285,176 @@ export class ConfigAdminPage implements OnInit {
       },
     });
   }
+
+  loadPromociones() {
+    this.isLoadingPromociones.set(true);
+    this.promocionService.getAll().subscribe({
+      next: (data) => {
+        this.promociones.set(data);
+        this.isLoadingPromociones.set(false);
+      },
+      error: (err) => {
+        this.toastService.error('Error al cargar promociones');
+        this.isLoadingPromociones.set(false);
+      },
+    });
+  }
+
+  openPromoModal(promo?: PromocionResponseDto) {
+    if (promo) {
+      this.editingPromoId.set(promo.idPromocion);
+      this.promocionForm.patchValue({
+        ...promo,
+        valorDescuento: promo.valorDescuento.toString(),
+      });
+    } else {
+      this.editingPromoId.set(null);
+      this.promocionForm.reset({ tipoDescuento: 'PORCENTAJE', estado: 'ACTIVA' });
+    }
+    this.showPromoModal.set(true);
+  }
+  closePromoModal() {
+    this.showPromoModal.set(false);
+    this.promocionForm.reset();
+    this.editingPromoId.set(null);
+  }
+  openAsignarModal() {
+    this.showAsignarModal.set(true);
+  }
+  closeAsignarModal() {
+    this.showAsignarModal.set(false);
+    this.asignarForm.reset();
+  }
+  openQuitarModal() {
+    this.showQuitarModal.set(true);
+  }
+  closeQuitarModal() {
+    this.showQuitarModal.set(false);
+    this.quitarForm.reset();
+  }
+
+  private buildPromocionDto(formValue: any): PromocionRequestDto | null {
+  const tiposValidos: PromocionRequestDto['tipoDescuento'][] = ['PORCENTAJE', 'MONTO_FIJO'];
+  const estadosValidos: PromocionRequestDto['estado'][] = ['ACTIVA', 'INACTIVA'];
+
+  if (!tiposValidos.includes(formValue.tipoDescuento)) {
+    this.toastService.error('Tipo de descuento inválido');
+    return null;
+  }
+
+  if (!estadosValidos.includes(formValue.estado)) {
+    this.toastService.error('Estado inválido');
+    return null;
+  }
+
+  return {
+    nombre: formValue.nombre ?? '',
+    descripcion: formValue.descripcion ?? '',
+    tipoDescuento: formValue.tipoDescuento,
+    valorDescuento: Number(formValue.valorDescuento),
+    fechaInicio: formValue.fechaInicio ?? '',
+    fechaFin: formValue.fechaFin ?? '',
+    estado: formValue.estado,
+  };
+}
+
+private buildProductoPromocionDto(formValue: any): ProductoPromocionRequestDto | null {
+  const idProd = Number(formValue.idProd);
+  const idPromocion = Number(formValue.idPromocion);
+
+  if (!idProd || !idPromocion) {
+    this.toastService.error('Debe indicar producto y promoción válidos');
+    return null;
+  }
+
+  return { idProd, idPromocion };
+}
+
+savePromocion() {
+  if (this.promocionForm.invalid) return;
+
+  const data = this.buildPromocionDto(this.promocionForm.value);
+  if (!data) return;
+
+  const id = this.editingPromoId();
+  const action$ = id
+    ? this.promocionService.update(id, data)
+    : this.promocionService.create(data);
+
+  action$.subscribe({
+    next: () => {
+      this.toastService.success(id ? 'Promoción actualizada' : 'Promoción creada');
+      this.loadPromociones();
+      this.closePromoModal();
+    },
+    error: (err) => this.toastService.error('Error al guardar la promoción'),
+  });
+}
+
+deletePromocion(id: number) {
+  this.promocionService.delete(id).subscribe({
+    next: () => {
+      this.alertService.success('Promoción eliminada');
+      this.loadPromociones();
+    },
+    error: (err: HttpErrorResponse) => {
+      const msg = err?.error?.message ?? 'No se pudo eliminar la promoción';
+      this.alertService.error('Error al eliminar', msg);
+    },
+  });
+}
+
+asignarPromocion() {
+  if (this.asignarForm.invalid) return;
+
+  const data = this.buildProductoPromocionDto(this.asignarForm.value);
+  if (!data) return;
+
+  this.productoPromocionService.asignar(data).subscribe({
+    next: () => {
+      this.toastService.success('Promoción asignada correctamente');
+      this.closeAsignarModal();
+    },
+    error: (err) => this.toastService.error('Error al asignar: ' + err?.error?.message),
+  });
+}
+
+quitarPromocion() {
+  if (this.quitarForm.invalid) return;
+
+  const data = this.buildProductoPromocionDto(this.quitarForm.value);
+  if (!data) return;
+
+  this.productoPromocionService.quitar(data).subscribe({
+    next: () => {
+      this.toastService.success('Promoción removida correctamente');
+      this.closeQuitarModal();
+    },
+    error: (err) => this.toastService.error('Error al remover: ' + err?.error?.message),
+  });
+}
+
+  getEstadoColor(estado: string): string {
+    const map: Record<string, string> = {
+      ACTIVA: 'text-[var(--color-green-inverso)] sm:text-[var(--color-green)]',
+      INACTIVA: 'text-[var(--color-gray)]',
+      VENCIDA: 'text-[var(--color-red-inverso)] sm:text-[var(--color-red)]',
+    };
+    return map[estado] ?? 'text-[var(--color-gray)]';
+  }
+
+  getTipoLabel(tipo: string): string {
+    return tipo === 'PORCENTAJE' ? '%' : '$';
+  }
+  
+  onPromocionAction(event: TableActionEvent) {
+  const promo = event.row as PromocionResponseDto;
+  if (event.type === 'edit') {
+    this.openPromoModal(promo);
+    return;
+  }
+  if (event.type === 'delete') {
+    this.deletePromocion(promo.idPromocion);
+  }
+}
 }
