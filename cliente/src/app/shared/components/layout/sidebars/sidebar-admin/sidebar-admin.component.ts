@@ -32,7 +32,6 @@ export class SidebarAdminComponent {
   menuItems = [
     { label: 'Inicio', path: '/tambito++/home', icon: 'home' },
     { label: 'Productos', path: '/tambito++/products', icon: 'box' },
-    { label: 'Quiebre de Stock', path: '/tambito++/stock-rupture', icon: 'triangle-exclamation' },
     { label: 'Ventas', path: '/tambito++/sales', icon: 'chart-line' },
     { label: 'Reclamos', path: '/tambito++/complaints', icon: 'comments' },
     { label: 'Clientes', path: '/tambito++/users', icon: 'users' },
