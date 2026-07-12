@@ -38,9 +38,6 @@ testem.log
 /typings
 __screenshots__/
 
-# Local production environment
-src/environments/environments.prod.ts
-
 # System files
 .DS_Store
 Thumbs.db
