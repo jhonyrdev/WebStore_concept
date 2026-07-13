@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { CatalogoComponent } from './catalogo.component';
 
@@ -8,12 +9,15 @@ describe('CatalogoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CatalogoComponent]
+      imports: [CatalogoComponent],
+      providers: [provideRouter([])]
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(CatalogoComponent);
     component = fixture.componentInstance;
+
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 

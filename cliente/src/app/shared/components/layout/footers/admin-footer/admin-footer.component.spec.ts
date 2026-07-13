@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { AdminFooterComponent } from './admin-footer.component';
 
@@ -8,12 +9,15 @@ describe('AdminFooterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminFooterComponent]
+      imports: [AdminFooterComponent],
+      providers: [provideRouter([])]
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(AdminFooterComponent);
     component = fixture.componentInstance;
+
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 

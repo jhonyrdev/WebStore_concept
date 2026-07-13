@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SidebarShellComponent } from './sidebar-shell.component';
 
 describe('SidebarShellComponent', () => {
@@ -14,6 +13,10 @@ describe('SidebarShellComponent', () => {
 
     fixture = TestBed.createComponent(SidebarShellComponent);
     component = fixture.componentInstance;
+
+    fixture.componentRef.setInput('isOpen', false);
+
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 

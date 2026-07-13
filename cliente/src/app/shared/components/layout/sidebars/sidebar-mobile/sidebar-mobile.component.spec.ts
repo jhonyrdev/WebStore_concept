@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SidebarMobileComponent } from './sidebar-mobile.component';
 
 describe('SidebarMobileComponent', () => {
@@ -14,6 +13,10 @@ describe('SidebarMobileComponent', () => {
 
     fixture = TestBed.createComponent(SidebarMobileComponent);
     component = fixture.componentInstance;
+
+    fixture.componentRef.setInput('isOpen', false);
+
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 
