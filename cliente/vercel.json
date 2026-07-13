@@ -1,0 +1,37 @@
+{
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "dist/cliente/browser",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "angular",
+  "nodeVersion": "24.x",
+  "env": {
+    "NG_APP_API_URL": "@NG_APP_API_URL"
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "destination": "/index.html",
+      "status": 200
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+}
