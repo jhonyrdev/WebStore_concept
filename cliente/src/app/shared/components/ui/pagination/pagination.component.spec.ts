@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PaginationComponent } from './pagination.component';
 
 describe('PaginationComponent', () => {
@@ -14,6 +13,11 @@ describe('PaginationComponent', () => {
 
     fixture = TestBed.createComponent(PaginationComponent);
     component = fixture.componentInstance;
+
+    fixture.componentRef.setInput('currentPage', 1);
+    fixture.componentRef.setInput('totalPages', 10);
+
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 

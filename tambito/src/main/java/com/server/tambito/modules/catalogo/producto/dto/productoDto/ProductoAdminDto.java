@@ -8,10 +8,15 @@ import lombok.Data;
 
 @Data
 public class ProductoAdminDto {
+    private Integer idProd;
     private String codProd;
     private String nomProd;
     private BigDecimal precioProd;
     private Integer cantProd;
     private String nombreCategoria;
     private EstadoProductoEnum estado;
+    private Integer descuento;
+
+
+    
 }

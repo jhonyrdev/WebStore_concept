@@ -41,8 +41,15 @@ export class ProductoService {
 
     this.listarConFallback().subscribe({
       next: (data) => {
-        this.products.set(data.filter((p) => p.stock > 0));
+        // Aseguramos filtrar por stock real considerando ambas variaciones de nombres (frontend y backend)
+        const productosDisponibles = data.filter((p: any) => {
+          const cantidad = p.stock !== undefined ? p.stock : (p.cantProd || p.cant || 0);
+          return cantidad > 0;
+        });
+
+        this.products.set(productosDisponibles);
         this.isLoading.set(false);
+        console.log("🔥 PRODUCTOS REALES CARGADOS EN EL SERVICIO PÚBLICO:", productosDisponibles.length);
       },
       error: (err) => {
         this.error.set(err?.message || 'Error cargando productos');
@@ -73,18 +80,39 @@ export class ProductoService {
       );
   }
 
-  listarCards(): Observable<ProductoCardDto[]> {
+  listarCards(): Observable<Producto[]> {
     return this.fallback
       .getWithFallback<
         ApiResponse<ProductoCardDto[]>
       >(`${this.API_PUBLIC}/cards`, 'data/producto-cards.json')
-      .pipe(map((response) => response.data ?? []));
+      .pipe(
+        map((response) => 
+          (response.data ?? []).map((item) => ({
+            id: 0, 
+            nombre: item.nomProd,
+            precio: item.precioProd,
+            stock: item.cantProd,
+            categoriaId: 0,
+            subCategoriaId: 0,
+            marcaId: 0,
+            imagen: item.imgProd,
+            porcentajeDescuento: item.porcentajeDescuento || 0
+          }))
+        )
+      );
   }
 
   listarAdmin(): Observable<ProductoAdminDto[]> {
-    return this.api
-      .get<ApiResponse<ProductoAdminDto[]>>(`${this.API_PUBLIC}/admin`)
-      .pipe(map((response) => response.data ?? []));
+  return this.api
+    .get<ApiResponse<ProductoAdminDto[]>>('api/producto/admin') 
+    .pipe(
+      map((response) =>
+        (response.data ?? []).map((item) => ({
+          ...item,
+          descuento: item.descuento ?? item.porcentajeDescuento ?? 0,
+        })),
+      ),
+    );
   }
 
   obtenerPorId(idProd: number): Observable<Producto> {
@@ -97,16 +125,17 @@ export class ProductoService {
     return this.listarConFallback();
   }
 
-  private toProducto(dto: ProductoListDto): Producto {
+  private toProducto(dto: any): Producto {
     return {
-      id: dto.idProd,
-      nombre: dto.nomProd,
-      precio: dto.precioProd,
-      stock: dto.cantProd,
-      categoriaId: dto.idCat,
-      subCategoriaId: dto.idSubcat,
-      marcaId: dto.idMarca,
-      imagen: dto.imgProd,
+      id: dto.idProd || dto.id,
+      nombre: dto.nomProd || dto.nombre,
+      precio: dto.precioProd || dto.precio,
+      stock: dto.cantProd || dto.cant || dto.stock,
+      categoriaId: dto.idCat || dto.categoriaId || dto.idCategoria,
+      subCategoriaId: dto.idSubcat || dto.subCategoriaId || dto.idSubcategoria,
+      marcaId: dto.idMarca || dto.marcaId,
+      imagen: dto.imgProd || dto.imagen,
+      porcentajeDescuento: dto.porcentajeDescuento || dto.descuento || 0, 
     };
   }
 
@@ -120,6 +149,7 @@ export class ProductoService {
       subCategoriaId: 0, 
       marcaId: 0,
       imagen: dto.imagen,
+      porcentajeDescuento: 0
     };
   }
 }

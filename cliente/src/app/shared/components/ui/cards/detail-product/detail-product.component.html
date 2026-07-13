@@ -41,6 +41,13 @@
       <div class="grid grid-cols-1 md:grid-cols-2">
         <!-- Image -->
         <div class="relative bg-neutral-100 h-52 sm:h-60 md:h-auto md:min-h-[420px]">
+          <!-- Etiqueta de Descuento Flotante sobre la Imagen -->
+          @if (product()?.porcentajeDescuento && product()!.porcentajeDescuento! > 0) {
+            <div class="absolute top-4 left-4 bg-yellow-500 text-black text-xs font-extrabold px-3 py-1 rounded-lg shadow-md z-10 animate-pulse">
+              -{{ product()?.porcentajeDescuento }}%
+            </div>
+          }
+
           @if (product()?.imagen) {
             <img
               [src]="product()!.imagen"
@@ -74,9 +81,22 @@
             <h2 class="font-semibold text-[#5e0956] title-product leading-tight mb-2">
               {{ product()?.nombre }}
             </h2>
-            <p class="price-product text-neutral-800 font-medium">
-              {{ formattedPrice() }}
-            </p>
+            
+            <!-- Precios Dinámicos con descuento -->
+            <div class="flex items-baseline gap-2">
+              @if (product()?.porcentajeDescuento && product()!.porcentajeDescuento! > 0) {
+                <span class="price-product text-red-600 font-bold text-xl">
+                  S/ {{ (product()!.precio - (product()!.precio * product()!.porcentajeDescuento! / 100)) | number:'1.2-2' }}
+                </span>
+                <span class="text-sm text-neutral-400 line-through font-normal">
+                  {{ formattedPrice() }}
+                </span>
+              } @else {
+                <p class="price-product text-neutral-800 font-medium">
+                  {{ formattedPrice() }}
+                </p>
+              }
+            </div>
           </div>
 
           <!-- Description -->
@@ -121,7 +141,6 @@
           <button
             (click)="addToCart()"
             class="mt-auto w-full py-4 px-6 rounded-xl bg-[#5e0956] text-white font-semibold text-sm tracking-wide hover:bg-[#a00691] active:scale-[0.98] transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2"
-            
           >
             Agregar al carrito
           </button>

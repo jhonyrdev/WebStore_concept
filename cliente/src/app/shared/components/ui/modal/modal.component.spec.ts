@@ -14,7 +14,10 @@ describe('ModalComponent', () => {
 
     fixture = TestBed.createComponent(ModalComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+
+    fixture.componentRef.setInput('isOpen', false);   // ← ESTA LÍNEA es la que agregás
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {

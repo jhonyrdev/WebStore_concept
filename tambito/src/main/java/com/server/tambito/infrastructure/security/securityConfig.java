@@ -34,6 +34,7 @@ public class securityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/auth/**").permitAll()
 						.requestMatchers("/api/public/**").permitAll()
+						.requestMatchers("/api/producto/admin").permitAll()
 						.anyRequest().authenticated())
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

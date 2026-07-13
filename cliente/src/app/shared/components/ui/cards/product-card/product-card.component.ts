@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { NgClass, DecimalPipe } from '@angular/common'; // 👈 1. Importamos DecimalPipe aquí
 import { Component, EventEmitter, HostBinding, Input, Output, signal } from '@angular/core';
 import { Producto } from '../../../../../features/product/models/product.model';
 import { formatCurrencyAmount, SupportedCurrency } from '../../../../utils/currency.utils';
@@ -7,7 +7,7 @@ import { DetailProductComponent } from '../detail-product/detail-product.compone
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [NgClass, DetailProductComponent],
+  imports: [NgClass, DetailProductComponent, DecimalPipe], // 👈 2. Lo registramos en los imports
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css'
 })
@@ -45,4 +45,3 @@ export class ProductCardComponent {
   @HostBinding('class.is-slider') get isSlider() { return this.variant === 'slider'; }
   @HostBinding('class.is-grid')   get isGrid()   { return this.variant === 'grid'; }
 }
-

@@ -7,7 +7,7 @@ import {
   sortByPrecioAsc,
   sortByPrecioDesc,
 } from '@/app/shared/utils/sort.utils';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core'; // Importación correcta del core
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -20,7 +20,10 @@ export class CatalogService {
 
   readonly searchTerm = signal('');
   readonly sortOrder = signal<'relevancia' | 'menor' | 'mayor' | 'az' | 'za'>('relevancia');
+  
   readonly categoriaId = signal<number | null>(null);
+  readonly subCategoriaId = signal<number | null>(null);
+  readonly marcaId = signal<number | null>(null);
 
   readonly isLoading = computed(
     () => this.productoService.isLoading() || this.categoriaService.isLoading(),
@@ -33,28 +36,43 @@ export class CatalogService {
   readonly filteredProducts = computed(() => {
     let list = [...this.productoService.products()];
 
+    // 1. Filtro por término de búsqueda
     const term = this.searchTerm().toLowerCase().trim();
     if (term) {
-      list = list.filter((p) => p.nombre.toLowerCase().includes(term));
+      list = list.filter((p) => p.nombre?.toLowerCase().includes(term));
     }
 
+    // 2. Filtro por Categoría Principal (Tolerante a tipos String/Number)
     const catId = this.categoriaId();
     if (catId !== null) {
-      list = list.filter((p) => p.categoriaId === catId);
+      list = list.filter((p) => Number(p.categoriaId) === Number(catId));
     }
 
+    // 3. Filtro por Sub-Categoría
+    const subId = this.subCategoriaId();
+    if (subId !== null) {
+      list = list.filter((p) => Number(p.subCategoriaId) === Number(subId));
+    }
+
+    // 4. Filtro por Marca
+    const mId = this.marcaId();
+    if (mId !== null) {
+      list = list.filter((p) => Number(p.marcaId) === Number(mId));
+    }
+
+    // 5. Ordenamiento
     switch (this.sortOrder()) {
-      case 'menor':
-        list = sortByPrecioAsc(list);
+      case 'menor': 
+        list = sortByPrecioAsc(list); 
         break;
-      case 'mayor':
-        list = sortByPrecioDesc(list);
+      case 'mayor': 
+        list = sortByPrecioDesc(list); 
         break;
-      case 'az':
-        list = sortByNombreAsc(list);
+      case 'az':    
+        list = sortByNombreAsc(list); 
         break;
-      case 'za':
-        list = sortByNombreDesc(list);
+      case 'za':    
+        list = sortByNombreDesc(list); 
         break;
     }
 
@@ -62,33 +80,50 @@ export class CatalogService {
   });
 
   readonly totalProductos = computed(() => this.filteredProducts().length);
+  
   readonly activeFilterCount = computed(() => {
     let count = 0;
+    if (this.subCategoriaId() !== null) count++;
+    if (this.marcaId() !== null) count++;
     return count;
   });
 
-  // ── Acciones ─────────────────────────────────────────────
   selectTodo(): void {
-    this.categoriaId.set(null);
+    this.clearAllSignals();
     this.router.navigate(['/catalogo']);
   }
 
-  // Llamado desde el sidebar (clic) → navega y actualiza signal
   selectCategoria(id: number): void {
     const config = CATEGORIA_CONFIG[id];
     if (config) {
       this.categoriaId.set(id);
+      this.subCategoriaId.set(null);
+      this.marcaId.set(null);
       this.router.navigate([config.route]);
     }
   }
 
-  // Llamado desde el layout al detectar cambio de ruta → solo actualiza signal
+  selectSubCategoria(id: number): void {
+    this.subCategoriaId.update(current => current === id ? null : id);
+  }
+
+  selectMarca(id: number): void {
+    this.marcaId.update(current => current === id ? null : id);
+  }
+
   setCategoriaId(id: number): void {
     this.categoriaId.set(id);
   }
 
   clearFilters(): void {
+    this.subCategoriaId.set(null);
+    this.marcaId.set(null);
+  }
+
+  private clearAllSignals(): void {
     this.categoriaId.set(null);
+    this.subCategoriaId.set(null);
+    this.marcaId.set(null);
     this.searchTerm.set('');
     this.sortOrder.set('relevancia');
   }

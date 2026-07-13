@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SearchModalComponent } from './search-modal.component';
 
 describe('SearchModalComponent', () => {
@@ -14,6 +13,10 @@ describe('SearchModalComponent', () => {
 
     fixture = TestBed.createComponent(SearchModalComponent);
     component = fixture.componentInstance;
+
+    fixture.componentRef.setInput('isOpen', false);
+
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 

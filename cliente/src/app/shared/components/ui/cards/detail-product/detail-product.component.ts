@@ -8,6 +8,7 @@ import {
   Output,
   signal,
 } from '@angular/core';
+import { DecimalPipe } from '@angular/common'; // 👈 1. Importamos el pipe para formatear números
 import { Producto } from '../../../../../features/product/models/product.model';
 import { ProductoService } from '../../../../../features/product/services/producto/producto.service';
 import { formatCurrencyAmount, SupportedCurrency } from '../../../../utils/currency.utils';
@@ -16,10 +17,10 @@ import { ScrollLockService } from '../../../../services/scroll-lock.service';
 @Component({
   selector: 'app-detail-product',
   standalone: true,
-  imports: [],
+  imports: [DecimalPipe], // 👈 2. Lo registramos en los imports del componente Standalone
   templateUrl: './detail-product.component.html',
   styleUrl: './detail-product.component.css',
-})
+ })
 export class DetailProductComponent {
   private productService = inject(ProductoService);
   private scrollLockService = inject(ScrollLockService);

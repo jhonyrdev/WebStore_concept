@@ -7,6 +7,7 @@ export interface Producto {
   subCategoriaId: number; // ← agregar
   marcaId: number;
   imagen?: string;
+  porcentajeDescuento?: number;
 }
 
 export interface ProductoListDto {
@@ -26,6 +27,7 @@ export interface ProductoListDto {
   nombreSubcat: string;
   idCat: number;
   nombreCategoria: string;
+  porcentajeDescuento?: number;
 }
 
 export interface ProductoCardDto {
@@ -35,13 +37,19 @@ export interface ProductoCardDto {
   cantProd: number;
   precioProd: number;
   estado: string;
+  // Añadimos estos campos para manejar la promoción desde el Backend
+  porcentajeDescuento?: number; 
+  precioConDescuento?: number;
 }
 
 export interface ProductoAdminDto {
+  idProd: number;
   codProd: string;
   nomProd: string;
   precioProd: number;
   cantProd: number;
   nombreCategoria: string;
   estado: string;
+  descuento?: number;
+  porcentajeDescuento?: number;
 }
