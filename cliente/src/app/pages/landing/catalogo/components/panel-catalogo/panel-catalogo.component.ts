@@ -28,36 +28,34 @@ export class PanelCatalogoComponent implements OnInit {
   private openSections = signal<Set<string>>(new Set());
 
   constructor() {
-  effect(() => {
-    const categoriaId    = this.catalog.categoriaId();
-    const subCategoriaId = this.catalog.subCategoriaId(); 
+    effect(() => {
+      const categoriaId = this.catalog.categoriaId();
+      const subCategoriaId = this.catalog.subCategoriaId(); 
 
-    if (subCategoriaId !== null) {
-      // Estado 3: subcategoría seleccionada → solo actualizar marcas
-      this.marcaService
-        .listarPorSubCategoria(subCategoriaId)
-        .subscribe((marcas) => this.marcas.set(marcas));
+      if (subCategoriaId !== null) {
+        this.marcaService
+          .listarPorSubCategoria(subCategoriaId)
+          .subscribe((marcas) => this.marcas.set(marcas));
 
-    } else if (categoriaId !== null) {
-      // Estado 2: categoría seleccionada
-      this.subcategoriaService
-        .listarPorCategoria(categoriaId)
-        .subscribe((subs) => this.subCategorias.set(subs));
-      this.marcaService
-        .listarPorCategoria(categoriaId)
-        .subscribe((marcas) => this.marcas.set(marcas));
+      } else if (categoriaId !== null) {
+        this.subcategoriaService
+          .listarPorCategoria(categoriaId)
+          .subscribe((subs) => this.subCategorias.set(subs));
+          
+        this.marcaService
+          .listarPorCategoria(categoriaId)
+          .subscribe((marcas) => this.marcas.set(marcas));
 
-    } else {
-      // Estado 1: sin filtro → todo
-      this.subcategoriaService
-        .listar()
-        .subscribe((subs) => this.subCategorias.set(subs));
-      this.marcaService
-        .listar()
-        .subscribe((marcas) => this.marcas.set(marcas));
-    }
-  });
-}
+      } else {
+        this.subcategoriaService
+          .listar()
+          .subscribe((subs) => this.subCategorias.set(subs));
+        this.marcaService
+          .listar()
+          .subscribe((marcas) => this.marcas.set(marcas));
+      }
+    }); // 👈 Solo cierra el paréntesis del effect, sin el objeto de opciones al final.
+  }
 
   ngOnInit(): void {
     this.categoriaService.loadCategories();

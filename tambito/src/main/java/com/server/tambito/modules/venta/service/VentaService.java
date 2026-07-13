@@ -75,6 +75,7 @@ public class VentaService extends BaseService<Venta, Integer> {
 
         List<LineaCompra> lineas = new ArrayList<>();
         BigDecimal subtotalCompra = BigDecimal.ZERO;
+        LocalDate hoy = LocalDate.now();
 
         for (CheckoutItemDto item : request.getItems()) {
             if (item == null || item.getProductoId() == null || item.getCantidad() == null || item.getCantidad() <= 0) {
@@ -89,9 +90,28 @@ public class VentaService extends BaseService<Venta, Integer> {
                 throw new IllegalStateException("No hay stock suficiente para el producto: " + producto.getNomProd());
             }
 
-            BigDecimal subtotalLinea = producto.getPrecioProd().multiply(BigDecimal.valueOf(item.getCantidad()));
+            // --- DETECCIÓN DE PROMOCIÓN ACTIVA Y VIGENTE ---
+            BigDecimal precioAplicado = producto.getPrecioProd();
+            
+            if (producto.getPromociones() != null) {
+                for (com.server.tambito.modules.catalogo.promocion.entity.Promocion promo : producto.getPromociones()) {
+                    if (promo.getEstado() == com.server.tambito.commons.enums.EstadoGeneralEnum.ACTIVO && 
+                        !hoy.isBefore(promo.getFechaInicio()) && 
+                        !hoy.isAfter(promo.getFechaFin())) {
+                        
+                        BigDecimal descuento = producto.getPrecioProd()
+                                .multiply(promo.getValorDescuento())
+                                .divide(BigDecimal.valueOf(100), 2, java.math.RoundingMode.HALF_UP);
+                        
+                        precioAplicado = producto.getPrecioProd().subtract(descuento);
+                        break; 
+                    }
+                }
+            }
+
+            BigDecimal subtotalLinea = precioAplicado.multiply(BigDecimal.valueOf(item.getCantidad()));
             subtotalCompra = subtotalCompra.add(subtotalLinea);
-            lineas.add(new LineaCompra(producto, item.getCantidad(), subtotalLinea));
+            lineas.add(new LineaCompra(producto, item.getCantidad(), subtotalLinea, precioAplicado));
         }
 
         BigDecimal igv = subtotalCompra.multiply(BigDecimal.valueOf(0.18));
@@ -118,7 +138,7 @@ public class VentaService extends BaseService<Venta, Integer> {
             detalle.setProducto(producto);
             detalle.setNomProd(producto.getNomProd());
             detalle.setCantidad(linea.cantidad());
-            detalle.setPrecioUnit(producto.getPrecioProd());
+            detalle.setPrecioUnit(linea.precioCobrado()); 
             detalle.setSubtotal(linea.subtotal());
             detalles.add(detalle);
         }
@@ -138,15 +158,15 @@ public class VentaService extends BaseService<Venta, Integer> {
                 .toList();
     }
 
-        @Transactional(readOnly = true)
-        public List<VentaReportDto> listarTodasLasVentas() {
+    @Transactional(readOnly = true)
+    public List<VentaReportDto> listarTodasLasVentas() {
         List<Venta> ventas = ventaRepository.findAllByOrderByFechaDescHoraDesc();
 
         return ventas.stream()
             .map(venta -> toReportDto(venta,
                 detalleVentaRepository.findByVenta_IdVentaOrderByIdDetalleAsc(venta.getIdVenta())))
             .toList();
-        }
+    }
 
     private Cliente obtenerClienteAutenticado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -195,6 +215,6 @@ public class VentaService extends BaseService<Venta, Integer> {
                 items);
     }
 
-    private record LineaCompra(Producto producto, Integer cantidad, BigDecimal subtotal) {
+    private record LineaCompra(Producto producto, Integer cantidad, BigDecimal subtotal, BigDecimal precioCobrado) {
     }
 }

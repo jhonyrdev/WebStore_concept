@@ -16,7 +16,7 @@ import { CatalogService } from './components/services/catalog.service';
   standalone: true,
   imports: [ProductCardComponent, SortSelectComponent, PaginationComponent],
   templateUrl: './catalogo.component.html',
-  styleUrl: './catalogo.component.css',
+  styleUrls: ['./catalogo.component.css'],
 })
 export class CatalogoComponent {
   protected catalog = inject(CatalogService);

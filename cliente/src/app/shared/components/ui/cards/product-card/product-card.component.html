@@ -1,8 +1,14 @@
 <div
   [ngClass]="variant === 'slider' ? 'snap-start shrink-0 w-full' : 'h-full'"
-  class="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm flex flex-col cursor-pointer"
+  class="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm flex flex-col cursor-pointer relative"
   (click)="openDetail()"
 >
+  @if (product.porcentajeDescuento && product.porcentajeDescuento > 0) {
+    <div class="absolute top-3 left-3 bg-yellow-500 text-black text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg shadow-sm z-10 animate-pulse">
+      -{{ product.porcentajeDescuento }}%
+    </div>
+  }
+
   <div class="w-full overflow-hidden" [ngClass]="product.imagen ? 'h-full' : 'h-45 bg-gray-100'">
     @if (product.imagen) {
       <img [src]="product.imagen" [alt]="product.nombre" class="w-full h-full object-contain" />
@@ -21,9 +27,21 @@
     <p class="font-title font-semibold text-gray-900 leading-tight line-clamp-2">
       {{ product.nombre }}
     </p>
-    <p class="font-precio font-regular text-gray-900 mt-1">
-      {{ formattedPrice }}
-    </p>
+    
+    <div class="flex items-baseline gap-2 mt-1">
+      @if (product.porcentajeDescuento && product.porcentajeDescuento > 0) {
+        <span class="font-precio font-bold text-red-600">
+          S/ {{ (product.precio - (product.precio * product.porcentajeDescuento / 100)) | number:'1.2-2' }}
+        </span>
+        <span class="text-xs font-regular text-gray-400 line-through">
+          {{ formattedPrice }}
+        </span>
+      } @else {
+        <span class="font-precio font-regular text-gray-900">
+          {{ formattedPrice }}
+        </span>
+      }
+    </div>
   </div>
 
   <div class="px-3 pb-3">

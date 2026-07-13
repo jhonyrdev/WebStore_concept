@@ -8,7 +8,8 @@ import { TabItem, TabsComponent } from '@/app/shared/components/ui/tabs/tabs.com
 import { ProductoAdminDto } from '@/app/features/product/models/product.model';
 import { MarcaListDto } from '@/app/features/product/models/marca.model';
 
-type Tab = 'productos' | 'categorias' | 'marca' | 'stock';
+// 🛠️ ACTUALIZADO: Se incluye 'promociones' en el tipo estricto de la pestaña
+type Tab = 'productos' | 'categorias' | 'marca' | 'stock' | 'promociones';
 
 interface ProductoCritico {
   nombre: string;
@@ -35,7 +36,9 @@ export class ProductosAdminPage {
   private readonly route = inject(ActivatedRoute);
 
   activeTab = signal<Tab>('productos');
-  productos = signal<ProductoAdminDto[]>([]);
+  
+  productos = signal<(ProductoAdminDto & { descuento?: number })[]>([]);
+  
   readonly categorias = this.categoriaService.categories;
   marcas = signal<MarcaListDto[]>([]);
   isLoading = signal(false);
@@ -103,6 +106,7 @@ export class ProductosAdminPage {
     { key: 'categorias', label: 'Categorias' },
     { key: 'marca', label: 'Marca' },
     { key: 'stock', label: 'Stock' },
+    { key: 'promociones', label: 'Promociones' },
   ];
 
   readonly totalPages = computed(() =>
@@ -126,6 +130,47 @@ export class ProductosAdminPage {
     this.cargarProductos();
     this.cargarCategorias();
     this.cargarMarcas();
+  }
+
+  guardarNuevaPromocion(idProdInput: string, idPromocionInput: string): void {
+    if (!idProdInput || !idPromocionInput) {
+      alert('Por favor, completa todos los campos del formulario.');
+      return;
+    }
+
+    // 🚀 Al recibir directamente el ID limpio desde el HTML, hacemos el parse directo
+    const idProd = parseInt(idProdInput, 10);
+    const idPromocion = parseInt(idPromocionInput, 10);
+
+    if (isNaN(idProd) || isNaN(idPromocion)) {
+      alert('Los identificadores numéricos no son válidos.');
+      return;
+    }
+
+    const bodyToSend = {
+      idProd: idProd,
+      idPromocion: idPromocion
+    };
+
+    console.log("🚀 Enviando IDs oficiales a la base de datos:", bodyToSend);
+
+    const apiEndpoint = 'api/public/producto/asignar-promocion';
+    const apiService = (this.productService as any).api;
+
+    if (apiService && typeof apiService.post === 'function') {
+      apiService.post(apiEndpoint, bodyToSend).subscribe({
+        next: () => {
+          alert('¡Golazo! Descuento aplicado y guardado directamente en la base de datos de Tambito.');
+          this.cargarProductos(); // Recarga la grilla al instante
+        },
+        error: (err: any) => {
+          console.error("Error del servidor:", err);
+          alert('Error al procesar la asignación.');
+        }
+      });
+    } else {
+      alert('Error crítico: El servicio de comunicación API no se encuentra disponible.');
+    }
   }
 
   changeTab(tab: Tab) {
@@ -223,7 +268,7 @@ export class ProductosAdminPage {
       return '0 días (Agotado)';
     }
 
-    return `${diasRestantes} días`;
+    return `${diasRestantes} days`;
   }
 
   obtenerAnchoBarra(diasRestantes: number): string {

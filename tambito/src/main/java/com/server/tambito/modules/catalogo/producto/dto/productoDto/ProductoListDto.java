@@ -24,4 +24,5 @@ public class ProductoListDto {
     private String nombreSubcat;
     private Integer idCat;
     private String nombreCategoria;
+    private Integer porcentajeDescuento;
 }

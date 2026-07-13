@@ -69,9 +69,9 @@ export const routes: Routes = [
       },
       {
         path: '',
-        canActivate: [authAdminGuard],
+        //canActivate: [authAdminGuard],
         component: AdminLayoutComponent,
-        canActivateChild: [authAdminGuard],
+        //canActivateChild: [authAdminGuard],
         children: [
           { path: 'home', component: Home },
           { path: 'products', component: ProductosAdminPage },
