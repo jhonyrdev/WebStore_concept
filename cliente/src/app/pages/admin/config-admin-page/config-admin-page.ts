@@ -64,8 +64,8 @@ export class ConfigAdminPage implements OnInit {
   showQuitarModal = signal(false);
   editingPromoId = signal<number | null>(null);
 
-  tiposDescuento = ['PORCENTAJE', 'MONTO_FIJO'];
-  estados = ['ACTIVA', 'INACTIVA', 'VENCIDA'];
+  tiposDescuento = ['PORCENTAJE', 'MONTO'];
+  estados = ['ACTIVO', 'INACTIVO', 'VENCIDO'];
 
   promocionForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3)]],
@@ -74,7 +74,7 @@ export class ConfigAdminPage implements OnInit {
     valorDescuento: ['', [Validators.required, Validators.min(0.01)]],
     fechaInicio: ['', Validators.required],
     fechaFin: ['', Validators.required],
-    estado: ['ACTIVA', Validators.required],
+    estado: ['ACTIVO', Validators.required],
   });
 
   asignarForm = this.fb.group({
@@ -309,7 +309,7 @@ export class ConfigAdminPage implements OnInit {
       });
     } else {
       this.editingPromoId.set(null);
-      this.promocionForm.reset({ tipoDescuento: 'PORCENTAJE', estado: 'ACTIVA' });
+      this.promocionForm.reset({ tipoDescuento: 'PORCENTAJE', estado: 'ACTIVO' });
     }
     this.showPromoModal.set(true);
   }
@@ -334,8 +334,8 @@ export class ConfigAdminPage implements OnInit {
   }
 
   private buildPromocionDto(formValue: any): PromocionRequestDto | null {
-  const tiposValidos: PromocionRequestDto['tipoDescuento'][] = ['PORCENTAJE', 'MONTO_FIJO'];
-  const estadosValidos: PromocionRequestDto['estado'][] = ['ACTIVA', 'INACTIVA'];
+  const tiposValidos: PromocionRequestDto['tipoDescuento'][] = ['PORCENTAJE', 'MONTO'];
+  const estadosValidos: PromocionRequestDto['estado'][] = ['ACTIVO', 'INACTIVO'];
 
   if (!tiposValidos.includes(formValue.tipoDescuento)) {
     this.toastService.error('Tipo de descuento inválido');
@@ -436,9 +436,8 @@ quitarPromocion() {
 
   getEstadoColor(estado: string): string {
     const map: Record<string, string> = {
-      ACTIVA: 'text-[var(--color-green-inverso)] sm:text-[var(--color-green)]',
-      INACTIVA: 'text-[var(--color-gray)]',
-      VENCIDA: 'text-[var(--color-red-inverso)] sm:text-[var(--color-red)]',
+      ACTIVO: 'text-[var(--color-green-inverso)] sm:text-[var(--color-green)]',
+      INACTIVO: 'text-[var(--color-gray)]',
     };
     return map[estado] ?? 'text-[var(--color-gray)]';
   }
