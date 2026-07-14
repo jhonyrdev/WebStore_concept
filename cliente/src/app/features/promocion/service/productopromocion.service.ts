@@ -1,27 +1,32 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ApiService } from '@/app/core/services/api/api.service';
+import { ApiOptions } from '@/app/core/services/api/api.service';
 import { PromocionResponseDto } from '../models/promocion.model';
 import { ProductoPromocionRequestDto } from '../models/producto-promocion.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductoPromocionService {
-  private apiUrl = 'http://localhost:8081/api/productos-promociones'; 
-  private apiUrl2 = 'http://localhost:8081/api/public/productos-promociones'; 
+  private readonly api = inject(ApiService);
 
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl = 'api/productos-promociones';
+  private readonly apiUrl2 = 'api/public/productos-promociones';
 
   asignar(data: ProductoPromocionRequestDto): Observable<PromocionResponseDto[]> {
-    return this.http.post<PromocionResponseDto[]>(`${this.apiUrl}/asignar`, data);
+    return this.api.post<PromocionResponseDto[], ProductoPromocionRequestDto>(
+      `${this.apiUrl}/asignar`,
+      data,
+    );
   }
 
   quitar(data: ProductoPromocionRequestDto): Observable<PromocionResponseDto[]> {
-    return this.http.delete<PromocionResponseDto[]>(`${this.apiUrl}/quitar`, { body: data });
+    const options: ApiOptions = { body: data };
+    return this.api.delete<PromocionResponseDto[]>(`${this.apiUrl}/quitar`, options);
   }
 
   obtenerPromocionesDeProducto(idProd: number): Observable<PromocionResponseDto[]> {
-    return this.http.get<PromocionResponseDto[]>(`${this.apiUrl2}/producto/${idProd}`);
+    return this.api.get<PromocionResponseDto[]>(`${this.apiUrl2}/producto/${idProd}`);
   }
 }

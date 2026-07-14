@@ -6,6 +6,7 @@ import { environment } from '@/environments/environment';
 export interface ApiOptions {
   headers?: HttpHeaders;
   params?: HttpParams;
+  body?: unknown;
 }
 
 @Injectable({

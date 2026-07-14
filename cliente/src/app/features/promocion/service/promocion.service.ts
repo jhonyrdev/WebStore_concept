@@ -1,50 +1,43 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injectable, inject } from '@angular/core';
+import { Observable, map } from 'rxjs';
+import { ApiService } from '@/app/core/services/api/api.service';
+import { ApiResponse } from '@/app/core/models/api-response';
 import { PromocionResponseDto, PromocionRequestDto } from '../models/promocion.model';
 
-
-
-interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-  timestamp: string;
-}
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PromocionService {
-  private apiUrl = 'http://localhost:8081/api/promociones';
-  private apiUrl2 = 'http://localhost:8081/api/public/promociones';
+  private readonly api = inject(ApiService);
 
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl = 'api/promociones';
+  private readonly apiUrl2 = 'api/public/promociones';
 
   getAll(): Observable<PromocionResponseDto[]> {
-    return this.http
+    return this.api
       .get<ApiResponse<PromocionResponseDto[]>>(this.apiUrl2)
-      .pipe(map(res => res.data));
+      .pipe(map((res) => res.data));
   }
 
   getById(id: number): Observable<PromocionResponseDto> {
-    return this.http
+    return this.api
       .get<ApiResponse<PromocionResponseDto>>(`${this.apiUrl2}/${id}`)
-      .pipe(map(res => res.data));
+      .pipe(map((res) => res.data));
   }
 
   create(data: PromocionRequestDto): Observable<PromocionResponseDto> {
-    return this.http
-      .post<ApiResponse<PromocionResponseDto>>(this.apiUrl, data)
-      .pipe(map(res => res.data));
+    return this.api
+      .post<ApiResponse<PromocionResponseDto>, PromocionRequestDto>(this.apiUrl, data)
+      .pipe(map((res) => res.data));
   }
 
   update(id: number, data: PromocionRequestDto): Observable<PromocionResponseDto> {
-    return this.http.put<PromocionResponseDto>(`${this.apiUrl}/${id}`, data);
+    return this.api
+      .put<ApiResponse<PromocionResponseDto>, PromocionRequestDto>(`${this.apiUrl}/${id}`, data)
+      .pipe(map((res) => res.data));
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.api.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
