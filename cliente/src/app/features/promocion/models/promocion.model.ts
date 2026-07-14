@@ -2,7 +2,7 @@ export interface PromocionResponseDto {
   idPromocion: number;
   nombre: string;
   descripcion?: string;
-  tipoDescuento: 'PORCENTAJE' | 'MONTO_FIJO';
+  tipoDescuento: 'PORCENTAJE' | 'MONTO';
   valorDescuento: number;
   fechaInicio: string;
   fechaFin: string;    
@@ -12,9 +12,9 @@ export interface PromocionResponseDto {
 export interface PromocionRequestDto {
   nombre: string;
   descripcion?: string;
-  tipoDescuento: 'PORCENTAJE' | 'MONTO_FIJO';
+  tipoDescuento: 'PORCENTAJE' | 'MONTO';
   valorDescuento: number;
   fechaInicio: string;
   fechaFin: string;
-  estado: 'ACTIVA' | 'INACTIVA' ;
+  estado: 'ACTIVO' | 'INACTIVO' ;
 }
